@@ -18,18 +18,20 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 
-const timeSlots = {
-    morning: ["10:30", "10:45", "11:00", "11:15", "11:30", "11:45"],
-    afternoon: ["12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45", "14:00", "14:15", "14:30", "14:45", "15:00", "15:15", "15:30", "15:45", "16:00", "16:15", "16:30", "16:45", "17:00", "17:15", "17:30", "17:45"],
-    evening: ["18:00", "18:15", "18:30", "18:45", "19:00", "19:15", "19:30", "19:45", "20:00", "20:15", "20:30"],
-};
+const timeSlots = [
+    "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
+    "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM", "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM",
+    "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM", "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM",
+    "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM", "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM",
+    "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM", "7:00 PM", "7:15 PM", "7:30 PM", "7:45 PM",
+    "8:00 PM", "8:15 PM", "8:30 PM"
+];
 
 const formSchema = z.object({
   adults: z.coerce.number().min(1, { message: "Must have at least 1 adult." }),
   children: z.coerce.number().min(0),
   games: z.string({ required_error: "Please select the number of games." }),
   date: z.date({ required_error: "A date is required." }),
-  timeOfDay: z.string({ required_error: "Please select a time of day." }),
   time: z.string({ required_error: "A time slot is required." }),
 }).refine(data => data.adults + data.children > 0, {
     message: "You must select at least one guest.",
@@ -56,7 +58,6 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
         },
     });
 
-    const timeOfDay = form.watch("timeOfDay");
     const adults = form.watch("adults");
     const children = form.watch("children");
 
@@ -230,76 +231,34 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                             </FormItem>
                         )}
                     />
-
-                    <FormField
-                        control={form.control}
-                        name="timeOfDay"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <RadioGroup
-                                        onValueChange={(value) => {
-                                            field.onChange(value);
-                                            form.setValue("time", ""); // Reset time when time of day changes
-                                        }}
-                                        defaultValue={field.value}
-                                        className="grid grid-cols-3 gap-4"
-                                    >
-                                        <FormItem>
-                                            <FormControl>
-                                                <RadioGroupItem value="morning" id="morning" className="sr-only" />
-                                            </FormControl>
-                                            <Label htmlFor="morning" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'morning' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>MORNING</Label>
-                                        </FormItem>
-                                        <FormItem>
-                                            <FormControl>
-                                                <RadioGroupItem value="afternoon" id="afternoon" className="sr-only" />
-                                            </FormControl>
-                                            <Label htmlFor="afternoon" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'afternoon' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>AFTERNOON</Label>
-                                        </FormItem>
-                                        <FormItem>
-                                            <FormControl>
-                                                <RadioGroupItem value="evening" id="evening" className="sr-only" />
-                                            </FormControl>
-                                            <Label htmlFor="evening" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'evening' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>EVENING</Label>
-                                        </FormItem>
-                                    </RadioGroup>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
                 </div>
-
-                {timeOfDay && (
-                     <FormField
-                        control={form.control}
-                        name="time"
-                        render={({ field }) => (
-                            <FormItem className="space-y-4">
-                                <FormLabel>Please select a start time:</FormLabel>
-                                <FormControl>
-                                    <RadioGroup
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        className="grid grid-cols-3 md:grid-cols-4 gap-4"
-                                    >
-                                        {timeSlots[timeOfDay as keyof typeof timeSlots].map((slot) => (
-                                            <FormItem key={slot}>
-                                                <FormControl>
-                                                    <RadioGroupItem value={slot} id={slot} className="sr-only" />
-                                                </FormControl>
-                                                <Label htmlFor={slot} className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === slot ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>{slot}</Label>
-                                            </FormItem>
-                                        ))}
-                                    </RadioGroup>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                )}
-
+                
+                <FormField
+                    control={form.control}
+                    name="time"
+                    render={({ field }) => (
+                        <FormItem className="space-y-4">
+                            <FormLabel>Please select a start time:</FormLabel>
+                            <FormControl>
+                                <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="grid grid-cols-3 md:grid-cols-4 gap-4"
+                                >
+                                    {timeSlots.map((slot) => (
+                                        <FormItem key={slot}>
+                                            <FormControl>
+                                                <RadioGroupItem value={slot} id={slot} className="sr-only" />
+                                            </FormControl>
+                                            <Label htmlFor={slot} className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === slot ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>{slot}</Label>
+                                        </FormItem>
+                                    ))}
+                                </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
                 <Separator />
                 
