@@ -132,13 +132,11 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
             }
         } else if (isBowling) {
             const numGames = parseInt(games || '1', 10);
-            let pricePerPerson = 0;
             if (numGames === 1) {
-                pricePerPerson = 6.50;
+                price = totalGuests * 6.50;
             } else { // 2 or 3 games
-                pricePerPerson = 5.00;
+                price = totalGuests * 5.00;
             }
-            price = totalGuests * pricePerPerson;
         } else if (isSoftPlay) {
             price = children * 5; // £5 per child
         }
@@ -189,7 +187,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         <AlertDescription>
                             The form options have been pre-configured for this special offer.
                         </AlertDescription>
-                         <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={handleClearDeal}>
+                         <Button variant="ghost" size="icon" className="absolute top-1/2 -translate-y-1/2 right-2 h-7 w-7 rounded-full bg-accent" onClick={handleClearDeal}>
                              <X className="h-4 w-4" />
                              <span className="sr-only">Clear deal</span>
                          </Button>
