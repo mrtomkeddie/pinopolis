@@ -1,5 +1,4 @@
 
-
 import MultiStepBookingForm from "@/components/multi-step-booking-form";
 import SpecialOffers from "@/components/special-offers";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,10 +18,8 @@ export default function BowlingPage() {
                     </p>
                 </div>
             </div>
-            <div className="grid lg:grid-cols-2 gap-8">
-                 <div className="space-y-8">
-                    <SpecialOffers />
-                </div>
+            <div className="space-y-8">
+                <SpecialOffers />
                 <Card className="shadow-lg w-full">
                     <CardHeader>
                         <CardTitle className="font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Book Your Lane</CardTitle>
