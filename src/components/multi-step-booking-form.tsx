@@ -184,8 +184,8 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         <AlertDescription>
                             The form options have been pre-configured for this special offer.
                         </AlertDescription>
-                        <Button variant="ghost" size="sm" onClick={handleClearDeal} className="absolute top-2 right-2 h-auto px-2 py-1 text-xs">
-                            <X className="mr-1 h-3 w-3" />
+                        <Button variant="ghost" size="sm" onClick={handleClearDeal} className="absolute top-2 right-2 text-xs">
+                             <X className="mr-1 h-3 w-3" />
                             Clear Deal
                         </Button>
                     </Alert>
@@ -215,7 +215,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                     </FormItem>
                                 )}
                             />
-                             {!isWineWednesday && (
+                            {!isWineWednesday && (
                                 <FormField
                                     control={form.control}
                                     name="children"
@@ -237,7 +237,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                         </FormItem>
                                     )}
                                 />
-                             )}
+                            )}
                              {!isSoftPlay && <p className="text-sm text-muted-foreground">For bookings of more than 16 people please email info@pinopolis.wales</p>}
                         </div>
 
