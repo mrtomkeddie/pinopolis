@@ -25,11 +25,15 @@ const timeSlots = {
 };
 
 const formSchema = z.object({
-  guests: z.coerce.number().min(1, { message: "Must have at least 1 guest." }).max(16, { message: "There is a maximum of 16 players per reservation." }),
+  adults: z.coerce.number().min(1, { message: "Must have at least 1 adult." }),
+  children: z.coerce.number().min(0),
   games: z.string({ required_error: "Please select the number of games." }),
   date: z.date({ required_error: "A date is required." }),
   timeOfDay: z.string({ required_error: "Please select a time of day." }),
   time: z.string({ required_error: "A time slot is required." }),
+}).refine(data => data.adults + data.children <= 16, {
+    message: "There is a maximum of 16 players per reservation.",
+    path: ["adults"],
 });
 
 type BookingFormProps = {
@@ -43,17 +47,22 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            guests: 1,
+            adults: 1,
+            children: 0,
         },
     });
 
     const timeOfDay = form.watch("timeOfDay");
+    const adults = form.watch("adults");
+    const children = form.watch("children");
+
+    const totalGuests = adults + children;
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
         toast({
             title: "Booking Confirmed!",
-            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} at ${values.time} for ${values.guests} guest(s) is confirmed.`,
+            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} guest(s) is confirmed.`,
         });
         router.push('/bookings');
     }
@@ -62,44 +71,83 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 
-                <FormField
-                    control={form.control}
-                    name="guests"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>How many guests would you like to reserve for?</FormLabel>
-                            <FormControl>
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="icon"
-                                        className="h-10 w-10"
-                                        onClick={() => form.setValue('guests', Math.max(1, field.value - 1))}
-                                        disabled={field.value <= 1}
-                                    >
-                                        <Minus className="h-4 w-4" />
-                                    </Button>
-                                    <Input {...field} readOnly className="text-center" />
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="icon"
-                                        className="h-10 w-10"
-                                        onClick={() => form.setValue('guests', Math.min(16, field.value + 1))}
-                                        disabled={field.value >= 16}
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            </FormControl>
-                            <FormMessage />
-                            <p className="text-sm text-muted-foreground">
-                                For bookings of more than 16 people please email info@pinopolis.wales
-                            </p>
-                        </FormItem>
-                    )}
-                />
+                <div className="space-y-4">
+                    <FormLabel>How many guests would you like to reserve for?</FormLabel>
+                    <FormField
+                        control={form.control}
+                        name="adults"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="font-normal">Adults</FormLabel>
+                                <FormControl>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="icon"
+                                            className="h-10 w-10"
+                                            onClick={() => form.setValue('adults', Math.max(1, field.value - 1))}
+                                            disabled={field.value <= 1}
+                                        >
+                                            <Minus className="h-4 w-4" />
+                                        </Button>
+                                        <Input {...field} readOnly className="text-center" />
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="icon"
+                                            className="h-10 w-10"
+                                            onClick={() => form.setValue('adults', Math.min(16, field.value + 1))}
+                                            disabled={totalGuests >= 16}
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                     <FormField
+                        control={form.control}
+                        name="children"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="font-normal">Children</FormLabel>
+                                <FormControl>
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="icon"
+                                            className="h-10 w-10"
+                                            onClick={() => form.setValue('children', Math.max(0, field.value - 1))}
+                                            disabled={field.value <= 0}
+                                        >
+                                            <Minus className="h-4 w-4" />
+                                        </Button>
+                                        <Input {...field} readOnly className="text-center" />
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="icon"
+                                            className="h-10 w-10"
+                                            onClick={() => form.setValue('children', Math.min(15, field.value + 1))}
+                                            disabled={totalGuests >= 16}
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <p className="text-sm text-muted-foreground">
+                        For bookings of more than 16 people please email info@pinopolis.wales
+                    </p>
+                </div>
+
 
                 <Separator />
 
