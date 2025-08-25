@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,8 +101,6 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                 pricePerPerson = 5.00;
             }
             price = totalGuests * pricePerPerson;
-        } else if (activityTitle === "AR Darts") {
-            price = totalGuests * (activityPricing as any).perPerson;
         } else if (isSoftPlay) {
             price = children * (activityPricing as any).child;
         }
