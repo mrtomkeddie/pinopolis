@@ -35,7 +35,7 @@ export default function BookingsPage() {
             </div>
 
             {!showBookings ? (
-                 <Card className="max-w-md mx-auto shadow-lg">
+                 <Card className="w-full shadow-lg">
                     <CardHeader>
                         <CardTitle className="font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Find Your Bookings</CardTitle>
                         <CardDescription>Enter your details to retrieve your upcoming bookings.</CardDescription>
