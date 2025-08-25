@@ -8,7 +8,7 @@ export default function SoftPlayPage() {
         <div className="space-y-8 max-w-6xl mx-auto">
              <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-lg">
-                    <Image src="https://placehold.co/600x400.png" alt="Soft Play Area" layout="fill" objectFit="cover" data-ai-hint="kids playground" />
+                    <Image src="/softplay.jpg" alt="Soft Play Area" layout="fill" objectFit="cover" />
                 </div>
                 <div className="space-y-4">
                     <h1 className="text-4xl font-headline text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]">Soft Play Scheduling</h1>
