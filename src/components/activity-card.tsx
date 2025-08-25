@@ -24,7 +24,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
         </div>
       </CardHeader>
       <CardContent className="p-6 flex-grow">
-        <CardTitle className="text-2xl font-bold">{activity.title}</CardTitle>
+        <CardTitle className="text-2xl font-headline">{activity.title}</CardTitle>
         <CardDescription className="mt-2 text-muted-foreground">{activity.description}</CardDescription>
       </CardContent>
       <CardFooter className="p-6 pt-0">

@@ -51,7 +51,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
                 </div>
             </CardHeader>
             <CardContent className="p-4 flex-grow">
-                <h3 className="text-xl font-bold">{booking.activity}</h3>
+                <h3 className="text-xl font-headline">{booking.activity}</h3>
                 <div className="mt-4 space-y-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
@@ -77,7 +77,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogTitle className="font-headline">Are you sure?</AlertDialogTitle>
                             <AlertDialogDescription>
                                 This action cannot be undone. This will permanently cancel your booking
                                 for {booking.activity} on {format(booking.date, 'PPP')} at {booking.time}.

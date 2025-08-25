@@ -9,14 +9,14 @@ export default function DartsPage() {
                 <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
                     <Image src="https://placehold.co/600x400.png" alt="AR Darts" layout="fill" objectFit="cover" data-ai-hint="dart board" />
                 </div>
-                <h1 className="text-3xl font-bold">AR Darts Reservation</h1>
+                <h1 className="text-4xl font-headline">AR Darts Reservation</h1>
                 <p className="text-muted-foreground">
                     Challenge your friends to a game of AR Darts! Our interactive dartboards bring a classic pub game to life with exciting animations, multiple game modes, and instant scoring. It's a whole new way to play.
                 </p>
             </div>
             <Card className="shadow-lg">
                 <CardHeader>
-                    <CardTitle>Reserve AR Darts</CardTitle>
+                    <CardTitle className="font-headline">Reserve AR Darts</CardTitle>
                     <CardDescription>Select your details and aim for the bullseye.</CardDescription>
                 </CardHeader>
                 <CardContent>

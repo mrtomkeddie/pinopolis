@@ -8,8 +8,8 @@ export default function BookingsPage() {
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">Your Upcoming Adventures</h1>
-                <p className="text-muted-foreground">Manage your bookings here. We can't wait to see you!</p>
+                <h1 className="text-4xl font-headline tracking-tight">Your Upcoming Adventures</h1>
+                <p className="text-muted-foreground mt-2">Manage your bookings here. We can't wait to see you!</p>
             </div>
             {upcomingBookings.length > 0 ? (
                 <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
@@ -19,7 +19,7 @@ export default function BookingsPage() {
                 </div>
             ) : (
                 <div className="text-center py-16 rounded-lg border-2 border-dashed">
-                    <h2 className="text-xl font-semibold">No upcoming bookings</h2>
+                    <h2 className="text-xl font-semibold font-headline">No upcoming bookings</h2>
                     <p className="text-muted-foreground mt-2">Time to plan your next adventure!</p>
                 </div>
             )}
