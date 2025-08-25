@@ -64,16 +64,10 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         resolver: zodResolver(formSchema),
         defaultValues: {
             adults: isBowling ? 1 : 0,
-            children: 1,
+            children: isBowling ? 0 : 1,
             games: isBowling ? "1" : undefined,
         },
     });
-    
-    // Set a default of 1 child if it's not bowling and no adults are selected
-    if (!isBowling && form.getValues("adults") === 0 && form.getValues("children") === 0) {
-        form.setValue("children", 1);
-    }
-    
 
     const adults = form.watch("adults");
     const children = form.watch("children");
@@ -89,8 +83,6 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         });
         router.push('/bookings');
     }
-
-    const stepCounter = isBowling ? 4 : 3;
 
     return (
         <Form {...form}>
@@ -263,7 +255,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                             name="time"
                             render={({ field }) => (
                                 <FormItem className="space-y-4">
-                                    <FormLabel>Step {stepCounter}: Please select a start time:</FormLabel>
+                                    <FormLabel>Step {isBowling ? '4' : '3'}: Please select a start time:</FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}

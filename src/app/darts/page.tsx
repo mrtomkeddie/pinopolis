@@ -1,5 +1,5 @@
 
-import BookingForm from "@/components/booking-form";
+import MultiStepBookingForm from "@/components/multi-step-booking-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
@@ -23,7 +23,7 @@ export default function DartsPage() {
                     <CardDescription>Select your details and aim for the bullseye.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <BookingForm activityTitle="AR Darts" />
+                    <MultiStepBookingForm activityTitle="AR Darts" />
                 </CardContent>
             </Card>
         </div>

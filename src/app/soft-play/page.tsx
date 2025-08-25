@@ -1,5 +1,5 @@
 
-import BookingForm from "@/components/booking-form";
+import MultiStepBookingForm from "@/components/multi-step-booking-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
@@ -23,7 +23,7 @@ export default function SoftPlayPage() {
                     <CardDescription>Book a play session for your children.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <BookingForm activityTitle="Soft Play" />
+                    <MultiStepBookingForm activityTitle="Soft Play" />
                 </CardContent>
             </Card>
         </div>
