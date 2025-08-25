@@ -7,11 +7,10 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-2xl shadow-primary/20">
         <Image
-          src="https://placehold.co/1200x400.png"
-          alt="Pinopolis interior"
+          src="/banner.jpeg"
+          alt="Pinopolis banner"
           layout="fill"
           objectFit="cover"
-          data-ai-hint="entertainment center"
           priority
         />
         <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center p-4">
