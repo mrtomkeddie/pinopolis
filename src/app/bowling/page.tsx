@@ -13,7 +13,7 @@ export default function BowlingPage() {
                 <div className="space-y-4">
                     <h1 className="text-4xl font-headline text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]">Bowling Lane Booking</h1>
                     <p className="text-muted-foreground">
-                        Step up to one of our state-of-the-art bowling lanes. Perfect for all ages and skill levels, our lanes feature automatic scoring, bumper guards for the little ones, and a vibrant atmosphere. Reserve your lane now for an unforgettable experience!
+                        Step up to one of our state-of-the-art bowling lanes, Wales’ first and only immersive Brunswick Spark Bowling Lanes. Perfect for all ages and skill levels, our lanes feature automatic scoring, bumper guards for the little ones, and a vibrant atmosphere. Reserve your lane now for an unforgettable experience!
                     </p>
                 </div>
             </div>
