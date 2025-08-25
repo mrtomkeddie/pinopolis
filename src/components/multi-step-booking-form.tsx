@@ -184,7 +184,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         <AlertDescription>
                             The form options have been pre-configured for this special offer.
                         </AlertDescription>
-                        <Button variant="ghost" size="sm" onClick={handleClearDeal} className="absolute top-2 right-2 text-xs">
+                        <Button variant="ghost" size="sm" onClick={handleClearDeal} className="absolute top-1/2 right-2 -translate-y-1/2 text-xs">
                              <X className="mr-1 h-3 w-3" />
                             Clear Deal
                         </Button>
