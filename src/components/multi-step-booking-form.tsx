@@ -55,6 +55,7 @@ const formSchema = z.object({
   adults: z.coerce.number().min(0),
   children: z.coerce.number().min(0),
   games: z.string().optional(),
+  wine: z.string().optional(),
   date: z.date({ required_error: "A date is required." }),
   time: z.string({ required_error: "A time slot is required." }),
 }).refine(data => {
@@ -87,6 +88,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
 
     const isBowling = activityTitle === "Bowling";
     const isSoftPlay = activityTitle === "Soft Play";
+    const isWineWednesday = dealId === 'wine-wednesday';
     
     const [totalPrice, setTotalPrice] = useState(0);
 
@@ -96,14 +98,19 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
             adults: isBowling || isSoftPlay ? 1 : 0,
             children: isBowling ? 0 : 1,
             games: deal ? deal.games : (isBowling ? "1" : undefined),
+            wine: isWineWednesday ? "White" : undefined,
         },
     });
     
     useEffect(() => {
         if (deal) {
             form.setValue('games', deal.games);
+            if (isWineWednesday) {
+                form.setValue('adults', 2);
+                form.setValue('children', 0);
+            }
         }
-    }, [deal, form]);
+    }, [deal, form, isWineWednesday]);
 
     const adults = form.watch("adults");
     const children = form.watch("children");
@@ -142,10 +149,17 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
-        const dealTitle = deal ? ` (${deal.title})` : '';
+        let dealDescription = deal ? ` (${deal.title}` : '';
+        if (isWineWednesday && values.wine) {
+            dealDescription += ` - ${values.wine} Wine`;
+        }
+        if (deal) {
+            dealDescription += ')';
+        }
+
         toast({
             title: "Booking Confirmed!",
-            description: `Your booking for ${activityTitle}${dealTitle} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} guest(s) is confirmed. Total: £${totalPrice.toFixed(2)}`,
+            description: `Your booking for ${activityTitle}${dealDescription} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} guest(s) is confirmed. Total: £${totalPrice.toFixed(2)}`,
         });
         router.push('/bookings');
     }
@@ -185,7 +199,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                         <FormLabel className="font-normal">Adults {isSoftPlay && "(Go Free)"}</FormLabel>
                                         <FormControl>
                                             <div className="flex items-center gap-2">
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isBowling || isSoftPlay ? 1 : 0, field.value - 1))} disabled={field.value <= (isBowling || isSoftPlay ? 1 : 0)}>
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0), field.value - 1))} disabled={field.value <= (isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0))}>
                                                     <Minus className="h-4 w-4" />
                                                 </Button>
                                                 <Input {...field} readOnly className="text-center" />
@@ -206,11 +220,11 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                         <FormLabel className="font-normal">Children</FormLabel>
                                         <FormControl>
                                             <div className="flex items-center gap-2">
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(0, field.value - 1))} disabled={field.value <= 0}>
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(0, field.value - 1))} disabled={field.value <= 0 || isWineWednesday}>
                                                     <Minus className="h-4 w-4" />
                                                 </Button>
                                                 <Input {...field} readOnly className="text-center" />
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.min(16, field.value + 1))} disabled={totalGuests >= 16}>
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.min(16, field.value + 1))} disabled={totalGuests >= 16 || isWineWednesday}>
                                                     <Plus className="h-4 w-4" />
                                                 </Button>
                                             </div>
@@ -221,8 +235,46 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                             />
                              {!isSoftPlay && <p className="text-sm text-muted-foreground">For bookings of more than 16 people please email info@pinopolis.wales</p>}
                         </div>
+
+                        {isWineWednesday && (
+                             <>
+                                <Separator />
+                                <FormField
+                                    control={form.control}
+                                    name="wine"
+                                    render={({ field }) => (
+                                        <FormItem className="space-y-4">
+                                            <FormLabel>Step 2: What kind of wine would you like?</FormLabel>
+                                            <FormControl>
+                                                <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-4">
+                                                    <FormItem>
+                                                        <FormControl>
+                                                            <RadioGroupItem value="White" id="wine-white" className="sr-only" />
+                                                        </FormControl>
+                                                        <Label htmlFor="wine-white" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'White' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>White</Label>
+                                                    </FormItem>
+                                                     <FormItem>
+                                                        <FormControl>
+                                                            <RadioGroupItem value="Red" id="wine-red" className="sr-only" />
+                                                        </FormControl>
+                                                        <Label htmlFor="wine-red" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'Red' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>Red</Label>
+                                                    </FormItem>
+                                                     <FormItem>
+                                                        <FormControl>
+                                                            <RadioGroupItem value="Rose" id="wine-rose" className="sr-only" />
+                                                        </FormControl>
+                                                        <Label htmlFor="wine-rose" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'Rose' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>Rosé</Label>
+                                                    </FormItem>
+                                                </RadioGroup>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </>
+                        )}
         
-                        {isBowling && (
+                        {isBowling && !isWineWednesday && (
                             <>
                                 <Separator />
                                 <FormField
@@ -263,7 +315,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         <Separator />
         
                         <div className="space-y-4">
-                            <FormLabel>Step {isBowling ? '3' : '2'}: When would you like to reserve?</FormLabel>
+                            <FormLabel>Step {isBowling ? (isWineWednesday ? 3 : 3) : 2}: When would you like to reserve?</FormLabel>
                             <FormField
                                 control={form.control}
                                 name="date"
@@ -302,7 +354,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                             name="time"
                             render={({ field }) => (
                                 <FormItem className="space-y-4">
-                                    <FormLabel>Step {isBowling ? '4' : '3'}: Please select a start time:</FormLabel>
+                                    <FormLabel>Step {isBowling ? (isWineWednesday ? 4 : 4) : 3}: Please select a start time:</FormLabel>
                                     <FormControl>
                                         <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-3 md:grid-cols-4 gap-4" disabled={!date}>
                                             {timeSlots.map((slot) => (
