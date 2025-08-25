@@ -5,7 +5,9 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BadgeDollarSign, PartyPopper } from 'lucide-react';
+import { BadgeDollarSign, PartyPopper, ArrowRight } from 'lucide-react';
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 const deals = [
     {
@@ -57,11 +59,19 @@ export default function SpecialOffers() {
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <ul className="space-y-1 pl-4 list-disc text-muted-foreground">
-                                    {deal.details.map((line, i) => (
-                                        <li key={i}>{line}</li>
-                                    ))}
-                                </ul>
+                                <div className="space-y-4">
+                                    <ul className="space-y-1 pl-4 list-disc text-muted-foreground">
+                                        {deal.details.map((line, i) => (
+                                            <li key={i}>{line}</li>
+                                        ))}
+                                    </ul>
+                                    <Button asChild className="w-full">
+                                        <Link href="/bowling">
+                                            Book This Deal
+                                            <ArrowRight className="ml-2 h-4 w-4" />
+                                        </Link>
+                                    </Button>
+                                </div>
                             </AccordionContent>
                         </AccordionItem>
                     ))}
