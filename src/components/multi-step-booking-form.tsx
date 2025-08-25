@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
+import { useEffect, useState } from "react";
 
 const timeSlots = [
     "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
@@ -55,10 +56,20 @@ type BookingFormProps = {
     activityTitle: string;
 };
 
+// Pricing configuration
+const pricing = {
+    "Bowling": { adult: 8, child: 6, perGame: true },
+    "AR Darts": { adult: 7, child: 7, perGame: false },
+    "Soft Play": { adult: 0, child: 5, perGame: false },
+};
+
 export default function MultiStepBookingForm({ activityTitle }: BookingFormProps) {
     const { toast } = useToast();
     const router = useRouter();
     const isBowling = activityTitle === "Bowling";
+    const isSoftPlay = activityTitle === "Soft Play";
+    const activityPricing = pricing[activityTitle as keyof typeof pricing] || { adult: 7, child: 7, perGame: false };
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -69,17 +80,33 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         },
     });
 
+    const [totalPrice, setTotalPrice] = useState(0);
+
     const adults = form.watch("adults");
     const children = form.watch("children");
+    const games = form.watch("games");
     const date = form.watch("date");
 
     const totalGuests = adults + children;
+
+    useEffect(() => {
+        let price = 0;
+        const numGames = parseInt(games || '1', 10);
+
+        if (activityPricing.perGame) {
+            price = (adults * activityPricing.adult + children * activityPricing.child) * numGames;
+        } else {
+            price = adults * activityPricing.adult + children * activityPricing.child;
+        }
+        setTotalPrice(price);
+    }, [adults, children, games, activityPricing]);
+
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
         toast({
             title: "Booking Confirmed!",
-            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} guest(s) is confirmed.`,
+            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} guest(s) is confirmed. Total: £${totalPrice.toFixed(2)}`,
         });
         router.push('/bookings');
     }
@@ -96,7 +123,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                 name="adults"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="font-normal">Adults</FormLabel>
+                                        <FormLabel className="font-normal">Adults {isSoftPlay && "(Go Free)"}</FormLabel>
                                         <FormControl>
                                             <div className="flex items-center gap-2">
                                                 <Button
@@ -283,7 +310,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                 <Separator />
                 
                 <div className="text-right font-bold text-lg">
-                    Total amount: £0.00
+                    Total amount: £{totalPrice.toFixed(2)}
                 </div>
 
                 <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Confirm Booking</Button>
@@ -291,3 +318,5 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         </Form>
     );
 }
+
+    
