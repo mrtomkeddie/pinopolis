@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
-import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
-import AppSidebarContent from '@/components/layout/sidebar-content';
+import TopNav from '@/components/layout/top-nav';
 
 export const metadata: Metadata = {
   title: 'Pinopolis',
@@ -26,18 +25,12 @@ export default function RootLayout({
         />
       </head>
       <body className={cn('font-body antialiased')}>
-        <SidebarProvider defaultOpen>
-          <Sidebar>
-            <AppSidebarContent />
-          </Sidebar>
-          <SidebarInset>
-            <div className="flex flex-col min-h-screen">
-                <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background">
-                    {children}
-                </main>
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
+        <div className="flex flex-col min-h-screen bg-background">
+          <TopNav />
+          <main className="flex-1 p-4 sm:p-6 lg:p-8">
+            {children}
+          </main>
+        </div>
         <Toaster />
       </body>
     </html>
