@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Minus, Plus } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -15,36 +15,18 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Separator } from "./ui/separator";
+import { Input } from "./ui/input";
 
 const formSchema = z.object({
-  adults: z.string({ required_error: "Please select the number of adults." }),
-  juniors: z.string({ required_error: "Please select the number of juniors." }),
+  guests: z.coerce.number().min(1, { message: "Must have at least 1 guest." }).max(16, { message: "There is a maximum of 16 players per reservation." }),
   games: z.string({ required_error: "Please select the number of games." }),
   date: z.date({ required_error: "A date is required." }),
   time: z.string({ required_error: "A time slot is required." }),
-}).refine(data => parseInt(data.adults) + parseInt(data.juniors) > 0, {
-    message: "You must select at least one guest.",
-    path: ["adults"],
-}).refine(data => parseInt(data.adults) + parseInt(data.juniors) <= 16, {
-    message: "There is a maximum of 16 players per reservation.",
-    path: ["adults"],
 });
-
 
 type BookingFormProps = {
     activityTitle: string;
 };
-
-const GuestSelectItem = ({ value, isSelected, onClick }: { value: number, isSelected: boolean, onClick: () => void }) => (
-    <Button
-        type="button"
-        variant={isSelected ? "default" : "outline"}
-        onClick={onClick}
-        className="h-10 w-10"
-    >
-        {value}
-    </Button>
-);
 
 export default function BowlingBookingForm({ activityTitle }: BookingFormProps) {
     const { toast } = useToast();
@@ -53,8 +35,7 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            adults: "0",
-            juniors: "0",
+            guests: 1,
         },
     });
 
@@ -62,67 +43,53 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
         console.log(values);
         toast({
             title: "Booking Confirmed!",
-            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} for ${values.adults} adult(s) and ${values.juniors} junior(s) is confirmed.`,
+            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} for ${values.guests} guest(s) is confirmed.`,
         });
         router.push('/bookings');
     }
-
-    const totalPlayers = parseInt(form.watch('adults') || '0') + parseInt(form.watch('juniors') || '0');
-
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 
-                <div className="space-y-4">
-                    <FormLabel>How many guests would you like to reserve for?</FormLabel>
-                    <FormField
-                        control={form.control}
-                        name="adults"
-                        render={({ field }) => (
-                            <FormItem className="space-y-2">
-                                <FormLabel className="font-normal text-muted-foreground">Adults:</FormLabel>
-                                <FormControl>
-                                    <div className="flex flex-wrap gap-2">
-                                        {Array.from({ length: 17 }, (_, i) => (
-                                            <GuestSelectItem
-                                                key={`adults-${i}`}
-                                                value={i}
-                                                isSelected={field.value === i.toString()}
-                                                onClick={() => field.onChange(i.toString())}
-                                            />
-                                        ))}
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="juniors"
-                        render={({ field }) => (
-                            <FormItem className="space-y-2">
-                                <FormLabel className="font-normal text-muted-foreground">Juniors:</FormLabel>
-                                <FormControl>
-                                    <div className="flex flex-wrap gap-2">
-                                        {Array.from({ length: 17 }, (_, i) => (
-                                            <GuestSelectItem
-                                                key={`juniors-${i}`}
-                                                value={i}
-                                                isSelected={field.value === i.toString()}
-                                                onClick={() => field.onChange(i.toString())}
-                                            />
-                                        ))}
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                     <FormMessage>{form.formState.errors.adults?.message}</FormMessage>
-                     <p className="text-sm text-muted-foreground">
-                        There is a maximum of 16 players per reservation. For bookings of more than 16 people please email info@pinopolis.wales
-                    </p>
-                </div>
+                <FormField
+                    control={form.control}
+                    name="guests"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>How many guests would you like to reserve for?</FormLabel>
+                            <FormControl>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-10 w-10"
+                                        onClick={() => form.setValue('guests', Math.max(1, field.value - 1))}
+                                        disabled={field.value <= 1}
+                                    >
+                                        <Minus className="h-4 w-4" />
+                                    </Button>
+                                    <Input {...field} readOnly className="text-center" />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-10 w-10"
+                                        onClick={() => form.setValue('guests', Math.min(16, field.value + 1))}
+                                        disabled={field.value >= 16}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </FormControl>
+                            <FormMessage />
+                            <p className="text-sm text-muted-foreground">
+                                For bookings of more than 16 people please email info@pinopolis.wales
+                            </p>
+                        </FormItem>
+                    )}
+                />
 
                 <Separator />
 
