@@ -20,6 +20,9 @@ export default function BowlingPage() {
                 </div>
             </div>
             <div className="grid lg:grid-cols-2 gap-8">
+                 <div className="space-y-8">
+                    <SpecialOffers />
+                </div>
                 <Card className="shadow-lg w-full">
                     <CardHeader>
                         <CardTitle className="font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Book Your Lane</CardTitle>
@@ -29,9 +32,6 @@ export default function BowlingPage() {
                         <MultiStepBookingForm activityTitle="Bowling" />
                     </CardContent>
                 </Card>
-                <div className="w-full">
-                    <SpecialOffers />
-                </div>
             </div>
         </div>
     );
