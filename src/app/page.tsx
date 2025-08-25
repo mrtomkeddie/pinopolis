@@ -1,5 +1,6 @@
 import ActivityCard from '@/components/activity-card';
 import ActivitySuggestions from '@/components/activity-suggestions';
+import OpeningHours from '@/components/opening-hours';
 import { activities } from '@/lib/data';
 
 export default function DashboardPage() {
@@ -16,7 +17,10 @@ export default function DashboardPage() {
         ))}
       </div>
       
-      <ActivitySuggestions />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <ActivitySuggestions />
+        <OpeningHours />
+      </div>
     </div>
   );
 }
