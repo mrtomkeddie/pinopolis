@@ -93,15 +93,21 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         const numGames = parseInt(games || '1', 10);
 
         if (isBowling) {
-            price = (adults + children) * (activityPricing as any).perPerson * numGames;
+            let pricePerPerson = 0;
+            if (numGames === 1) {
+                pricePerPerson = 6.50;
+            } else {
+                pricePerPerson = 5.00;
+            }
+            price = totalGuests * pricePerPerson;
         } else if (activityTitle === "AR Darts") {
-            price = (adults + children) * (activityPricing as any).perPerson;
+            price = totalGuests * (activityPricing as any).perPerson;
         } else if (isSoftPlay) {
             price = children * (activityPricing as any).child;
         }
 
         setTotalPrice(price);
-    }, [adults, children, games, activityPricing, isBowling, isSoftPlay, activityTitle]);
+    }, [adults, children, games, totalGuests, activityPricing, isBowling, isSoftPlay, activityTitle]);
 
 
     function onSubmit(values: z.infer<typeof formSchema>) {
