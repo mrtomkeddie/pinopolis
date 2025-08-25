@@ -187,10 +187,10 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         <AlertDescription>
                             The form options have been pre-configured for this special offer.
                         </AlertDescription>
-                         <Button variant="ghost" size="icon" className="absolute top-1/2 -translate-y-1/2 right-2 h-7 w-7 rounded-full bg-accent" onClick={handleClearDeal}>
+                         <button type="button" className="absolute top-1/2 -translate-y-1/2 right-2 h-7 w-7 rounded-full bg-accent flex items-center justify-center" onClick={handleClearDeal}>
                              <X className="h-4 w-4" />
                              <span className="sr-only">Clear deal</span>
-                         </Button>
+                         </button>
                     </Alert>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
