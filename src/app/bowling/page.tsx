@@ -8,7 +8,7 @@ export default function BowlingPage() {
         <div className="space-y-8 max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-lg">
-                    <Image src="https://placehold.co/600x400.png" alt="Bowling alley" layout="fill" objectFit="cover" data-ai-hint="bowling alley" />
+                    <Image src="/bowling.jpg" alt="Bowling alley" layout="fill" objectFit="cover" />
                 </div>
                 <div className="space-y-4">
                     <h1 className="text-4xl font-headline text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]">Bowling Lane Booking</h1>
