@@ -11,6 +11,7 @@ import Link from "next/link";
 
 const deals = [
     {
+        id: 'money-saving-monday',
         title: 'Money Saving Monday!',
         details: [
             '1 Game of Bowling & any pint.',
@@ -20,6 +21,7 @@ const deals = [
         ],
     },
     {
+        id: 'triple-tuesday',
         title: 'Triple Tuesday!',
         details: [
             '2 Games of Bowling per group & 1 O.G Burger per person.',
@@ -28,6 +30,7 @@ const deals = [
         ],
     },
     {
+        id: 'wine-wednesday',
         title: 'Wine Wednesday!',
         details: [
             'A bottle of rose, white or red wine & a game of bowling for 2 guests.',
@@ -66,7 +69,7 @@ export default function SpecialOffers() {
                                         ))}
                                     </ul>
                                     <Button asChild className="w-full">
-                                        <Link href="/bowling">
+                                        <Link href={`/bowling?deal=${deal.id}`}>
                                             Book This Deal
                                             <ArrowRight className="ml-2 h-4 w-4" />
                                         </Link>

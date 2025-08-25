@@ -8,17 +8,18 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus } from "lucide-react";
+import { CalendarIcon, Minus, Plus, AlertCircle } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const timeSlots = [
     "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
@@ -29,16 +30,35 @@ const timeSlots = [
     "8:00 PM", "8:15 PM", "8:30 PM"
 ];
 
+const deals = {
+    'money-saving-monday': {
+        title: 'Money Saving Monday',
+        games: '1',
+        pricePerPerson: 6,
+        day: 1, // 0 is Sunday, 1 is Monday
+    },
+    'triple-tuesday': {
+        title: 'Triple Tuesday',
+        games: '2',
+        pricePerPerson: 15,
+        day: 2,
+    },
+    'wine-wednesday': {
+        title: 'Wine Wednesday',
+        games: '1',
+        day: 3,
+        // Special pricing logic will be handled separately
+    },
+};
+
 const formSchema = z.object({
   adults: z.coerce.number().min(0),
   children: z.coerce.number().min(0),
-  // Games is optional as it only applies to bowling
   games: z.string().optional(),
   date: z.date({ required_error: "A date is required." }),
   time: z.string({ required_error: "A time slot is required." }),
 }).refine(data => {
-    // For bowling, at least one adult is required.
-    if (data.games) {
+    if (data.games) { // Bowling validation
         return data.adults >= 1;
     }
     return true;
@@ -53,78 +73,110 @@ const formSchema = z.object({
     path: ["adults"],
 });
 
+
 type BookingFormProps = {
     activityTitle: string;
-};
-
-// Pricing configuration
-const pricing = {
-    "Bowling": { perPerson: 6.50, perGame: true },
-    "AR Darts": { perPerson: 7, perGame: false },
-    "Soft Play": { adult: 0, child: 5, perGame: false },
 };
 
 export default function MultiStepBookingForm({ activityTitle }: BookingFormProps) {
     const { toast } = useToast();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const dealId = searchParams.get('deal');
+    const deal = useMemo(() => dealId ? deals[dealId as keyof typeof deals] : null, [dealId]);
+
     const isBowling = activityTitle === "Bowling";
     const isSoftPlay = activityTitle === "Soft Play";
-    const activityPricing = pricing[activityTitle as keyof typeof pricing];
+    
+    const [totalPrice, setTotalPrice] = useState(0);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            adults: isBowling ? 1 : (isSoftPlay ? 1 : 0),
+            adults: isBowling || isSoftPlay ? 1 : 0,
             children: isBowling ? 0 : 1,
-            games: isBowling ? "1" : undefined,
+            games: deal ? deal.games : (isBowling ? "1" : undefined),
         },
     });
-
-    const [totalPrice, setTotalPrice] = useState(0);
+    
+    useEffect(() => {
+        if (deal) {
+            form.setValue('games', deal.games);
+        }
+    }, [deal, form]);
 
     const adults = form.watch("adults");
     const children = form.watch("children");
     const games = form.watch("games");
     const date = form.watch("date");
-
     const totalGuests = adults + children;
 
     useEffect(() => {
         let price = 0;
-        const numGames = parseInt(games || '1', 10);
 
-        if (isBowling) {
+        if (deal) {
+            if (dealId === 'wine-wednesday') {
+                price = 15; // Base for 2 guests
+                if (totalGuests > 2) {
+                    price += (totalGuests - 2) * 3;
+                }
+            } else if (deal.pricePerPerson) {
+                price = totalGuests * deal.pricePerPerson;
+            }
+        } else if (isBowling) {
+            const numGames = parseInt(games || '1', 10);
             let pricePerPerson = 0;
             if (numGames === 1) {
                 pricePerPerson = 6.50;
-            } else {
+            } else { // 2 or 3 games
                 pricePerPerson = 5.00;
             }
             price = totalGuests * pricePerPerson;
         } else if (isSoftPlay) {
-            price = children * (activityPricing as any).child;
+            price = children * 5; // £5 per child
         }
 
         setTotalPrice(price);
-    }, [adults, children, games, totalGuests, activityPricing, isBowling, isSoftPlay, activityTitle]);
+    }, [adults, children, games, totalGuests, isBowling, isSoftPlay, deal, dealId]);
 
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
+        const dealTitle = deal ? ` (${deal.title})` : '';
         toast({
             title: "Booking Confirmed!",
-            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} guest(s) is confirmed. Total: £${totalPrice.toFixed(2)}`,
+            description: `Your booking for ${activityTitle}${dealTitle} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} guest(s) is confirmed. Total: £${totalPrice.toFixed(2)}`,
         });
         router.push('/bookings');
     }
+    
+    const isDateDisabled = (d: Date) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to start of today for comparison
+        if (d < today) return true; // Disable past dates
+        if (deal && d.getDay() !== deal.day) {
+            return true; // Disable dates that don't match the deal's day
+        }
+        return false;
+    };
+
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {deal && (
+                     <Alert variant="default" className="border-primary">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle className="font-headline text-primary">You're booking the {deal.title} deal!</AlertTitle>
+                        <AlertDescription>
+                            The form options have been pre-configured for this special offer.
+                        </AlertDescription>
+                    </Alert>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-6">
                         <div className="space-y-4">
-                            <FormLabel>Step 1: How many guests would you like to reserve for?</FormLabel>
+                            <FormLabel>Step 1: How many guests?</FormLabel>
                             <FormField
                                 control={form.control}
                                 name="adults"
@@ -133,25 +185,11 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                         <FormLabel className="font-normal">Adults {isSoftPlay && "(Go Free)"}</FormLabel>
                                         <FormControl>
                                             <div className="flex items-center gap-2">
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    size="icon"
-                                                    className="h-10 w-10"
-                                                    onClick={() => form.setValue('adults', Math.max(isBowling || isSoftPlay ? 1 : 0, field.value - 1))}
-                                                    disabled={field.value <= (isBowling || isSoftPlay ? 1 : 0)}
-                                                >
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isBowling || isSoftPlay ? 1 : 0, field.value - 1))} disabled={field.value <= (isBowling || isSoftPlay ? 1 : 0)}>
                                                     <Minus className="h-4 w-4" />
                                                 </Button>
                                                 <Input {...field} readOnly className="text-center" />
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    size="icon"
-                                                    className="h-10 w-10"
-                                                    onClick={() => form.setValue('adults', Math.min(16, field.value + 1))}
-                                                    disabled={totalGuests >= 16}
-                                                >
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.min(16, field.value + 1))} disabled={totalGuests >= 16}>
                                                     <Plus className="h-4 w-4" />
                                                 </Button>
                                             </div>
@@ -168,25 +206,11 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                         <FormLabel className="font-normal">Children</FormLabel>
                                         <FormControl>
                                             <div className="flex items-center gap-2">
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    size="icon"
-                                                    className="h-10 w-10"
-                                                    onClick={() => form.setValue('children', Math.max(0, field.value - 1))}
-                                                    disabled={field.value <= 0}
-                                                >
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(0, field.value - 1))} disabled={field.value <= 0}>
                                                     <Minus className="h-4 w-4" />
                                                 </Button>
                                                 <Input {...field} readOnly className="text-center" />
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    size="icon"
-                                                    className="h-10 w-10"
-                                                    onClick={() => form.setValue('children', Math.min(16, field.value + 1))}
-                                                    disabled={totalGuests >= 16}
-                                                >
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.min(16, field.value + 1))} disabled={totalGuests >= 16}>
                                                     <Plus className="h-4 w-4" />
                                                 </Button>
                                             </div>
@@ -195,6 +219,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                     </FormItem>
                                 )}
                             />
+                             {!isSoftPlay && <p className="text-sm text-muted-foreground">For bookings of more than 16 people please email info@pinopolis.wales</p>}
                         </div>
         
                         {isBowling && (
@@ -205,30 +230,26 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                     name="games"
                                     render={({ field }) => (
                                         <FormItem className="space-y-4">
-                                            <FormLabel>Step 2: How many games would you like to reserve?</FormLabel>
+                                            <FormLabel>Step 2: How many games?</FormLabel>
                                             <FormControl>
-                                                <RadioGroup
-                                                    onValueChange={field.onChange}
-                                                    defaultValue={field.value}
-                                                    className="flex gap-4"
-                                                >
+                                                <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-4" disabled={!!deal}>
                                                     <FormItem>
                                                         <FormControl>
                                                             <RadioGroupItem value="1" id="1-game" className="sr-only" />
                                                         </FormControl>
-                                                        <Label htmlFor="1-game" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '1' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>1 GAME</Label>
+                                                        <Label htmlFor="1-game" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '1' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', {"opacity-50 cursor-not-allowed": !!deal})}>1 GAME</Label>
                                                     </FormItem>
                                                     <FormItem>
                                                         <FormControl>
                                                             <RadioGroupItem value="2" id="2-games" className="sr-only" />
                                                         </FormControl>
-                                                        <Label htmlFor="2-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '2' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>2 GAMES</Label>
+                                                        <Label htmlFor="2-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '2' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', {"opacity-50 cursor-not-allowed": !!deal})}>2 GAMES</Label>
                                                     </FormItem>
                                                     <FormItem>
                                                         <FormControl>
                                                             <RadioGroupItem value="3" id="3-games" className="sr-only" />
                                                         </FormControl>
-                                                        <Label htmlFor="3-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '3' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>3 GAMES</Label>
+                                                        <Label htmlFor="3-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '3' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', {"opacity-50 cursor-not-allowed": !!deal})}>3 GAMES</Label>
                                                     </FormItem>
                                                 </RadioGroup>
                                             </FormControl>
@@ -251,13 +272,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                         <Popover>
                                             <PopoverTrigger asChild>
                                                 <FormControl>
-                                                    <Button
-                                                        variant={"outline"}
-                                                        className={cn(
-                                                            "w-full pl-3 text-left font-normal",
-                                                            !field.value && "text-muted-foreground"
-                                                        )}
-                                                    >
+                                                    <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
                                                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                     </Button>
@@ -268,11 +283,12 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                                     mode="single"
                                                     selected={field.value}
                                                     onSelect={field.onChange}
-                                                    disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                                                    disabled={isDateDisabled}
                                                     initialFocus
                                                 />
                                             </PopoverContent>
                                         </Popover>
+                                        {deal && <FormMessage>You can only select a {format(new Date(2024, 0, deal.day), 'eeee')} for this deal.</FormMessage>}
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -288,12 +304,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                 <FormItem className="space-y-4">
                                     <FormLabel>Step {isBowling ? '4' : '3'}: Please select a start time:</FormLabel>
                                     <FormControl>
-                                        <RadioGroup
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                            className="grid grid-cols-3 md:grid-cols-4 gap-4"
-                                            disabled={!date}
-                                        >
+                                        <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-3 md:grid-cols-4 gap-4" disabled={!date}>
                                             {timeSlots.map((slot) => (
                                                 <FormItem key={slot}>
                                                     <FormControl>
@@ -317,8 +328,10 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                     Total amount: £{totalPrice.toFixed(2)}
                 </div>
 
-                <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Confirm Booking</Button>
+                <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!form.formState.isValid}>Confirm Booking</Button>
             </form>
         </Form>
     );
 }
+
+    
