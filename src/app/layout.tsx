@@ -4,7 +4,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import AppSidebarContent from '@/components/layout/sidebar-content';
-import Header from '@/components/layout/header';
 
 export const metadata: Metadata = {
   title: 'Pinopolis',
@@ -28,12 +27,11 @@ export default function RootLayout({
       </head>
       <body className={cn('font-body antialiased')}>
         <SidebarProvider defaultOpen>
-          <Sidebar variant="floating">
+          <Sidebar>
             <AppSidebarContent />
           </Sidebar>
           <SidebarInset>
             <div className="flex flex-col min-h-screen">
-                <Header/>
                 <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background">
                     {children}
                 </main>
