@@ -79,7 +79,7 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-6">
                         <div className="space-y-4">
-                            <FormLabel>How many guests would you like to reserve for?</FormLabel>
+                            <FormLabel>Step 1: How many guests would you like to reserve for?</FormLabel>
                             <FormField
                                 control={form.control}
                                 name="adults"
@@ -162,7 +162,7 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                             name="games"
                             render={({ field }) => (
                                 <FormItem className="space-y-4">
-                                    <FormLabel>How many games would you like to reserve?</FormLabel>
+                                    <FormLabel>Step 2: How many games would you like to reserve?</FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -197,7 +197,7 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                         <Separator />
         
                         <div className="space-y-4">
-                            <FormLabel>When would you like to reserve?</FormLabel>
+                            <FormLabel>Step 3: When would you like to reserve?</FormLabel>
                             <FormField
                                 control={form.control}
                                 name="date"
@@ -241,7 +241,7 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                             name="time"
                             render={({ field }) => (
                                 <FormItem className="space-y-4">
-                                    <FormLabel>Please select a start time:</FormLabel>
+                                    <FormLabel>Step 4: Please select a start time:</FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
