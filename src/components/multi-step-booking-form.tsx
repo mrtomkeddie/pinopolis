@@ -184,9 +184,9 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         <AlertDescription>
                             The form options have been pre-configured for this special offer.
                         </AlertDescription>
-                        <Button variant="outline" size="sm" onClick={handleClearDeal} className="absolute top-2 right-2 h-auto px-2 py-1 text-xs">
-                                <X className="mr-1 h-3 w-3" />
-                                Clear Deal
+                        <Button variant="ghost" size="sm" onClick={handleClearDeal} className="absolute top-2 right-2 h-auto px-2 py-1 text-xs">
+                            <X className="mr-1 h-3 w-3" />
+                            Clear Deal
                         </Button>
                     </Alert>
                 )}
@@ -215,27 +215,29 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                     </FormItem>
                                 )}
                             />
-                             <FormField
-                                control={form.control}
-                                name="children"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="font-normal">Children</FormLabel>
-                                        <FormControl>
-                                            <div className="flex items-center gap-2">
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(0, field.value - 1))} disabled={field.value <= 0 || isWineWednesday}>
-                                                    <Minus className="h-4 w-4" />
-                                                </Button>
-                                                <Input {...field} readOnly className="text-center" />
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.min(16, field.value + 1))} disabled={totalGuests >= 16 || isWineWednesday}>
-                                                    <Plus className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                             {!isWineWednesday && (
+                                <FormField
+                                    control={form.control}
+                                    name="children"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="font-normal">Children</FormLabel>
+                                            <FormControl>
+                                                <div className="flex items-center gap-2">
+                                                    <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(0, field.value - 1))} disabled={field.value <= 0}>
+                                                        <Minus className="h-4 w-4" />
+                                                    </Button>
+                                                    <Input {...field} readOnly className="text-center" />
+                                                    <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.min(16, field.value + 1))} disabled={totalGuests >= 16}>
+                                                        <Plus className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                             )}
                              {!isSoftPlay && <p className="text-sm text-muted-foreground">For bookings of more than 16 people please email info@pinopolis.wales</p>}
                         </div>
 
