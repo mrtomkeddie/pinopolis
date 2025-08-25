@@ -26,8 +26,8 @@ export default function AppSidebarContent() {
     return (
         <>
             <SidebarHeader>
-                <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-                    <Image src="/logo.png" alt="Fun Zone Logo" width={32} height={32} className="text-primary" />
+                <Link href="/" className="flex items-center justify-center p-2">
+                    <Image src="/logo.png" alt="Fun Zone Logo" width={40} height={40} className="text-primary" />
                 </Link>
             </SidebarHeader>
             <SidebarContent>
