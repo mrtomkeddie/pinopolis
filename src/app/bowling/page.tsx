@@ -1,5 +1,7 @@
 
+
 import MultiStepBookingForm from "@/components/multi-step-booking-form";
+import SpecialOffers from "@/components/special-offers";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
@@ -17,15 +19,20 @@ export default function BowlingPage() {
                     </p>
                 </div>
             </div>
-            <Card className="shadow-lg w-full">
-                <CardHeader>
-                    <CardTitle className="font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Book Your Lane</CardTitle>
-                    <CardDescription>Select your details and get ready to roll.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <MultiStepBookingForm activityTitle="Bowling" />
-                </CardContent>
-            </Card>
+            <div className="grid lg:grid-cols-2 gap-8">
+                <Card className="shadow-lg w-full">
+                    <CardHeader>
+                        <CardTitle className="font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Book Your Lane</CardTitle>
+                        <CardDescription>Select your details and get ready to roll.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <MultiStepBookingForm activityTitle="Bowling" />
+                    </CardContent>
+                </Card>
+                <div className="w-full">
+                    <SpecialOffers />
+                </div>
+            </div>
         </div>
     );
 }

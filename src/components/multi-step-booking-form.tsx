@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, AlertCircle } from "lucide-react";
+import { CalendarIcon, Minus, Plus, AlertCircle, X } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -173,18 +173,26 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         }
         return false;
     };
+    
+    const handleClearDeal = () => {
+        router.push('/bowling');
+    };
 
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {deal && (
-                     <Alert variant="default" className="border-primary">
+                     <Alert variant="default" className="border-primary relative">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertTitle className="font-headline text-primary">You're booking the {deal.title} deal!</AlertTitle>
+                        <AlertTitle className="font-headline text-primary pr-8">You're booking the {deal.title} deal!</AlertTitle>
                         <AlertDescription>
                             The form options have been pre-configured for this special offer.
                         </AlertDescription>
+                         <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={handleClearDeal}>
+                             <X className="h-4 w-4" />
+                             <span className="sr-only">Clear deal</span>
+                         </Button>
                     </Alert>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
