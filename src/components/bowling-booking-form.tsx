@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,10 +18,17 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 
+const timeSlots = {
+    morning: ["10:30", "10:45", "11:00", "11:15", "11:30", "11:45"],
+    afternoon: ["12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+    evening: ["18:00", "19:00", "20:00", "21:00", "22:00"],
+};
+
 const formSchema = z.object({
   guests: z.coerce.number().min(1, { message: "Must have at least 1 guest." }).max(16, { message: "There is a maximum of 16 players per reservation." }),
   games: z.string({ required_error: "Please select the number of games." }),
   date: z.date({ required_error: "A date is required." }),
+  timeOfDay: z.string({ required_error: "Please select a time of day." }),
   time: z.string({ required_error: "A time slot is required." }),
 });
 
@@ -39,11 +47,13 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
         },
     });
 
+    const timeOfDay = form.watch("timeOfDay");
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
         toast({
             title: "Booking Confirmed!",
-            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} for ${values.guests} guest(s) is confirmed.`,
+            description: `Your booking for ${activityTitle} on ${format(values.date, "PPP")} at ${values.time} for ${values.guests} guest(s) is confirmed.`,
         });
         router.push('/bookings');
     }
@@ -109,19 +119,19 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                                         <FormControl>
                                             <RadioGroupItem value="1" id="1-game" className="sr-only" />
                                         </FormControl>
-                                        <Label htmlFor="1-game" className={cn("block w-full text-center p-3 rounded-md border-2", field.value === '1' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>1 GAME</Label>
+                                        <Label htmlFor="1-game" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '1' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>1 GAME</Label>
                                     </FormItem>
                                     <FormItem>
                                         <FormControl>
                                             <RadioGroupItem value="2" id="2-games" className="sr-only" />
                                         </FormControl>
-                                        <Label htmlFor="2-games" className={cn("block w-full text-center p-3 rounded-md border-2", field.value === '2' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>2 GAMES</Label>
+                                        <Label htmlFor="2-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '2' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>2 GAMES</Label>
                                     </FormItem>
                                     <FormItem>
                                         <FormControl>
                                             <RadioGroupItem value="3" id="3-games" className="sr-only" />
                                         </FormControl>
-                                        <Label htmlFor="3-games" className={cn("block w-full text-center p-3 rounded-md border-2", field.value === '3' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>3 GAMES</Label>
+                                        <Label htmlFor="3-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '3' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>3 GAMES</Label>
                                     </FormItem>
                                 </RadioGroup>
                             </FormControl>
@@ -171,33 +181,36 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
 
                     <FormField
                         control={form.control}
-                        name="time"
+                        name="timeOfDay"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
                                     <RadioGroup
-                                        onValueChange={field.onChange}
+                                        onValueChange={(value) => {
+                                            field.onChange(value);
+                                            form.setValue("time", ""); // Reset time when time of day changes
+                                        }}
                                         defaultValue={field.value}
-                                        className="flex gap-4"
+                                        className="grid grid-cols-3 gap-4"
                                     >
                                         <FormItem>
-                                        <FormControl>
-                                            <RadioGroupItem value="morning" id="morning" className="sr-only" />
-                                        </FormControl>
-                                        <Label htmlFor="morning" className={cn("block w-full text-center p-3 rounded-md border-2", field.value === 'morning' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>MORNING</Label>
-                                    </FormItem>
-                                    <FormItem>
-                                        <FormControl>
-                                            <RadioGroupItem value="afternoon" id="afternoon" className="sr-only" />
-                                        </FormControl>
-                                        <Label htmlFor="afternoon" className={cn("block w-full text-center p-3 rounded-md border-2", field.value === 'afternoon' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>AFTERNOON</Label>
-                                    </FormItem>
-                                    <FormItem>
-                                        <FormControl>
-                                            <RadioGroupItem value="evening" id="evening" className="sr-only" />
-                                        </FormControl>
-                                        <Label htmlFor="evening" className={cn("block w-full text-center p-3 rounded-md border-2", field.value === 'evening' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>EVENING</Label>
-                                    </FormItem>
+                                            <FormControl>
+                                                <RadioGroupItem value="morning" id="morning" className="sr-only" />
+                                            </FormControl>
+                                            <Label htmlFor="morning" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'morning' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>MORNING</Label>
+                                        </FormItem>
+                                        <FormItem>
+                                            <FormControl>
+                                                <RadioGroupItem value="afternoon" id="afternoon" className="sr-only" />
+                                            </FormControl>
+                                            <Label htmlFor="afternoon" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'afternoon' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>AFTERNOON</Label>
+                                        </FormItem>
+                                        <FormItem>
+                                            <FormControl>
+                                                <RadioGroupItem value="evening" id="evening" className="sr-only" />
+                                            </FormControl>
+                                            <Label htmlFor="evening" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'evening' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>EVENING</Label>
+                                        </FormItem>
                                     </RadioGroup>
                                 </FormControl>
                                 <FormMessage />
@@ -205,6 +218,36 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                         )}
                     />
                 </div>
+
+                {timeOfDay && (
+                     <FormField
+                        control={form.control}
+                        name="time"
+                        render={({ field }) => (
+                            <FormItem className="space-y-4">
+                                <FormLabel>Please select a start time:</FormLabel>
+                                <FormControl>
+                                    <RadioGroup
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                        className="grid grid-cols-3 gap-4"
+                                    >
+                                        {timeSlots[timeOfDay as keyof typeof timeSlots].map((slot) => (
+                                            <FormItem key={slot}>
+                                                <FormControl>
+                                                    <RadioGroupItem value={slot} id={slot} className="sr-only" />
+                                                </FormControl>
+                                                <Label htmlFor={slot} className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === slot ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>{slot}</Label>
+                                            </FormItem>
+                                        ))}
+                                    </RadioGroup>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                )}
+
 
                 <Separator />
                 
