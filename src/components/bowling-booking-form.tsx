@@ -60,6 +60,7 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
 
     const adults = form.watch("adults");
     const children = form.watch("children");
+    const date = form.watch("date");
 
     const totalGuests = adults + children;
 
@@ -234,7 +235,7 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                         </div>
                     </div>
                     
-                    <div>
+                    <div className={cn(!date && "opacity-50")}>
                         <FormField
                             control={form.control}
                             name="time"
@@ -246,13 +247,14 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                             className="grid grid-cols-3 md:grid-cols-4 gap-4"
+                                            disabled={!date}
                                         >
                                             {timeSlots.map((slot) => (
                                                 <FormItem key={slot}>
                                                     <FormControl>
                                                         <RadioGroupItem value={slot} id={slot} className="sr-only" />
                                                     </FormControl>
-                                                    <Label htmlFor={slot} className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === slot ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>{slot}</Label>
+                                                    <Label htmlFor={slot} className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === slot ? 'bg-primary text-primary-foreground border-primary' : 'border-input', !date && "cursor-not-allowed")}>{slot}</Label>
                                                 </FormItem>
                                             ))}
                                         </RadioGroup>
