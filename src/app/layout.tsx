@@ -27,8 +27,8 @@ export default function RootLayout({
         />
       </head>
       <body className={cn('font-body antialiased')}>
-        <SidebarProvider>
-          <Sidebar collapsible="icon" variant="floating">
+        <SidebarProvider defaultOpen>
+          <Sidebar variant="floating">
             <AppSidebarContent />
           </Sidebar>
           <SidebarInset>
