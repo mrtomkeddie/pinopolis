@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import OpeningHours from '@/components/opening-hours';
+import SpecialOffers from '@/components/special-offers';
 
 export default function DashboardPage() {
   return (
@@ -25,6 +26,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <OpeningHours />
+        <SpecialOffers />
       </div>
     </div>
   );
