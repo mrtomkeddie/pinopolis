@@ -19,7 +19,7 @@ export default function DashboardPage() {
             Welcome to Pinopolis!
           </h1>
           <p className="text-lg md:text-xl text-foreground mt-4 max-w-2xl">
-            your ultimate family entertainment centre
+            Your ultimate family entertainment centre
           </p>
         </div>
       </div>
