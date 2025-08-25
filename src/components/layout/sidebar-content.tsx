@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
 import { Dices, CalendarDays, LayoutDashboard, Target, ToyBrick } from 'lucide-react';
+import Image from 'next/image';
 
 const navItems = [
     { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -26,8 +27,7 @@ export default function AppSidebarContent() {
         <>
             <SidebarHeader>
                 <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-                    <Dices className="w-6 h-6 text-primary" />
-                    <span className="text-primary group-data-[collapsible=icon]:hidden">Fun Zone</span>
+                    <Image src="/logo.png" alt="Fun Zone Logo" width={24} height={24} className="text-primary" />
                 </Link>
             </SidebarHeader>
             <SidebarContent>
