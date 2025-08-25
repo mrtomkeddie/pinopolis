@@ -1,4 +1,4 @@
-import BookingForm from "@/components/booking-form";
+import BowlingBookingForm from "@/components/bowling-booking-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
@@ -20,7 +20,7 @@ export default function BowlingPage() {
                     <CardDescription>Select your details and get ready to roll.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <BookingForm activityTitle="Bowling" />
+                    <BowlingBookingForm activityTitle="Bowling" />
                 </CardContent>
             </Card>
         </div>
