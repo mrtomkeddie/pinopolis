@@ -31,6 +31,9 @@ const formSchema = z.object({
   date: z.date({ required_error: "A date is required." }),
   timeOfDay: z.string({ required_error: "Please select a time of day." }),
   time: z.string({ required_error: "A time slot is required." }),
+}).refine(data => data.adults + data.children > 0, {
+    message: "You must select at least one guest.",
+    path: ["adults"],
 }).refine(data => data.adults + data.children <= 16, {
     message: "There is a maximum of 16 players per reservation.",
     path: ["adults"],
@@ -49,6 +52,7 @@ export default function BowlingBookingForm({ activityTitle }: BookingFormProps) 
         defaultValues: {
             adults: 1,
             children: 0,
+            games: "1",
         },
     });
 
