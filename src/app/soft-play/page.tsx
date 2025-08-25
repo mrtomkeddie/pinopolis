@@ -1,20 +1,23 @@
+
 import BookingForm from "@/components/booking-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
 export default function SoftPlayPage() {
     return (
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="space-y-4">
-                <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+        <div className="space-y-8 max-w-6xl mx-auto">
+             <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-lg">
                     <Image src="https://placehold.co/600x400.png" alt="Soft Play Area" layout="fill" objectFit="cover" data-ai-hint="kids playground" />
                 </div>
-                <h1 className="text-4xl font-headline text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]">Soft Play Scheduling</h1>
-                <p className="text-muted-foreground">
-                    Let your little ones explore, climb, and slide in our multi-level soft play area. Designed for maximum fun and safety, it's the perfect place for kids to burn off energy while you relax.
-                </p>
+                <div className="space-y-4">
+                    <h1 className="text-4xl font-headline text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]">Soft Play Scheduling</h1>
+                    <p className="text-muted-foreground">
+                        Let your little ones explore, climb, and slide in our multi-level soft play area. Designed for maximum fun and safety, it's the perfect place for kids to burn off energy while you relax.
+                    </p>
+                </div>
             </div>
-            <Card className="shadow-lg">
+            <Card className="shadow-lg w-full">
                 <CardHeader>
                     <CardTitle className="font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Schedule Soft Play</CardTitle>
                     <CardDescription>Book a play session for your children.</CardDescription>
