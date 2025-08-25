@@ -9,11 +9,11 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { BowlingBall, CalendarDays, LayoutDashboard, Target, ToyBrick } from 'lucide-react';
+import { Dices, CalendarDays, LayoutDashboard, Target, ToyBrick } from 'lucide-react';
 
 const navItems = [
     { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
-    { href: '/bowling', icon: BowlingBall, label: 'Bowling' },
+    { href: '/bowling', icon: Dices, label: 'Bowling' },
     { href: '/darts', icon: Target, label: 'AR Darts' },
     { href: '/soft-play', icon: ToyBrick, label: 'Soft Play' },
     { href: '/bookings', icon: CalendarDays, label: 'My Bookings' },
@@ -26,7 +26,7 @@ export default function AppSidebarContent() {
         <>
             <SidebarHeader>
                 <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-                    <BowlingBall className="w-6 h-6 text-primary" />
+                    <Dices className="w-6 h-6 text-primary" />
                     <span className="text-primary group-data-[collapsible=icon]:hidden">Fun Zone</span>
                 </Link>
             </SidebarHeader>
