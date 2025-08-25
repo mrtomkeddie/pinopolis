@@ -18,7 +18,6 @@ export default function ActivitySuggestions() {
         const result = await suggestActivities({ userAge: 30, bookingHistory });
         setSuggestions(result.suggestedActivities);
       } catch (error) {
-        console.error('Failed to fetch activity suggestions:', error);
         setSuggestions('Could not load suggestions at this time.');
       } finally {
         setLoading(false);
@@ -28,10 +27,10 @@ export default function ActivitySuggestions() {
   }, []);
 
   return (
-    <Card className="bg-gradient-to-br from-primary/20 to-background border-primary/50">
+    <Card className="bg-gradient-to-br from-accent/10 to-transparent border-accent/20">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Wand2 className="text-primary" />
+          <Wand2 className="text-accent" />
           <span>For You</span>
         </CardTitle>
         <CardDescription>Based on your recent activity, here are some suggestions!</CardDescription>
@@ -43,7 +42,7 @@ export default function ActivitySuggestions() {
             <span>Generating ideas...</span>
           </div>
         ) : (
-          <ul className="list-disc pl-5 space-y-1 text-sm">
+          <ul className="list-disc pl-5 space-y-1 text-sm font-medium">
             {suggestions.split('\n').map((item, index) => item.trim() && <li key={index}>{item.replace(/^- /, '')}</li>)}
           </ul>
         )}

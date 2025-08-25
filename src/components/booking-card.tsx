@@ -32,12 +32,13 @@ export default function BookingCard({ booking }: BookingCardProps) {
         toast({
             title: "Booking Cancelled",
             description: `Your booking for ${booking.activity} has been cancelled.`,
+            variant: 'destructive'
         });
         // Here you would also update the state to remove the card from the UI.
     };
     
     return (
-        <Card className="flex flex-col overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105">
+        <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 bg-card border-border/50">
             <CardHeader className="p-0">
                 <div className="relative h-40 w-full">
                     <Image

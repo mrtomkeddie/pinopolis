@@ -11,7 +11,7 @@ type ActivityCardProps = {
 
 export default function ActivityCard({ activity }: ActivityCardProps) {
   return (
-    <Card className="flex flex-col overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 bg-card border-border/50">
       <CardHeader className="p-0">
         <div className="relative h-48 w-full">
             <Image
@@ -25,7 +25,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
       </CardHeader>
       <CardContent className="p-6 flex-grow">
         <CardTitle className="text-2xl font-bold">{activity.title}</CardTitle>
-        <CardDescription className="mt-2">{activity.description}</CardDescription>
+        <CardDescription className="mt-2 text-muted-foreground">{activity.description}</CardDescription>
       </CardContent>
       <CardFooter className="p-6 pt-0">
         <Button asChild className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
