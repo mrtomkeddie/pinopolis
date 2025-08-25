@@ -195,9 +195,6 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                     </FormItem>
                                 )}
                             />
-                            <p className="text-sm text-muted-foreground">
-                                For bookings of more than 16 people please email info@pinopolis.wales
-                            </p>
                         </div>
         
                         {isBowling && (
