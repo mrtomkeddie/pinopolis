@@ -132,11 +132,8 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
             }
         } else if (isBowling) {
             const numGames = parseInt(games || '1', 10);
-            if (numGames === 1) {
-                price = totalGuests * 6.50;
-            } else { // 2 or 3 games
-                price = totalGuests * 5.00;
-            }
+            const pricePerPerson = numGames === 1 ? 6.50 : 5.00;
+            price = totalGuests * pricePerPerson;
         } else if (isSoftPlay) {
             price = children * 5; // £5 per child
         }
@@ -181,16 +178,16 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {deal && (
-                     <Alert variant="default" className="border-primary relative">
+                    <Alert variant="default" className="border-primary">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertTitle className="font-headline text-primary pr-8">You're booking the {deal.title} deal!</AlertTitle>
-                        <AlertDescription>
-                            The form options have been pre-configured for this special offer.
+                        <AlertTitle className="font-headline text-primary">You're booking the {deal.title} deal!</AlertTitle>
+                        <AlertDescription className="space-y-3">
+                            <p>The form options have been pre-configured for this special offer.</p>
+                             <Button variant="outline" size="sm" onClick={handleClearDeal} className="h-auto px-2 py-1 text-xs">
+                                <X className="mr-1 h-3 w-3" />
+                                Clear Deal
+                            </Button>
                         </AlertDescription>
-                         <button type="button" className="absolute top-1/2 -translate-y-1/2 right-2 h-7 w-7 rounded-full bg-accent flex items-center justify-center" onClick={handleClearDeal}>
-                             <X className="h-4 w-4" />
-                             <span className="sr-only">Clear deal</span>
-                         </button>
                     </Alert>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
