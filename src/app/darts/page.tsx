@@ -14,7 +14,7 @@ export default function DartsPage() {
                     </p>
                 </div>
                 <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-lg">
-                    <Image src="https://placehold.co/600x400.png" alt="AR Darts" layout="fill" objectFit="cover" data-ai-hint="dart board" />
+                    <Image src="/darts.jpg" alt="AR Darts" layout="fill" objectFit="cover" />
                 </div>
             </div>
             <Card className="shadow-lg w-full">
