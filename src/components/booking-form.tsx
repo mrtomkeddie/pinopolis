@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Minus, Plus } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -59,7 +60,29 @@ export default function BookingForm({ activityTitle }: BookingFormProps) {
                         <FormItem>
                             <FormLabel>Number of Guests</FormLabel>
                             <FormControl>
-                                <Input type="number" min="1" max="8" {...field} />
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-10 w-10"
+                                        onClick={() => form.setValue('guests', Math.max(1, field.value - 1))}
+                                        disabled={field.value <= 1}
+                                    >
+                                        <Minus className="h-4 w-4" />
+                                    </Button>
+                                    <Input {...field} readOnly className="text-center" />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-10 w-10"
+                                        onClick={() => form.setValue('guests', Math.min(8, field.value + 1))}
+                                        disabled={field.value >= 8}
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                </div>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
