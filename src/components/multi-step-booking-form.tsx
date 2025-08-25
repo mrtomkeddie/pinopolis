@@ -58,7 +58,7 @@ type BookingFormProps = {
 
 // Pricing configuration
 const pricing = {
-    "Bowling": { adult: 8, child: 6, perGame: true },
+    "Bowling": { perGame: true },
     "AR Darts": { adult: 7, child: 7, perGame: false },
     "Soft Play": { adult: 0, child: 5, perGame: false },
 };
@@ -68,8 +68,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
     const router = useRouter();
     const isBowling = activityTitle === "Bowling";
     const isSoftPlay = activityTitle === "Soft Play";
-    const activityPricing = pricing[activityTitle as keyof typeof pricing] || { adult: 7, child: 7, perGame: false };
-
+    const activityPricing = pricing[activityTitle as keyof typeof pricing];
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -93,13 +92,33 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         let price = 0;
         const numGames = parseInt(games || '1', 10);
 
-        if (activityPricing.perGame) {
-            price = (adults * activityPricing.adult + children * activityPricing.child) * numGames;
-        } else {
-            price = adults * activityPricing.adult + children * activityPricing.child;
+        if (isBowling) {
+            let adultPrice = 0;
+            if (adults === 1) {
+                adultPrice = 6.50;
+            } else if (adults > 1) {
+                adultPrice = adults * 5;
+            }
+
+            let childPrice = 0;
+            if (children === 1) {
+                childPrice = 6.50;
+            } else if (children > 1) {
+                childPrice = children * 5;
+            }
+            
+            price = (adultPrice + childPrice) * numGames;
+
+        } else if (activityPricing) {
+            if (activityPricing.perGame) {
+                 price = (adults * (activityPricing as any).adult + children * (activityPricing as any).child) * numGames;
+            } else {
+                 price = adults * (activityPricing as any).adult + children * (activityPricing as any).child;
+            }
         }
+
         setTotalPrice(price);
-    }, [adults, children, games, activityPricing]);
+    }, [adults, children, games, activityPricing, isBowling]);
 
 
     function onSubmit(values: z.infer<typeof formSchema>) {
@@ -318,5 +337,3 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         </Form>
     );
 }
-
-    
