@@ -27,7 +27,7 @@ export default function AppSidebarContent() {
         <>
             <SidebarHeader>
                 <Link href="/" className="flex items-center justify-center p-2">
-                    <Image src="/logo.png" alt="Pinopolis Logo" width={100} height={100} />
+                    <Image src="/logo.png" alt="Pinopolis Logo" width={150} height={150} />
                 </Link>
             </SidebarHeader>
             <SidebarContent>
