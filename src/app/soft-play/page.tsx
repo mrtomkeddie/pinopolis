@@ -9,14 +9,14 @@ export default function SoftPlayPage() {
                 <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
                     <Image src="https://placehold.co/600x400.png" alt="Soft Play Area" layout="fill" objectFit="cover" data-ai-hint="kids playground" />
                 </div>
-                <h1 className="text-4xl font-headline">Soft Play Scheduling</h1>
+                <h1 className="text-4xl font-headline text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]">Soft Play Scheduling</h1>
                 <p className="text-muted-foreground">
                     Let your little ones explore, climb, and slide in our multi-level soft play area. Designed for maximum fun and safety, it's the perfect place for kids to burn off energy while you relax.
                 </p>
             </div>
             <Card className="shadow-lg">
                 <CardHeader>
-                    <CardTitle className="font-headline">Schedule Soft Play</CardTitle>
+                    <CardTitle className="font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Schedule Soft Play</CardTitle>
                     <CardDescription>Book a play session for your children.</CardDescription>
                 </CardHeader>
                 <CardContent>

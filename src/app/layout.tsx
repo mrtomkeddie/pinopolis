@@ -7,8 +7,8 @@ import AppSidebarContent from '@/components/layout/sidebar-content';
 import Header from '@/components/layout/header';
 
 export const metadata: Metadata = {
-  title: 'Family Fun Zone',
-  description: 'Book your next adventure!',
+  title: 'Pinopolis',
+  description: 'Your ultimate bowling and entertainment destination.',
 };
 
 export default function RootLayout({
@@ -22,7 +22,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
