@@ -7,7 +7,7 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-2xl shadow-primary/20">
         <Image
-          src="/banner.jpeg"
+          src="/banner.jpg"
           alt="Pinopolis banner"
           layout="fill"
           objectFit="cover"
