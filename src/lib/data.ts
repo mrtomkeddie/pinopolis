@@ -12,14 +12,14 @@ export const activities: Activity[] = [
     title: 'AR Darts',
     description: 'Experience darts like never before with augmented reality.',
     href: '/darts',
-    image: '/darts.jpg',
+    image: 'https://picsum.photos/seed/darts/600/400',
     imageHint: 'dart board'
   },
   {
     title: 'Soft Play',
     description: 'A safe and fun environment for the little ones to play.',
     href: '/soft-play',
-    image: '/softplay.jpg',
+    image: 'https://picsum.photos/seed/softplay/600/400',
     imageHint: 'kids playground'
   },
 ];

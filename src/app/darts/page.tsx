@@ -15,7 +15,7 @@ export default function DartsPage() {
                     </p>
                 </div>
                 <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-lg">
-                    <Image src="/darts.jpg" alt="AR Darts" layout="fill" objectFit="cover" />
+                    <Image src="https://picsum.photos/seed/darts/600/400" alt="AR Darts" layout="fill" objectFit="cover" />
                 </div>
             </div>
             <Card className="shadow-lg w-full">
