@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock } from 'lucide-react';
+import { Clock, MapPin } from 'lucide-react';
+import { Separator } from './ui/separator';
 
 const openingHours = [
     { day: 'MONDAY', hours: '10:30am - 10:00pm' },
@@ -29,6 +30,15 @@ export default function OpeningHours() {
                         </li>
                     ))}
                 </ul>
+                <Separator className="my-4" />
+                <div className="flex items-center gap-4 text-sm">
+                    <MapPin className="h-8 w-8 text-primary" />
+                    <div className="text-muted-foreground">
+                        <p className="font-medium text-foreground">Pinopolis</p>
+                        <p>Sandy Road</p>
+                        <p>Llanelli, SA15 4DP</p>
+                    </div>
+                </div>
             </CardContent>
         </Card>
     );
