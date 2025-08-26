@@ -12,7 +12,7 @@ export const activities: Activity[] = [
     title: 'AR Darts',
     description: 'Experience darts like never before with augmented reality.',
     href: '/darts',
-    image: '/darts.jpg',
+    image: '/darts.jpg?v=2',
     imageHint: 'dart board'
   },
   {
