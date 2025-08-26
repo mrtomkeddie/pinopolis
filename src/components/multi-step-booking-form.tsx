@@ -92,11 +92,23 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
     
     const [totalPrice, setTotalPrice] = useState(0);
 
+    const dynamicSchema = useMemo(() => {
+        return formSchema.refine(data => {
+            if (isSoftPlay) {
+                return data.children >= 1;
+            }
+            return true;
+        }, {
+            message: "Must have at least 1 child for Soft Play.",
+            path: ["children"],
+        });
+    }, [isSoftPlay]);
+
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(dynamicSchema),
         defaultValues: {
             adults: isBowling || isSoftPlay ? 1 : 0,
-            children: isBowling ? 0 : 1,
+            children: isSoftPlay ? 1 : (isBowling ? 0 : 1),
             games: deal ? deal.games : (isBowling ? "1" : undefined),
             wine: isWineWednesday ? "White" : undefined,
         },
@@ -202,7 +214,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                         <FormLabel className="font-normal">Adults {isSoftPlay && "(Go Free)"}</FormLabel>
                                         <FormControl>
                                             <div className="flex items-center gap-2">
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0), field.value - 1))} disabled={field.value <= (isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0))}>
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isWineWednesday ? 2 : 1, field.value - 1))} disabled={field.value <= (isWineWednesday ? 2 : 1)}>
                                                     <Minus className="h-4 w-4" />
                                                 </Button>
                                                 <Input {...field} readOnly className="text-center" />
@@ -224,7 +236,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                             <FormLabel className="font-normal">Children</FormLabel>
                                             <FormControl>
                                                 <div className="flex items-center gap-2">
-                                                    <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(0, field.value - 1))} disabled={field.value <= 0}>
+                                                    <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(isSoftPlay ? 1 : 0, field.value - 1))} disabled={field.value <= (isSoftPlay ? 1 : 0)}>
                                                         <Minus className="h-4 w-4" />
                                                     </Button>
                                                     <Input {...field} readOnly className="text-center" />
@@ -390,3 +402,5 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         </Form>
     );
 }
+
+    
