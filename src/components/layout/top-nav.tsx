@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import React from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const navItems = [
     { href: '/', icon: Home, label: 'Home' },
@@ -21,6 +22,7 @@ const navItems = [
 
 export default function TopNav() {
     const pathname = usePathname();
+    const isMobile = useIsMobile();
 
     const NavLink = ({ item }: { item: { href: string, icon: React.ElementType, label: string }}) => {
         const baseClasses = "text-muted-foreground hover:text-foreground";
@@ -49,8 +51,8 @@ export default function TopNav() {
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button variant="ghost">
-                            <Menu className="h-6 w-6 mr-2" />
-                            Menu
+                            <Menu className="h-6 w-6" />
+                            {!isMobile && <span className="ml-2">Menu</span>}
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="p-0 w-[300px]">
