@@ -31,7 +31,7 @@ export const bookings: Booking[] = [
         date: new Date(new Date().setDate(new Date().getDate() + 7)),
         time: '18:00',
         guests: 4,
-        image: 'https://placehold.co/600x400.png',
+        image: '/bowling.jpg',
         imageHint: 'bowling alley'
     },
     {
@@ -40,7 +40,7 @@ export const bookings: Booking[] = [
         date: new Date(new Date().setDate(new Date().getDate() + 10)),
         time: '20:00',
         guests: 2,
-        image: 'https://placehold.co/600x400.png',
+        image: '/darts.jpg?v=2',
         imageHint: 'dart board'
     }
 ]
