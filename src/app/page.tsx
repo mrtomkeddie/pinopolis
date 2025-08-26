@@ -2,6 +2,10 @@ import Image from 'next/image';
 import OpeningHours from '@/components/opening-hours';
 import SpecialOffers from '@/components/special-offers';
 import Amenities from '@/components/amenities';
+import ActivityCard from '@/components/activity-card';
+import { activities } from '@/lib/data';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Sparkles } from 'lucide-react';
 
 export default function DashboardPage() {
   return (
@@ -24,9 +28,26 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      <Card className="bg-card border-border/50">
+        <CardHeader>
+          <CardTitle className="flex items-center text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">
+            <Sparkles className="mr-2 h-6 w-6" />
+            Choose Your Adventure
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {activities.map((activity) => (
+              <ActivityCard key={activity.title} activity={activity} />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <OpeningHours />
         <SpecialOffers />
+        <OpeningHours />
       </div>
 
       <Amenities />
