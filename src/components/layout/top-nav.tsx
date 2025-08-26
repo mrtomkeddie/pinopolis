@@ -1,3 +1,4 @@
+
 'use client'
 
 import Link from 'next/link';
@@ -99,7 +100,7 @@ export default function TopNav() {
                         <Image src="/logo.png" alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
                     </Link>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 ml-auto">
                     {navItems.map((item) => <NavLink key={item.href} item={item} />)}
                 </div>
             </nav>
