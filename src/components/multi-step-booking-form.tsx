@@ -6,9 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, AlertCircle, X, ToyBrick } from "lucide-react";
+import { CalendarIcon, Minus, Plus, AlertCircle, X, ToyBrick, ArrowLeft } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -21,6 +21,7 @@ import { Input } from "./ui/input";
 import { useEffect, useState, useMemo } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Switch } from "./ui/switch";
+import { Checkbox } from "./ui/checkbox";
 
 const timeSlots = [
     "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
@@ -61,6 +62,12 @@ const formSchema = z.object({
   softPlayChildren: z.coerce.number().optional(),
   date: z.date({ required_error: "A date is required." }),
   time: z.string({ required_error: "A time slot is required." }),
+  firstName: z.string().min(1, "First name is required."),
+  lastName: z.string().min(1, "Last name is required."),
+  postalCode: z.string().min(1, "Postal code is required."),
+  phone: z.string().min(1, "Phone number is required."),
+  email: z.string().email("Invalid email address."),
+  marketingOptIn: z.boolean().optional(),
 }).refine(data => {
     if (data.games) { // Bowling validation
         return data.adults >= 1;
@@ -88,6 +95,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
     const searchParams = useSearchParams();
     const dealId = searchParams.get('deal');
     const deal = useMemo(() => dealId ? deals[dealId as keyof typeof deals] : null, [dealId]);
+    const [step, setStep] = useState(1);
 
     const isBowling = activityTitle === "Bowling";
     const isSoftPlay = activityTitle === "Soft Play";
@@ -166,6 +174,13 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
     }, [adults, children, games, totalGuests, isBowling, isSoftPlay, deal, dealId, addSoftPlay, softPlayChildren]);
 
 
+    async function onNext() {
+        const isValid = await form.trigger(["adults", "children", "games", "date", "time"]);
+        if (isValid) {
+            setStep(2);
+        }
+    }
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
         let dealDescription = deal ? ` (${deal.title}` : '';
@@ -207,107 +222,39 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {deal && (
-                     <Alert variant="default" className="border-primary relative">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertTitle className="font-headline text-primary">You're booking the {deal.title} deal!</AlertTitle>
-                        <AlertDescription>
-                            The form options have been pre-configured for this special offer.
-                        </AlertDescription>
-                        <Button variant="ghost" size="sm" onClick={handleClearDeal} className="absolute top-1/2 right-2 -translate-y-1/2 text-xs">
-                             <X className="mr-1 h-3 w-3" />
-                            Clear Deal
-                        </Button>
-                    </Alert>
-                )}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
-                        <div className="space-y-4">
-                            <FormLabel>Step 1: How many {isBowling ? "bowling" : ""} guests?</FormLabel>
-                            <FormField
-                                control={form.control}
-                                name="adults"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="font-normal">Adults {isSoftPlay && "(Go Free)"}</FormLabel>
-                                        <FormControl>
-                                            <div className="flex items-center gap-2">
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0), field.value - 1))} disabled={field.value <= (isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0))}>
-                                                    <Minus className="h-4 w-4" />
-                                                </Button>
-                                                <Input {...field} readOnly className="text-center" />
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.min(16, field.value + 1))} disabled={totalGuests >= 16}>
-                                                    <Plus className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            {!isWineWednesday && (
-                                <FormField
-                                    control={form.control}
-                                    name="children"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="font-normal">Children</FormLabel>
-                                            <FormControl>
-                                                <div className="flex items-center gap-2">
-                                                    <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(isSoftPlay ? 1 : 0, field.value - 1))} disabled={field.value <= (isSoftPlay ? 1 : 0)}>
-                                                        <Minus className="h-4 w-4" />
-                                                    </Button>
-                                                    <Input {...field} readOnly className="text-center" />
-                                                    <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.min(16, field.value + 1))} disabled={totalGuests >= 16}>
-                                                        <Plus className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            )}
-                             {!isSoftPlay && <p className="text-sm text-muted-foreground">For bookings of more than 16 people please email info@pinopolis.wales</p>}
-                        </div>
 
-                         {isBowling && !deal && (
-                             <>
-                                <Separator />
-                                <FormField
-                                    control={form.control}
-                                    name="addSoftPlay"
-                                    render={({ field }) => (
-                                        <FormItem className="space-y-4">
-                                            <div className="flex items-center space-x-2">
-                                                <ToyBrick className="h-5 w-5 text-primary" />
-                                                <Label htmlFor="soft-play-switch" className="flex-grow">Step 2: Add Soft Play for other kids?</Label>
-                                                <FormControl>
-                                                    <Switch
-                                                        id="soft-play-switch"
-                                                        checked={field.value}
-                                                        onCheckedChange={field.onChange}
-                                                    />
-                                                </FormControl>
-                                            </div>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                {addSoftPlay && (
+                {step === 1 && (
+                    <>
+                        {deal && (
+                            <Alert variant="default" className="border-primary relative">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertTitle className="font-headline text-primary">You're booking the {deal.title} deal!</AlertTitle>
+                                <AlertDescription>
+                                    The form options have been pre-configured for this special offer.
+                                </AlertDescription>
+                                <Button variant="ghost" size="sm" onClick={handleClearDeal} className="absolute top-1/2 right-2 -translate-y-1/2 text-xs">
+                                    <X className="mr-1 h-3 w-3" />
+                                    Clear Deal
+                                </Button>
+                            </Alert>
+                        )}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-6">
+                                <div className="space-y-4">
+                                    <FormLabel>Step 1: How many {isBowling ? "bowling" : ""} guests?</FormLabel>
                                     <FormField
                                         control={form.control}
-                                        name="softPlayChildren"
+                                        name="adults"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="font-normal">Number of Children for Soft Play</FormLabel>
+                                                <FormLabel className="font-normal">Adults {isSoftPlay && "(Go Free)"}</FormLabel>
                                                 <FormControl>
                                                     <div className="flex items-center gap-2">
-                                                        <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('softPlayChildren', Math.max(1, (field.value || 1) - 1))} disabled={(field.value || 1) <= 1}>
+                                                        <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0), field.value - 1))} disabled={field.value <= (isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0))}>
                                                             <Minus className="h-4 w-4" />
                                                         </Button>
-                                                        <Input {...field} value={field.value || 1} readOnly className="text-center" />
-                                                        <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('softPlayChildren', Math.min(15, (field.value || 1) + 1))} disabled={(field.value || 1) >= 15}>
+                                                        <Input {...field} readOnly className="text-center" />
+                                                        <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.min(16, field.value + 1))} disabled={totalGuests >= 16}>
                                                             <Plus className="h-4 w-4" />
                                                         </Button>
                                                     </div>
@@ -316,156 +263,340 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                             </FormItem>
                                         )}
                                     />
+                                    {!isWineWednesday && (
+                                        <FormField
+                                            control={form.control}
+                                            name="children"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel className="font-normal">Children</FormLabel>
+                                                    <FormControl>
+                                                        <div className="flex items-center gap-2">
+                                                            <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.max(isSoftPlay ? 1 : 0, field.value - 1))} disabled={field.value <= (isSoftPlay ? 1 : 0)}>
+                                                                <Minus className="h-4 w-4" />
+                                                            </Button>
+                                                            <Input {...field} readOnly className="text-center" />
+                                                            <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('children', Math.min(16, field.value + 1))} disabled={totalGuests >= 16}>
+                                                                <Plus className="h-4 w-4" />
+                                                            </Button>
+                                                        </div>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    )}
+                                    {!isSoftPlay && <p className="text-sm text-muted-foreground">For bookings of more than 16 people please email info@pinopolis.wales</p>}
+                                </div>
+
+                                {isBowling && !deal && (
+                                    <>
+                                        <Separator />
+                                        <FormField
+                                            control={form.control}
+                                            name="addSoftPlay"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-4">
+                                                    <div className="flex items-center space-x-2">
+                                                        <ToyBrick className="h-5 w-5 text-primary" />
+                                                        <Label htmlFor="soft-play-switch" className="flex-grow">Step 2: Add Soft Play for other kids?</Label>
+                                                        <FormControl>
+                                                            <Switch
+                                                                id="soft-play-switch"
+                                                                checked={field.value}
+                                                                onCheckedChange={field.onChange}
+                                                            />
+                                                        </FormControl>
+                                                    </div>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        {addSoftPlay && (
+                                            <FormField
+                                                control={form.control}
+                                                name="softPlayChildren"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel className="font-normal">Number of Children for Soft Play</FormLabel>
+                                                        <FormControl>
+                                                            <div className="flex items-center gap-2">
+                                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('softPlayChildren', Math.max(1, (field.value || 1) - 1))} disabled={(field.value || 1) <= 1}>
+                                                                    <Minus className="h-4 w-4" />
+                                                                </Button>
+                                                                <Input {...field} value={field.value || 1} readOnly className="text-center" />
+                                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('softPlayChildren', Math.min(15, (field.value || 1) + 1))} disabled={(field.value || 1) >= 15}>
+                                                                    <Plus className="h-4 w-4" />
+                                                                </Button>
+                                                            </div>
+                                                        </FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        )}
+                                    </>
                                 )}
-                            </>
-                        )}
 
 
-                        {isWineWednesday && (
-                             <>
+                                {isWineWednesday && (
+                                    <>
+                                        <Separator />
+                                        <FormField
+                                            control={form.control}
+                                            name="wine"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-4">
+                                                    <FormLabel>Step 2: What kind of wine would you like?</FormLabel>
+                                                    <FormControl>
+                                                        <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-4">
+                                                            <FormItem>
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="White" id="wine-white" className="sr-only" />
+                                                                </FormControl>
+                                                                <Label htmlFor="wine-white" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'White' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>White</Label>
+                                                            </FormItem>
+                                                            <FormItem>
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="Red" id="wine-red" className="sr-only" />
+                                                                </FormControl>
+                                                                <Label htmlFor="wine-red" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'Red' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>Red</Label>
+                                                            </FormItem>
+                                                            <FormItem>
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="Rose" id="wine-rose" className="sr-only" />
+                                                                </FormControl>
+                                                                <Label htmlFor="wine-rose" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'Rose' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>Rosé</Label>
+                                                            </FormItem>
+                                                        </RadioGroup>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </>
+                                )}
+
+                                {isBowling && !isWineWednesday && (
+                                    <>
+                                        <Separator />
+                                        <FormField
+                                            control={form.control}
+                                            name="games"
+                                            render={({ field }) => (
+                                                <FormItem className="space-y-4">
+                                                    <FormLabel>Step 3: How many games?</FormLabel>
+                                                    <FormControl>
+                                                        <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-4" disabled={!!deal}>
+                                                            <FormItem>
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="1" id="1-game" className="sr-only" />
+                                                                </FormControl>
+                                                                <Label htmlFor="1-game" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '1' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', { "opacity-50 cursor-not-allowed": !!deal })}>1 GAME</Label>
+                                                            </FormItem>
+                                                            <FormItem>
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="2" id="2-games" className="sr-only" />
+                                                                </FormControl>
+                                                                <Label htmlFor="2-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '2' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', { "opacity-50 cursor-not-allowed": !!deal })}>2 GAMES</Label>
+                                                            </FormItem>
+                                                            <FormItem>
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="3" id="3-games" className="sr-only" />
+                                                                </FormControl>
+                                                                <Label htmlFor="3-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '3' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', { "opacity-50 cursor-not-allowed": !!deal })}>3 GAMES</Label>
+                                                            </FormItem>
+                                                        </RadioGroup>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </>
+                                )}
+
                                 <Separator />
+
+                                <div className="space-y-4">
+                                    <FormLabel>Step {isBowling ? (isWineWednesday ? 3 : 4) : 2}: When would you like to reserve?</FormLabel>
+                                    <FormField
+                                        control={form.control}
+                                        name="date"
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-col">
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <FormControl>
+                                                            <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                                                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                            </Button>
+                                                        </FormControl>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                            mode="single"
+                                                            selected={field.value}
+                                                            onSelect={field.onChange}
+                                                            disabled={isDateDisabled}
+                                                            initialFocus
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                                {deal && <FormMessage>You can only select a {format(new Date(2024, 0, deal.day), 'eeee')} for this deal.</FormMessage>}
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={cn(!date && "opacity-50")}>
                                 <FormField
                                     control={form.control}
-                                    name="wine"
+                                    name="time"
                                     render={({ field }) => (
                                         <FormItem className="space-y-4">
-                                            <FormLabel>Step 2: What kind of wine would you like?</FormLabel>
+                                            <FormLabel>Step {isBowling ? (isWineWednesday ? 4 : 5) : 3}: Please select a start time:</FormLabel>
                                             <FormControl>
-                                                <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-4">
-                                                    <FormItem>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="White" id="wine-white" className="sr-only" />
-                                                        </FormControl>
-                                                        <Label htmlFor="wine-white" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'White' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>White</Label>
-                                                    </FormItem>
-                                                     <FormItem>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="Red" id="wine-red" className="sr-only" />
-                                                        </FormControl>
-                                                        <Label htmlFor="wine-red" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'Red' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>Red</Label>
-                                                    </FormItem>
-                                                     <FormItem>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="Rose" id="wine-rose" className="sr-only" />
-                                                        </FormControl>
-                                                        <Label htmlFor="wine-rose" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === 'Rose' ? 'bg-primary text-primary-foreground border-primary' : 'border-input')}>Rosé</Label>
-                                                    </FormItem>
+                                                <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-3 md:grid-cols-4 gap-4" disabled={!date}>
+                                                    {timeSlots.map((slot) => (
+                                                        <FormItem key={slot}>
+                                                            <FormControl>
+                                                                <RadioGroupItem value={slot} id={slot} className="sr-only" />
+                                                            </FormControl>
+                                                            <Label htmlFor={slot} className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === slot ? 'bg-primary text-primary-foreground border-primary' : 'border-input', !date && "cursor-not-allowed")}>{slot}</Label>
+                                                        </FormItem>
+                                                    ))}
                                                 </RadioGroup>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-                            </>
-                        )}
-        
-                        {isBowling && !isWineWednesday && (
-                            <>
-                                <Separator />
-                                <FormField
-                                    control={form.control}
-                                    name="games"
-                                    render={({ field }) => (
-                                        <FormItem className="space-y-4">
-                                            <FormLabel>Step 3: How many games?</FormLabel>
-                                            <FormControl>
-                                                <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-4" disabled={!!deal}>
-                                                    <FormItem>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="1" id="1-game" className="sr-only" />
-                                                        </FormControl>
-                                                        <Label htmlFor="1-game" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '1' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', {"opacity-50 cursor-not-allowed": !!deal})}>1 GAME</Label>
-                                                    </FormItem>
-                                                    <FormItem>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="2" id="2-games" className="sr-only" />
-                                                        </FormControl>
-                                                        <Label htmlFor="2-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '2' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', {"opacity-50 cursor-not-allowed": !!deal})}>2 GAMES</Label>
-                                                    </FormItem>
-                                                    <FormItem>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="3" id="3-games" className="sr-only" />
-                                                        </FormControl>
-                                                        <Label htmlFor="3-games" className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === '3' ? 'bg-primary text-primary-foreground border-primary' : 'border-input', {"opacity-50 cursor-not-allowed": !!deal})}>3 GAMES</Label>
-                                                    </FormItem>
-                                                </RadioGroup>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </>
-                        )}
-        
-                        <Separator />
-        
-                        <div className="space-y-4">
-                            <FormLabel>Step {isBowling ? (isWineWednesday ? 3 : 4) : 2}: When would you like to reserve?</FormLabel>
+                            </div>
+                        </div>
+                    </>
+                )}
+
+                {step === 2 && (
+                    <div className="space-y-6">
+                        <div>
+                             <h3 className="text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Your Information</h3>
+                             <p className="text-muted-foreground">Please enter your contact information. An email address is required for your confirmation receipt.</p>
+                             <Separator className="my-4" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <FormField
                                 control={form.control}
-                                name="date"
+                                name="firstName"
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <FormControl>
-                                                    <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                    </Button>
-                                                </FormControl>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-auto p-0" align="start">
-                                                <Calendar
-                                                    mode="single"
-                                                    selected={field.value}
-                                                    onSelect={field.onChange}
-                                                    disabled={isDateDisabled}
-                                                    initialFocus
-                                                />
-                                            </PopoverContent>
-                                        </Popover>
-                                        {deal && <FormMessage>You can only select a {format(new Date(2024, 0, deal.day), 'eeee')} for this deal.</FormMessage>}
+                                    <FormItem>
+                                        <FormLabel>First name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="First name" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="lastName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Last name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Last name" {...field} />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
-                    </div>
-                    
-                    <div className={cn(!date && "opacity-50")}>
-                        <FormField
+                         <FormField
                             control={form.control}
-                            name="time"
+                            name="postalCode"
                             render={({ field }) => (
-                                <FormItem className="space-y-4">
-                                    <FormLabel>Step {isBowling ? (isWineWednesday ? 4 : 5) : 3}: Please select a start time:</FormLabel>
+                                <FormItem>
+                                    <FormLabel>Postal code</FormLabel>
                                     <FormControl>
-                                        <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-3 md:grid-cols-4 gap-4" disabled={!date}>
-                                            {timeSlots.map((slot) => (
-                                                <FormItem key={slot}>
-                                                    <FormControl>
-                                                        <RadioGroupItem value={slot} id={slot} className="sr-only" />
-                                                    </FormControl>
-                                                    <Label htmlFor={slot} className={cn("block w-full text-center p-3 rounded-md border-2 cursor-pointer", field.value === slot ? 'bg-primary text-primary-foreground border-primary' : 'border-input', !date && "cursor-not-allowed")}>{slot}</Label>
-                                                </FormItem>
-                                            ))}
-                                        </RadioGroup>
+                                        <Input placeholder="Postal code" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+                         <FormField
+                            control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Phone number</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Phone number" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>E-Mail</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="E-Mail" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="marketingOptIn"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                    <FormControl>
+                                        <Checkbox
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <div className="space-y-1 leading-none">
+                                        <FormDescription>
+                                            We would like to send you details of Pinopolis latest offers and information by email. To opt in please tick this box.
+                                        </FormDescription>
+                                    </div>
+                                </FormItem>
+                            )}
+                        />
                     </div>
-                </div>
+                )}
+
 
                 <Separator />
                 
-                <div className="text-right font-bold text-lg">
-                    Total amount: £{totalPrice.toFixed(2)}
+                <div className="flex items-center justify-between">
+                    <div className="text-right font-bold text-lg">
+                        Total amount: £{totalPrice.toFixed(2)}
+                    </div>
+                    <div className="flex gap-4">
+                        {step === 2 && (
+                             <Button type="button" variant="outline" onClick={() => setStep(1)}>
+                                <ArrowLeft />
+                                Back
+                            </Button>
+                        )}
+                        {step === 1 ? (
+                            <Button type="button" onClick={onNext} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Next</Button>
+                        ) : (
+                            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!form.formState.isValid}>Confirm Booking</Button>
+                        )}
+                    </div>
                 </div>
 
-                <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!form.formState.isValid}>Confirm Booking</Button>
             </form>
         </Form>
     );
