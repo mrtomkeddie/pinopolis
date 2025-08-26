@@ -5,21 +5,21 @@ export const activities: Activity[] = [
     title: 'Bowling',
     description: 'Book a lane and strike up some fun with family and friends.',
     href: '/bowling',
-    image: 'https://picsum.photos/seed/bowling/600/400',
+    image: '/bowling.jpg',
     imageHint: 'bowling alley'
   },
   {
     title: 'AR Darts',
     description: 'Experience darts like never before with augmented reality.',
     href: '/darts',
-    image: 'https://picsum.photos/seed/darts/600/400',
+    image: '/darts.jpg',
     imageHint: 'dart board'
   },
   {
     title: 'Soft Play',
     description: 'A safe and fun environment for the little ones to play.',
     href: '/soft-play',
-    image: 'https://picsum.photos/seed/playground/600/400',
+    image: '/softplay.jpg',
     imageHint: 'kids playground'
   },
 ];
