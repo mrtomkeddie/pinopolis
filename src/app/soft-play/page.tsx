@@ -9,7 +9,7 @@ export default function SoftPlayPage() {
         <div className="space-y-8 max-w-6xl mx-auto">
              <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-lg">
-                    <Image src="https://picsum.photos/seed/softplay/600/400" alt="Soft Play Area" layout="fill" objectFit="cover" />
+                    <Image src="/softplay.jpg?v=1" alt="Soft Play Area" layout="fill" objectFit="cover" />
                 </div>
                 <div className="space-y-4">
                     <h1 className="text-4xl font-headline text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]">Soft Play Scheduling</h1>

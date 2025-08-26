@@ -19,7 +19,7 @@ export const activities: Activity[] = [
     title: 'Soft Play',
     description: 'A safe and fun environment for the little ones to play.',
     href: '/soft-play',
-    image: 'https://picsum.photos/seed/softplay/600/400',
+    image: '/softplay.jpg?v=1',
     imageHint: 'kids playground'
   },
 ];
