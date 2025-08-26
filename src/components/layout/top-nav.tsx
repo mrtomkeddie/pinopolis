@@ -65,7 +65,14 @@ export default function TopNav() {
                                 <span className="sr-only">Open menu</span>
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="left" className="p-0 pt-10">
+                        <SheetContent side="left" className="p-0">
+                            <div className="flex justify-center p-4 border-b border-border/40 mb-4">
+                               <SheetClose asChild>
+                                    <Link href="/">
+                                        <Image src="/logo.png" alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
+                                    </Link>
+                               </SheetClose>
+                            </div>
                             <div className="flex flex-col">
                                 {navItems.map((item) => <NavLink key={item.href} item={item} isMobile />)}
                             </div>
