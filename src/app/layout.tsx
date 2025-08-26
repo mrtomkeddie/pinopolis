@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import TopNav from '@/components/layout/top-nav';
+import Footer from '@/components/layout/footer';
 
 export const metadata: Metadata = {
   title: 'Pinopolis',
@@ -30,6 +31,7 @@ export default function RootLayout({
           <main className="flex-1 p-4 sm:p-6 lg:p-8">
             {children}
           </main>
+          <Footer />
         </div>
         <Toaster />
       </body>
