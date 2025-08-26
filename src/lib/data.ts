@@ -12,7 +12,7 @@ export const activities: Activity[] = [
     title: 'AR Darts',
     description: 'Experience darts like never before with augmented reality.',
     href: '/darts',
-    image: 'https://picsum.photos/seed/darts/600/400',
+    image: '/darts.jpg',
     imageHint: 'dart board'
   },
   {
