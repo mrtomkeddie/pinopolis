@@ -59,7 +59,7 @@ export default function TopNav() {
                         <div className="flex justify-center p-4 border-b border-border/40 mb-4">
                            <SheetClose asChild>
                                 <Link href="/">
-                                    <Image src="/logo.png" alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
+                                    <Image src={isMobile ? "/mobilelogo.png" : "/logo.png"} alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
                                 </Link>
                            </SheetClose>
                         </div>
@@ -71,7 +71,7 @@ export default function TopNav() {
                 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                     <Link href="/">
-                        <Image src="/logo.png" alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
+                         <Image src={isMobile ? "/mobilelogo.png" : "/logo.png"} alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
                     </Link>
                 </div>
 
