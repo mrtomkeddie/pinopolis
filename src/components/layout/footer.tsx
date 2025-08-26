@@ -12,7 +12,7 @@ export default function Footer() {
           </Link>
         </p>
         <div className="flex items-center gap-4">
-          <Link href="https://www.facebook.com/PinopolisLlanelli/?locale=en_GB" aria-label="Facebook page" className="text-muted-foreground hover:text-primary" target="_blank" rel="noopener noreferrer">
+          <Link href="https://www.facebook.com/PinopolisLlanelli/" aria-label="Facebook page" className="text-muted-foreground hover:text-primary" target="_blank" rel="noopener noreferrer">
             <Facebook className="h-5 w-5" />
           </Link>
           <Link href="https://www.instagram.com/pinopolis_llanelli/" aria-label="Instagram page" className="text-muted-foreground hover:text-primary" target="_blank" rel="noopener noreferrer">
