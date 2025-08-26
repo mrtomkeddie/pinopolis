@@ -22,7 +22,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Switch } from "./ui/switch";
 import { Checkbox } from "./ui/checkbox";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 
 const timeSlots = [
     "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
@@ -662,7 +662,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         
                         {step === 3 && (
                             <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!form.formState.isValid}>
-                                Confirm Booking
+                                Confirm Booking &amp; Pay
                             </Button>
                         )}
                     </div>

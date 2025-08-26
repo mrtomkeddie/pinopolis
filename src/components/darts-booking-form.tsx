@@ -488,7 +488,7 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
                         
                         {step === 3 && (
                             <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!form.formState.isValid}>
-                                Confirm Booking
+                                Confirm Booking &amp; Pay
                             </Button>
                         )}
                     </div>
