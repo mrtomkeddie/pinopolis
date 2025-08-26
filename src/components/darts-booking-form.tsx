@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Minus, Plus, ToyBrick } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -17,6 +17,8 @@ import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Separator } from "./ui/separator";
 import { useEffect, useState } from "react";
+import { Switch } from "./ui/switch";
+import { Input } from "./ui/input";
 
 const timeSlots = [
     "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
@@ -30,6 +32,8 @@ const timeSlots = [
 const formSchema = z.object({
     oches: z.string({ required_error: "Please select the number of oches." }),
     duration: z.string({ required_error: "Please select a duration." }),
+    addSoftPlay: z.boolean().optional(),
+    softPlayChildren: z.coerce.number().optional(),
     date: z.date({ required_error: "A date is required." }),
     time: z.string({ required_error: "A time slot is required." }),
 });
@@ -59,30 +63,43 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
         defaultValues: {
             oches: "1",
             duration: "30",
+            addSoftPlay: false,
+            softPlayChildren: 1,
         },
     });
 
     const oches = form.watch("oches");
     const duration = form.watch("duration");
+    const addSoftPlay = form.watch("addSoftPlay");
+    const softPlayChildren = form.watch("softPlayChildren");
     const date = form.watch("date");
 
     useEffect(() => {
         const ocheKey = oches as keyof typeof pricing;
+        let price = 0;
         if (pricing[ocheKey]) {
             const durationKey = duration as keyof typeof pricing[typeof ocheKey];
-            const price = pricing[ocheKey][durationKey] || 0;
-            setTotalPrice(price);
-        } else {
-            setTotalPrice(0);
+            price = pricing[ocheKey][durationKey] || 0;
         }
-    }, [oches, duration]);
+
+        if(addSoftPlay && softPlayChildren) {
+            price += softPlayChildren * 5;
+        }
+
+        setTotalPrice(price);
+    }, [oches, duration, addSoftPlay, softPlayChildren]);
 
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values);
+        let softPlayDescription = '';
+        if (values.addSoftPlay && values.softPlayChildren) {
+            softPlayDescription = ` with Soft Play for ${values.softPlayChildren} child(ren)`;
+        }
+
         toast({
             title: "Booking Confirmed!",
-            description: `Your booking for ${activityTitle} is confirmed for ${format(values.date, "PPP")} at ${values.time}. Total: £${totalPrice.toFixed(2)}`,
+            description: `Your booking for ${activityTitle}${softPlayDescription} is confirmed for ${format(values.date, "PPP")} at ${values.time}. Total: £${totalPrice.toFixed(2)}`,
         });
         router.push('/bookings');
     }
@@ -166,10 +183,57 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
                         </div>
 
                         <Separator />
+                        
+                        <FormField
+                            control={form.control}
+                            name="addSoftPlay"
+                            render={({ field }) => (
+                                <FormItem className="space-y-4">
+                                    <div className="flex items-center space-x-2">
+                                        <ToyBrick className="h-5 w-5 text-primary" />
+                                        <Label htmlFor="soft-play-switch" className="flex-grow">Step 3: Add Soft Play for other kids?</Label>
+                                        <FormControl>
+                                            <Switch
+                                                id="soft-play-switch"
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {addSoftPlay && (
+                            <FormField
+                                control={form.control}
+                                name="softPlayChildren"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="font-normal">Number of Children for Soft Play</FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center gap-2">
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('softPlayChildren', Math.max(1, (field.value || 1) - 1))} disabled={(field.value || 1) <= 1}>
+                                                    <Minus className="h-4 w-4" />
+                                                </Button>
+                                                <Input {...field} value={field.value || 1} readOnly className="text-center" />
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('softPlayChildren', Math.min(15, (field.value || 1) + 1))} disabled={(field.value || 1) >= 15}>
+                                                    <Plus className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+
+
+                        <Separator />
 
                         {/* Date Picker */}
                         <div className="space-y-4">
-                            <FormLabel>Step 3: When would you like to reserve?</FormLabel>
+                            <FormLabel>Step 4: When would you like to reserve?</FormLabel>
                             <FormField
                                 control={form.control}
                                 name="date"
@@ -211,7 +275,7 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
                             name="time"
                             render={({ field }) => (
                                 <FormItem className="space-y-4">
-                                    <FormLabel>Step 4: Please select a start time:</FormLabel>
+                                    <FormLabel>Step 5: Please select a start time:</FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
