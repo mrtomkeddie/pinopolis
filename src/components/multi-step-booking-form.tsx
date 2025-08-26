@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, AlertCircle, X } from "lucide-react";
+import { CalendarIcon, Minus, Plus, AlertCircle, X, ToyBrick } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -20,6 +20,7 @@ import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 import { useEffect, useState, useMemo } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Switch } from "./ui/switch";
 
 const timeSlots = [
     "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
@@ -56,6 +57,8 @@ const formSchema = z.object({
   children: z.coerce.number().min(0),
   games: z.string().optional(),
   wine: z.string().optional(),
+  addSoftPlay: z.boolean().optional(),
+  softPlayChildren: z.coerce.number().optional(),
   date: z.date({ required_error: "A date is required." }),
   time: z.string({ required_error: "A time slot is required." }),
 }).refine(data => {
@@ -107,10 +110,12 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(dynamicSchema),
         defaultValues: {
-            adults: isBowling || isSoftPlay ? 1 : 0,
+            adults: isBowling ? 1 : (isSoftPlay ? 1 : 0),
             children: isSoftPlay ? 1 : (isBowling ? 0 : 1),
             games: deal ? deal.games : (isBowling ? "1" : undefined),
             wine: isWineWednesday ? "White" : undefined,
+            addSoftPlay: false,
+            softPlayChildren: 1,
         },
     });
     
@@ -128,6 +133,9 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
     const children = form.watch("children");
     const games = form.watch("games");
     const date = form.watch("date");
+    const addSoftPlay = form.watch("addSoftPlay");
+    const softPlayChildren = form.watch("softPlayChildren");
+
     const totalGuests = adults + children;
 
     useEffect(() => {
@@ -144,14 +152,18 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
             }
         } else if (isBowling) {
             const numGames = parseInt(games || '1', 10);
-            const pricePerGame = numGames > 1 ? 5.00 : 6.50;
-            price = totalGuests * pricePerGame * numGames;
+            const pricePerGameAdult = numGames > 1 ? 5.00 : 6.50;
+            const pricePerGameChild = numGames > 1 ? 4.00 : 5.50;
+            price = (adults * pricePerGameAdult * numGames) + (children * pricePerGameChild * numGames);
+            if(addSoftPlay && softPlayChildren) {
+                price += softPlayChildren * 5;
+            }
         } else if (isSoftPlay) {
             price = children * 5; // £5 per child
         }
 
         setTotalPrice(price);
-    }, [adults, children, games, totalGuests, isBowling, isSoftPlay, deal, dealId]);
+    }, [adults, children, games, totalGuests, isBowling, isSoftPlay, deal, dealId, addSoftPlay, softPlayChildren]);
 
 
     function onSubmit(values: z.infer<typeof formSchema>) {
@@ -164,9 +176,15 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
             dealDescription += ')';
         }
 
+        let softPlayDescription = '';
+        if (isBowling && values.addSoftPlay && values.softPlayChildren) {
+            softPlayDescription = ` with Soft Play for ${values.softPlayChildren} child(ren)`;
+        }
+
+
         toast({
             title: "Booking Confirmed!",
-            description: `Your booking for ${activityTitle}${dealDescription} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} guest(s) is confirmed. Total: £${totalPrice.toFixed(2)}`,
+            description: `Your booking for ${activityTitle}${dealDescription}${softPlayDescription} on ${format(values.date, "PPP")} at ${values.time} for ${values.adults + values.children} bowling guest(s) is confirmed. Total: £${totalPrice.toFixed(2)}`,
         });
         router.push('/bookings');
     }
@@ -205,7 +223,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-6">
                         <div className="space-y-4">
-                            <FormLabel>Step 1: How many guests?</FormLabel>
+                            <FormLabel>Step 1: How many {isBowling ? "bowling" : ""} guests?</FormLabel>
                             <FormField
                                 control={form.control}
                                 name="adults"
@@ -214,7 +232,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                         <FormLabel className="font-normal">Adults {isSoftPlay && "(Go Free)"}</FormLabel>
                                         <FormControl>
                                             <div className="flex items-center gap-2">
-                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isWineWednesday ? 2 : 1, field.value - 1))} disabled={field.value <= (isWineWednesday ? 2 : 1)}>
+                                                <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('adults', Math.max(isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0), field.value - 1))} disabled={field.value <= (isWineWednesday ? 2 : (isBowling || isSoftPlay ? 1 : 0))}>
                                                     <Minus className="h-4 w-4" />
                                                 </Button>
                                                 <Input {...field} readOnly className="text-center" />
@@ -252,6 +270,56 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                             )}
                              {!isSoftPlay && <p className="text-sm text-muted-foreground">For bookings of more than 16 people please email info@pinopolis.wales</p>}
                         </div>
+
+                         {isBowling && !deal && (
+                             <>
+                                <Separator />
+                                <FormField
+                                    control={form.control}
+                                    name="addSoftPlay"
+                                    render={({ field }) => (
+                                        <FormItem className="space-y-4">
+                                            <div className="flex items-center space-x-2">
+                                                <ToyBrick className="h-5 w-5 text-primary" />
+                                                <Label htmlFor="soft-play-switch" className="flex-grow">Step 2: Add Soft Play for other kids?</Label>
+                                                <FormControl>
+                                                    <Switch
+                                                        id="soft-play-switch"
+                                                        checked={field.value}
+                                                        onCheckedChange={field.onChange}
+                                                    />
+                                                </FormControl>
+                                            </div>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                {addSoftPlay && (
+                                    <FormField
+                                        control={form.control}
+                                        name="softPlayChildren"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="font-normal">Number of Children for Soft Play</FormLabel>
+                                                <FormControl>
+                                                    <div className="flex items-center gap-2">
+                                                        <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('softPlayChildren', Math.max(1, (field.value || 1) - 1))} disabled={(field.value || 1) <= 1}>
+                                                            <Minus className="h-4 w-4" />
+                                                        </Button>
+                                                        <Input {...field} value={field.value || 1} readOnly className="text-center" />
+                                                        <Button type="button" variant="outline" size="icon" className="h-10 w-10" onClick={() => form.setValue('softPlayChildren', Math.min(15, (field.value || 1) + 1))} disabled={(field.value || 1) >= 15}>
+                                                            <Plus className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                )}
+                            </>
+                        )}
+
 
                         {isWineWednesday && (
                              <>
@@ -299,7 +367,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                     name="games"
                                     render={({ field }) => (
                                         <FormItem className="space-y-4">
-                                            <FormLabel>Step 2: How many games?</FormLabel>
+                                            <FormLabel>Step 3: How many games?</FormLabel>
                                             <FormControl>
                                                 <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-4" disabled={!!deal}>
                                                     <FormItem>
@@ -332,7 +400,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         <Separator />
         
                         <div className="space-y-4">
-                            <FormLabel>Step {isBowling ? (isWineWednesday ? 3 : 3) : 2}: When would you like to reserve?</FormLabel>
+                            <FormLabel>Step {isBowling ? (isWineWednesday ? 3 : 4) : 2}: When would you like to reserve?</FormLabel>
                             <FormField
                                 control={form.control}
                                 name="date"
@@ -371,7 +439,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                             name="time"
                             render={({ field }) => (
                                 <FormItem className="space-y-4">
-                                    <FormLabel>Step {isBowling ? (isWineWednesday ? 4 : 4) : 3}: Please select a start time:</FormLabel>
+                                    <FormLabel>Step {isBowling ? (isWineWednesday ? 4 : 5) : 3}: Please select a start time:</FormLabel>
                                     <FormControl>
                                         <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-3 md:grid-cols-4 gap-4" disabled={!date}>
                                             {timeSlots.map((slot) => (
@@ -402,5 +470,3 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         </Form>
     );
 }
-
-    
