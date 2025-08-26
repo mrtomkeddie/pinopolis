@@ -8,8 +8,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, AlertCircle, X, ToyBrick, ArrowLeft } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon, Minus, Plus, AlertCircle, X, ToyBrick, ArrowLeft, PartyPopper, User, Calendar, Clock, Gamepad2, Wine, Users } from "lucide-react";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -22,6 +22,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Switch } from "./ui/switch";
 import { Checkbox } from "./ui/checkbox";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const timeSlots = [
     "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
@@ -124,6 +125,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
             wine: isWineWednesday ? "White" : undefined,
             addSoftPlay: false,
             softPlayChildren: 1,
+            marketingOptIn: false,
         },
     });
     
@@ -137,26 +139,20 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         }
     }, [deal, form, isWineWednesday]);
 
-    const adults = form.watch("adults");
-    const children = form.watch("children");
-    const games = form.watch("games");
-    const date = form.watch("date");
-    const addSoftPlay = form.watch("addSoftPlay");
-    const softPlayChildren = form.watch("softPlayChildren");
-
-    const totalGuests = adults + children;
+    const watchAllFields = form.watch();
 
     useEffect(() => {
+        const { adults, children, games, addSoftPlay, softPlayChildren } = watchAllFields;
         let price = 0;
 
         if (deal) {
             if (dealId === 'wine-wednesday') {
                 price = 15; // Base for 2 guests
-                if (totalGuests > 2) {
-                    price += (totalGuests - 2) * 3;
+                if ((adults + children) > 2) {
+                    price += ((adults + children) - 2) * 3;
                 }
             } else if (deal.pricePerPerson) {
-                price = totalGuests * deal.pricePerPerson;
+                price = (adults + children) * deal.pricePerPerson;
             }
         } else if (isBowling) {
             const numGames = parseInt(games || '1', 10);
@@ -171,13 +167,17 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         }
 
         setTotalPrice(price);
-    }, [adults, children, games, totalGuests, isBowling, isSoftPlay, deal, dealId, addSoftPlay, softPlayChildren]);
+    }, [watchAllFields, isBowling, isSoftPlay, deal, dealId]);
 
 
     async function onNext() {
-        const isValid = await form.trigger(["adults", "children", "games", "date", "time"]);
+        const fieldsToValidate = step === 1
+            ? ["adults", "children", "games", "date", "time", "wine", "addSoftPlay", "softPlayChildren"] as const
+            : ["firstName", "lastName", "postalCode", "phone", "email"] as const;
+
+        const isValid = await form.trigger(fieldsToValidate);
         if (isValid) {
-            setStep(2);
+            setStep(prev => prev + 1);
         }
     }
 
@@ -218,6 +218,8 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
         router.push('/bowling');
     };
 
+    const { adults, children, date, time, games, wine, addSoftPlay, softPlayChildren, firstName, lastName, email, phone, postalCode } = form.getValues();
+    const totalGuests = adults + children;
 
     return (
         <Form {...form}>
@@ -312,7 +314,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                                 </FormItem>
                                             )}
                                         />
-                                        {addSoftPlay && (
+                                        {watchAllFields.addSoftPlay && (
                                             <FormField
                                                 control={form.control}
                                                 name="softPlayChildren"
@@ -434,7 +436,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                                         </FormControl>
                                                     </PopoverTrigger>
                                                     <PopoverContent className="w-auto p-0" align="start">
-                                                        <Calendar
+                                                        <CalendarComponent
                                                             mode="single"
                                                             selected={field.value}
                                                             onSelect={field.onChange}
@@ -482,7 +484,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                 {step === 2 && (
                     <div className="space-y-6">
                         <div>
-                             <h3 className="text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Your Information</h3>
+                             <h3 className="text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Step {isBowling || isSoftPlay ? 'Final' : '2'}: Your Information</h3>
                              <p className="text-muted-foreground">Please enter your contact information. An email address is required for your confirmation receipt.</p>
                              <Separator className="my-4" />
                         </div>
@@ -575,6 +577,68 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                     </div>
                 )}
 
+                 {step === 3 && (
+                    <div className="space-y-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Reservation Review</CardTitle>
+                                <CardDescription>Please review your booking details below before confirming.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2 rounded-lg border p-4">
+                                    <h4 className="font-semibold text-primary">{activityTitle} Booking</h4>
+                                    {deal && (
+                                        <div className="flex items-center text-sm">
+                                            <PartyPopper className="mr-2 h-4 w-4" />
+                                            <span>Deal: {deal.title}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex items-center text-sm">
+                                        <Users className="mr-2 h-4 w-4" />
+                                        <span>{adults} Adult(s), {children} Child(ren)</span>
+                                    </div>
+                                    <div className="flex items-center text-sm">
+                                        <Calendar className="mr-2 h-4 w-4" />
+                                        <span>{date ? format(date, "PPP") : 'N/A'}</span>
+                                    </div>
+                                    <div className="flex items-center text-sm">
+                                        <Clock className="mr-2 h-4 w-4" />
+                                        <span>{time}</span>
+                                    </div>
+                                    {isBowling && games && (
+                                        <div className="flex items-center text-sm">
+                                            <Gamepad2 className="mr-2 h-4 w-4" />
+                                            <span>{games} Game(s)</span>
+                                        </div>
+                                    )}
+                                    {isWineWednesday && wine && (
+                                         <div className="flex items-center text-sm">
+                                            <Wine className="mr-2 h-4 w-4" />
+                                            <span>{wine} Wine</span>
+                                        </div>
+                                    )}
+                                    {addSoftPlay && softPlayChildren && (
+                                         <div className="flex items-center text-sm">
+                                            <ToyBrick className="mr-2 h-4 w-4" />
+                                            <span>Soft Play for {softPlayChildren} child(ren)</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="space-y-2 rounded-lg border p-4">
+                                    <h4 className="font-semibold text-primary">Your Information</h4>
+                                    <div className="flex items-center text-sm">
+                                        <User className="mr-2 h-4 w-4" />
+                                        <span>{firstName} {lastName}</span>
+                                    </div>
+                                     <p className="text-sm text-muted-foreground pl-6">{email}</p>
+                                     <p className="text-sm text-muted-foreground pl-6">{phone}</p>
+                                     <p className="text-sm text-muted-foreground pl-6">{postalCode}</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                 )}
+
 
                 <Separator />
                 
@@ -583,16 +647,23 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                         Total amount: £{totalPrice.toFixed(2)}
                     </div>
                     <div className="flex gap-4">
-                        {step === 2 && (
-                             <Button type="button" variant="outline" onClick={() => setStep(1)}>
-                                <ArrowLeft />
+                        {(step === 2 || step === 3) && (
+                             <Button type="button" variant="outline" onClick={() => setStep(prev => prev - 1)}>
+                                <ArrowLeft className="mr-2 h-4 w-4"/>
                                 Back
                             </Button>
                         )}
-                        {step === 1 ? (
-                            <Button type="button" onClick={onNext} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Next</Button>
-                        ) : (
-                            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!form.formState.isValid}>Confirm Booking</Button>
+                        
+                        {step < 3 && (
+                            <Button type="button" onClick={onNext} className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                {step === 1 ? 'Next' : 'Review Booking'}
+                            </Button>
+                        )}
+                        
+                        {step === 3 && (
+                            <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!form.formState.isValid}>
+                                Confirm Booking
+                            </Button>
                         )}
                     </div>
                 </div>

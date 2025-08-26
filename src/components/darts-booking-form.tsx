@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,8 +8,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Minus, Plus, ToyBrick, ArrowLeft } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon, ToyBrick, ArrowLeft, Users, Clock, Calendar, User, Timer } from "lucide-react";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -20,6 +21,7 @@ import { useEffect, useState } from "react";
 import { Switch } from "./ui/switch";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 
 const timeSlots = [
     "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
@@ -73,16 +75,14 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
             duration: "30",
             addSoftPlay: false,
             softPlayChildren: 1,
+            marketingOptIn: false,
         },
     });
 
-    const oches = form.watch("oches");
-    const duration = form.watch("duration");
-    const addSoftPlay = form.watch("addSoftPlay");
-    const softPlayChildren = form.watch("softPlayChildren");
-    const date = form.watch("date");
+    const watchAllFields = form.watch();
 
     useEffect(() => {
+        const { oches, duration, addSoftPlay, softPlayChildren } = watchAllFields;
         const ocheKey = oches as keyof typeof pricing;
         let price = 0;
         if (pricing[ocheKey]) {
@@ -95,12 +95,16 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
         }
 
         setTotalPrice(price);
-    }, [oches, duration, addSoftPlay, softPlayChildren]);
+    }, [watchAllFields]);
 
     async function onNext() {
-        const isValid = await form.trigger(["oches", "duration", "date", "time"]);
+        const fieldsToValidate = step === 1
+            ? ["oches", "duration", "date", "time", "addSoftPlay", "softPlayChildren"] as const
+            : ["firstName", "lastName", "postalCode", "phone", "email"] as const;
+            
+        const isValid = await form.trigger(fieldsToValidate);
         if (isValid) {
-            setStep(2);
+            setStep(prev => prev + 1);
         }
     }
 
@@ -117,6 +121,8 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
         });
         router.push('/bookings');
     }
+    
+    const { oches, duration, date, time, addSoftPlay, softPlayChildren, firstName, lastName, email, phone, postalCode } = form.getValues();
 
     return (
         <Form {...form}>
@@ -219,7 +225,7 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
                                     </FormItem>
                                 )}
                             />
-                            {addSoftPlay && (
+                            {watchAllFields.addSoftPlay && (
                                 <FormField
                                     control={form.control}
                                     name="softPlayChildren"
@@ -267,7 +273,7 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
                                                     </FormControl>
                                                 </PopoverTrigger>
                                                 <PopoverContent className="w-auto p-0" align="start">
-                                                    <Calendar
+                                                    <CalendarComponent
                                                         mode="single"
                                                         selected={field.value}
                                                         onSelect={field.onChange}
@@ -318,7 +324,7 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
                 {step === 2 && (
                     <div className="space-y-6">
                         <div>
-                             <h3 className="text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Your Information</h3>
+                             <h3 className="text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Step 2: Your Information</h3>
                              <p className="text-muted-foreground">Please enter your contact information. An email address is required for your confirmation receipt.</p>
                              <Separator className="my-4" />
                         </div>
@@ -410,6 +416,54 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
                         />
                     </div>
                 )}
+                
+                {step === 3 && (
+                    <div className="space-y-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">Reservation Review</CardTitle>
+                                <CardDescription>Please review your booking details below before confirming.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2 rounded-lg border p-4">
+                                    <h4 className="font-semibold text-primary">{activityTitle} Booking</h4>
+                                    <div className="flex items-center text-sm">
+                                        <Users className="mr-2 h-4 w-4" />
+                                        <span>{oches} Oche(s)</span>
+                                    </div>
+                                    <div className="flex items-center text-sm">
+                                        <Timer className="mr-2 h-4 w-4" />
+                                        <span>{duration} minutes</span>
+                                    </div>
+                                    <div className="flex items-center text-sm">
+                                        <Calendar className="mr-2 h-4 w-4" />
+                                        <span>{date ? format(date, "PPP") : 'N/A'}</span>
+                                    </div>
+                                    <div className="flex items-center text-sm">
+                                        <Clock className="mr-2 h-4 w-4" />
+                                        <span>{time}</span>
+                                    </div>
+                                    {addSoftPlay && softPlayChildren && (
+                                         <div className="flex items-center text-sm">
+                                            <ToyBrick className="mr-2 h-4 w-4" />
+                                            <span>Soft Play for {softPlayChildren} child(ren)</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="space-y-2 rounded-lg border p-4">
+                                    <h4 className="font-semibold text-primary">Your Information</h4>
+                                    <div className="flex items-center text-sm">
+                                        <User className="mr-2 h-4 w-4" />
+                                        <span>{firstName} {lastName}</span>
+                                    </div>
+                                     <p className="text-sm text-muted-foreground pl-6">{email}</p>
+                                     <p className="text-sm text-muted-foreground pl-6">{phone}</p>
+                                     <p className="text-sm text-muted-foreground pl-6">{postalCode}</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
 
 
                 <Separator />
@@ -418,17 +472,24 @@ export default function DartsBookingForm({ activityTitle }: BookingFormProps) {
                     <div className="text-right font-bold text-lg">
                         Total amount: £{totalPrice.toFixed(2)}
                     </div>
-                    <div className="flex gap-4">
-                        {step === 2 && (
-                             <Button type="button" variant="outline" onClick={() => setStep(1)}>
-                                <ArrowLeft />
+                     <div className="flex gap-4">
+                        {(step === 2 || step === 3) && (
+                             <Button type="button" variant="outline" onClick={() => setStep(prev => prev - 1)}>
+                                <ArrowLeft className="mr-2 h-4 w-4"/>
                                 Back
                             </Button>
                         )}
-                        {step === 1 ? (
-                            <Button type="button" onClick={onNext} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Next</Button>
-                        ) : (
-                            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Confirm Booking</Button>
+                        
+                        {step < 3 && (
+                            <Button type="button" onClick={onNext} className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                                {step === 1 ? 'Next' : 'Review Booking'}
+                            </Button>
+                        )}
+                        
+                        {step === 3 && (
+                            <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground" disabled={!form.formState.isValid}>
+                                Confirm Booking
+                            </Button>
                         )}
                     </div>
                 </div>
