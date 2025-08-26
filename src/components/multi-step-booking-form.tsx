@@ -154,6 +154,9 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
             } else if (deal.pricePerPerson) {
                 price = (adults + children) * deal.pricePerPerson;
             }
+             if(addSoftPlay && softPlayChildren) {
+                price += softPlayChildren * 5;
+            }
         } else if (isBowling) {
             const numGames = parseInt(games || '1', 10);
             const pricePerGameAdult = numGames > 1 ? 5.00 : 6.50;
@@ -291,7 +294,7 @@ export default function MultiStepBookingForm({ activityTitle }: BookingFormProps
                                     {!isSoftPlay && <p className="text-sm text-muted-foreground">For bookings of more than 16 people please email info@pinopolis.wales</p>}
                                 </div>
 
-                                {isBowling && !deal && (
+                                {isBowling && (
                                     <>
                                         <Separator />
                                         <FormField
