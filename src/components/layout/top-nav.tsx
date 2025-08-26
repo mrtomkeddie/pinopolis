@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import React from 'react';
 
 const navItems = [
     { href: '/', icon: Home, label: 'Home' },
@@ -22,6 +23,12 @@ const navItems = [
 export default function TopNav() {
     const pathname = usePathname();
     const isMobile = useIsMobile();
+    const [isClient, setIsClient] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsClient(true);
+    }, []);
+
 
     const NavLink = ({ item, isMobile = false }: { item: { href: string, icon: React.ElementType, label: string }, isMobile?: boolean }) => {
         const baseClasses = "text-muted-foreground hover:text-foreground";
@@ -52,6 +59,23 @@ export default function TopNav() {
                     {buttonContent}
                 </Link>
             </Button>
+        )
+    }
+
+    if (!isClient) {
+        return (
+             <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <nav className="container flex items-center h-20 px-4 md:px-6">
+                     <div className="flex items-center gap-4">
+                        <Link href="/" className="flex items-center">
+                            <Image src="/logo.png" alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
+                        </Link>
+                    </div>
+                    <div className="flex items-center gap-2 ml-auto">
+                         {/* Render empty space or a skeleton on the server to prevent mismatch */}
+                    </div>
+                </nav>
+            </header>
         )
     }
 
