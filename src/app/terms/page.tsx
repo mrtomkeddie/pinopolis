@@ -1,10 +1,20 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
 export default function TermsPage() {
+  const [lastUpdated, setLastUpdated] = useState('');
+
+  useEffect(() => {
+    setLastUpdated(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto py-8 space-y-6">
       <h1 className="text-4xl font-headline text-primary drop-shadow-[0_0_10px_hsl(var(--primary))]">Terms and Conditions</h1>
       
       <div className="space-y-4 text-muted-foreground">
-        <p>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <p>Last updated: {lastUpdated || 'Loading...'}</p>
 
         <div className="space-y-2">
             <h2 className="text-2xl font-headline text-accent drop-shadow-[0_0_8px_hsl(var(--accent))]">GENERAL ADMISSION</h2>
