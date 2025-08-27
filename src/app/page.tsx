@@ -14,8 +14,8 @@ export default function DashboardPage() {
         <Image
           src="/banner.jpg"
           alt="Pinopolis banner"
-          layout="fill"
-          objectFit="cover"
+          fill
+          className="object-cover"
           priority
         />
         <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center p-4">
