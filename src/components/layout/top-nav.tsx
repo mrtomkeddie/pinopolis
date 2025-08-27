@@ -62,7 +62,7 @@ export default function TopNav() {
                         <SheetHeader className="p-4 border-b border-border/40 mb-4">
                            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                            <SheetClose asChild>
-                                <Link href="/">
+                                <Link href="/" className="flex justify-center">
                                     <Image src={isMobile ? "/mobilelogo.png" : "/logo.png"} alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
                                 </Link>
                            </SheetClose>
