@@ -7,7 +7,7 @@ import { Dices, CalendarDays, Home, Target, ToyBrick, Menu } from 'lucide-react'
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import React from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -45,6 +45,9 @@ export default function TopNav() {
         )
     }
 
+    // Render desktop version by default to avoid hydration mismatch
+    const shouldShowMenuText = isMobile === undefined ? true : !isMobile;
+
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <nav className="container flex items-center justify-between h-20 px-4 md:px-6">
@@ -52,17 +55,18 @@ export default function TopNav() {
                     <SheetTrigger asChild>
                         <Button variant="ghost">
                             <Menu className="h-6 w-6" />
-                            {!isMobile && <span className="ml-2">Menu</span>}
+                            {shouldShowMenuText && <span className="ml-2">Menu</span>}
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="p-0 w-[300px]">
-                        <div className="flex justify-center p-4 border-b border-border/40 mb-4">
+                        <SheetHeader className="p-4 border-b border-border/40 mb-4">
+                           <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                            <SheetClose asChild>
                                 <Link href="/">
                                     <Image src={isMobile ? "/mobilelogo.png" : "/logo.png"} alt="Pinopolis Logo" width={120} height={40} className="h-10 w-auto" />
                                 </Link>
                            </SheetClose>
-                        </div>
+                        </SheetHeader>
                         <div className="flex flex-col">
                             {navItems.map((item) => <NavLink key={item.href} item={item} />)}
                         </div>
@@ -75,7 +79,6 @@ export default function TopNav() {
                     </Link>
                 </div>
 
-                {/* This empty div is used to balance the flexbox layout and keep the logo centered */}
                 <div className="w-24"></div>
             </nav>
         </header>
