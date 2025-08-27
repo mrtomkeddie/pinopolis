@@ -37,6 +37,7 @@ export default function RootLayout({
       <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet"
+        precedence="default"
       />
       <body className={cn('font-body antialiased')}>
         <div className="flex flex-col min-h-screen bg-background">
