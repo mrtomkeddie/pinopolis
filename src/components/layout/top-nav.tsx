@@ -25,21 +25,19 @@ export default function TopNav() {
     const isMobile = useIsMobile();
 
     const NavLink = ({ item }: { item: { href: string, icon: React.ElementType, label: string }}) => {
-        const baseClasses = "text-muted-foreground hover:text-foreground";
-        const activeClasses = "text-primary hover:text-primary";
-        const mobileClasses = "flex items-center gap-4 p-4 text-lg";
-
-        const buttonContent = (
-            <>
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
-            </>
-        )
+        const isActive = pathname === item.href;
+        const linkClasses = cn(
+            "flex items-center gap-4 px-6 py-3 text-lg rounded-lg mx-2 transition-colors",
+            isActive
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground"
+        );
 
         return (
             <SheetClose asChild>
-                <Link href={item.href} className={cn(baseClasses, { [activeClasses]: pathname === item.href }, mobileClasses)}>
-                    {buttonContent}
+                <Link href={item.href} className={linkClasses}>
+                    <item.icon className="h-5 w-5" />
+                    <span>{item.label}</span>
                 </Link>
             </SheetClose>
         )
@@ -67,7 +65,7 @@ export default function TopNav() {
                                 </Link>
                            </SheetClose>
                         </SheetHeader>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-1">
                             {navItems.map((item) => <NavLink key={item.href} item={item} />)}
                         </div>
                     </SheetContent>
