@@ -115,7 +115,7 @@ export default function Home() {
                 <span>Premium Experience</span>
               </div>
             </div>
-            <Link href="#experiences">
+            <Link href="#content">
               <Button size="lg" className="mt-8">
                 Book Your Experience
                 <ArrowRight className="ml-2 h-5 w-5" />
