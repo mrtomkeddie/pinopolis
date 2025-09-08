@@ -98,18 +98,6 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         updateDetails({ wineChoice: wine });
     };
 
-    const accentTextColor = {
-        orange: 'text-orange-400',
-        pink: 'text-pink-400',
-        cyan: 'text-cyan-400',
-    };
-    
-    const accentSwitchClass = {
-        orange: 'data-[state=checked]:bg-orange-500',
-        pink: 'data-[state=checked]:bg-pink-500',
-        cyan: 'data-[state=checked]:bg-cyan-500',
-    };
-
     return (
         <div className="space-y-6">
             <Alert>
@@ -164,7 +152,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             </div>
 
             {promotion && (
-                <Alert variant="default" className={cn(accentTextColor[accentColor], 'border-current')}>
+                <Alert variant="default" className="text-primary border-primary">
                     <Tag className="h-4 w-4" />
                     <AlertTitle>{promotion.name} Available!</AlertTitle>
                     <AlertDescription>
@@ -172,7 +160,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                     </AlertDescription>
                     <div className="flex items-center justify-between mt-4">
                         <Label htmlFor="deal-switch" className="text-sm font-normal">Apply Deal</Label>
-                        <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} className={cn(accentSwitchClass[accentColor])}/>
+                        <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} />
                     </div>
                 </Alert>
             )}
@@ -213,9 +201,12 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                             <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" disabled={isGamesLocked} />
                             <Label 
                                 htmlFor={`games-${num}`} 
-                                className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4", 
-                                isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-accent hover:text-accent-foreground", 
-                                "peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                                className={cn(
+                                    "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4", 
+                                    isGamesLocked 
+                                        ? "cursor-not-allowed opacity-50" 
+                                        : "cursor-pointer hover:bg-accent hover:text-accent-foreground", 
+                                    "peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                                 )}>
                                 {num} {num > 1 ? 'Games' : 'Game'}
                             </Label>
