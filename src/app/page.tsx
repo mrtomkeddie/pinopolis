@@ -193,7 +193,7 @@ export default function Home() {
                 {activeTab === 'food-drinks' && (
                   <div id="food-drinks">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold font-headline text-yellow-400">Culinary Innovation</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold font-headline text-yellow-400">Food & Drinks</h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                       {foodAndDrinks.map((item) => (
@@ -264,6 +264,8 @@ export default function Home() {
 }
 
     
+    
+
     
 
     
