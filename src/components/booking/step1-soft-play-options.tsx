@@ -75,7 +75,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                 disabledDecrement={bookingDetails.children <= 1}
             />
             {childrenError && <Alert variant="destructive"><AlertDescription className="text-xs">At least one child is required for soft play.</AlertDescription></Alert>}
-             <p className="text-xs text-muted-foreground pt-2">Price is per child. Each session is 1 hour.</p>
+             <p className="text-xs text-muted-foreground pt-2">Price is £5 per child. Unlimited play.</p>
         </div>
       </div>
 
