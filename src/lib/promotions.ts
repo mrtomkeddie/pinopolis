@@ -25,7 +25,7 @@ export const weeklyPromotions: { [key: number]: Promotion } = {
     description: 'One game of bowling and a bottle of wine for two.',
     minGuests: 2,
     maxGuests: 2,
-    pricePerAdditionalGuest: 3
+    pricePerAdditionalGuest: 0
   }
 };
 

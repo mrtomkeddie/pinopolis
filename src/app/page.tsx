@@ -194,7 +194,7 @@ export default function Home() {
                                     {activity.price > 0 ? (
                                         <>£<span className="font-bold">{activity.price.toFixed(2)}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : '/child'}</span></>
                                     ) : (
-                                        <span className="font-bold text-base">From £10.95</span>
+                                        <><span className="font-bold text-base">From £10.95</span><span className="text-sm text-muted-foreground">/oche</span></>
                                     )}
                                   </p>
                                   <Sheet>

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -13,6 +14,8 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { cn } from '@/lib/utils';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Info } from 'lucide-react';
 
 const steps = ['options', 'details', 'summary'];
 
