@@ -46,16 +46,16 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
       orange: {
         '--primary': 'hsl(25 95% 53%)',
         '--primary-foreground': 'hsl(0 0% 100%)',
-      },
+      } as React.CSSProperties,
        pink: {
         '--primary': 'hsl(325 81% 59%)',
         '--primary-foreground': 'hsl(0 0% 100%)',
-      },
+      } as React.CSSProperties,
        cyan: {
         '--primary': 'hsl(190 95% 50%)',
         '--primary-foreground': 'hsl(0 0% 100%)',
-      },
-    } as React.CSSProperties;
+      } as React.CSSProperties,
+    };
 
   const ringClass = {
     orange: 'focus:ring-orange-500',
