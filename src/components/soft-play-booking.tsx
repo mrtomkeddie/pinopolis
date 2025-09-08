@@ -115,7 +115,7 @@ export default function SoftPlayBooking({ activity, price, accentColor }: { acti
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <>
        <SheetHeader className="p-4 flex-shrink-0 border-b">
             <SheetTitle className={cn("font-headline text-2xl", accentText[accentColor])}>Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
@@ -149,6 +149,6 @@ export default function SoftPlayBooking({ activity, price, accentColor }: { acti
             )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

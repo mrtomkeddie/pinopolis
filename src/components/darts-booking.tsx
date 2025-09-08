@@ -138,7 +138,7 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <>
        <SheetHeader className="p-4 flex-shrink-0 border-b">
             <SheetTitle className={cn("font-headline text-2xl", accentText[accentColor])}>Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
@@ -162,17 +162,16 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
             ) : <div className="w-1/3" /> }
             
             {currentStep < steps.length - 1 ? (
-            <Button onClick={nextStep} disabled={isNextDisabled()} className={cn("w-full text-white border-0 bg-gradient-to-r flex-grow", accentGradient[accentColor])}>
+            <Button onClick={nextStep} disabled={isNextDisabled()} className={cn("text-white border-0 bg-gradient-to-r flex-grow", accentGradient[accentColor])}>
                 Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             ) : (
-            <Button onClick={handleBooking} className={cn("w-full text-white border-0 bg-gradient-to-r flex-grow", accentGradient[accentColor])}>
+            <Button onClick={handleBooking} className={cn("text-white border-0 bg-gradient-to-r flex-grow", accentGradient[accentColor])}>
                 Confirm Booking & Pay
             </Button>
             )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
-

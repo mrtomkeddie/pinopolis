@@ -9,9 +9,8 @@ import { Step1_Options } from './booking/step1-options';
 import { Step2_Details } from './booking/step2-details';
 import { Step3_Summary } from './booking/step3-summary';
 import { Button } from './ui/button';
-import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { cn } from '@/lib/utils';
 
@@ -155,7 +154,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <>
       <SheetHeader className="p-4 flex-shrink-0 border-b">
           <SheetTitle className={cn("font-headline text-2xl", accentText[accentColor])}>Book: {activity.name}</SheetTitle>
           <SheetDescription>Select your details to reserve a spot.</SheetDescription>
@@ -190,6 +189,6 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
             )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
