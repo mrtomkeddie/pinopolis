@@ -77,7 +77,6 @@ export default function MenuDialog({ menu, accentColor = 'yellow' }: MenuDialogP
                 ))}
                 </Accordion>
             </div>
-            <ScrollBar className="[&>div]:bg-primary" />
           </ScrollArea>
         </div>
         <Separator className="bg-border/20 flex-shrink-0" />
