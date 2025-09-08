@@ -2,7 +2,7 @@
 import type { Promotion } from './types';
 import { getDay } from 'date-fns';
 
-const weeklyPromotions: { [key: number]: Promotion } = {
+export const weeklyPromotions: { [key: number]: Promotion } = {
   1: { 
     name: 'Money Saving Monday', 
     type: 'perPerson',

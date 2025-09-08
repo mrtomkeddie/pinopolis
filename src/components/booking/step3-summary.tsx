@@ -5,7 +5,7 @@ import type { BookingDetails, Promotion } from '@/lib/types';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Users, Calendar, Gamepad2, ToyBrick, Wine, Info } from 'lucide-react';
+import { Users, Calendar, Gamepad2, ToyBrick, Wine, Info, Tag } from 'lucide-react';
 
 interface Step3Props {
   bookingDetails: BookingDetails;
@@ -26,7 +26,7 @@ export function Step3_Summary({ bookingDetails, basePrice, discountAmount, final
       <div className="space-y-4 p-4 border rounded-lg">
         {promotion ? (
              <div className="flex items-start gap-3 text-primary pb-4 border-b">
-                <Info className="w-5 h-5 mt-1 flex-shrink-0" />
+                <Tag className="w-5 h-5 mt-1 flex-shrink-0" />
                 <div>
                     <h4 className="font-semibold">{promotion.name}</h4>
                     <p className="text-sm text-primary/80">{promotion.description}</p>
@@ -39,7 +39,7 @@ export function Step3_Summary({ bookingDetails, basePrice, discountAmount, final
         <div className="flex items-center gap-2 text-sm"><Gamepad2 className="w-4 h-4" /> {games} Game(s)</div>
         <div className="flex items-center gap-2 text-sm"><Calendar className="w-4 h-4" /> {date ? format(date, 'E, d MMM yyyy') : 'N/A'} at {time || 'N/A'}</div>
         
-        {wineChoice && (
+        {wineChoice && promotion && (
              <div className="flex items-center gap-2 text-sm pt-2 border-t mt-2"><Wine className="w-4 h-4 text-pink-400" /> Wine Choice: {wineChoice}</div>
         )}
         {addSoftPlay && (

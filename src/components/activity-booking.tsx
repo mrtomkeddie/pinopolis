@@ -3,14 +3,15 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { getApplicablePromotion } from '@/lib/promotions';
+import { getApplicablePromotion, weeklyPromotions } from '@/lib/promotions';
 import type { BookingDetails, Activity, Promotion } from '@/lib/types';
 import { Step1_Options } from './booking/step1-options';
 import { Step2_Details } from './booking/step2-details';
 import { Step3_Summary } from './booking/step3-summary';
 import { Button } from './ui/button';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 const steps = ['options', 'details', 'summary'];
 
@@ -33,6 +34,7 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
       postcode: '',
       marketingOptIn: false,
     },
+    dealApplied: false,
   });
   const [promotion, setPromotion] = useState<Promotion | null>(null);
 
@@ -43,18 +45,23 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
     setPromotion(applicablePromotion);
 
     if (applicablePromotion) {
-        if(applicablePromotion.type === 'perPerson' || applicablePromotion.type === 'package') {
-            updateDetails({ games: applicablePromotion.games });
+        if(bookingDetails.dealApplied) {
+            if(applicablePromotion.type === 'perPerson' || applicablePromotion.type === 'package') {
+                updateDetails({ games: applicablePromotion.games });
+            }
+            if (applicablePromotion.type === 'package') {
+                updateDetails({ adults: 2, children: 0 });
+            }
         }
-        if (applicablePromotion.type === 'package') {
-            updateDetails({ adults: 2, children: 0 });
-        }
+    } else {
+        // If no promotion, ensure dealApplied is false
+        updateDetails({ dealApplied: false });
     }
-  }, [bookingDetails.date]);
+  }, [bookingDetails.date, bookingDetails.dealApplied]);
 
 
   const basePrice = useMemo(() => {
-    if (promotion) {
+    if (promotion && bookingDetails.dealApplied) {
         switch (promotion.type) {
             case 'perPerson':
                 return (bookingDetails.adults + bookingDetails.children) * promotion.price;
@@ -62,7 +69,6 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
                 const additionalGuests = Math.max(0, bookingDetails.adults - promotion.minGuests);
                 return promotion.price + (additionalGuests * promotion.pricePerAdditionalGuest);
             case 'discount':
-                // This case is for potential future percentage-based deals, though not used by current deals.
                 const totalGuests = bookingDetails.adults + bookingDetails.children;
                 const bowlingPrice = totalGuests * bookingDetails.games * price;
                 return bowlingPrice;
@@ -76,11 +82,11 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
   }, [bookingDetails, price, promotion]);
 
   const discountAmount = useMemo(() => {
-    if (promotion?.type === 'discount') {
+    if (promotion?.type === 'discount' && bookingDetails.dealApplied) {
         return basePrice * (promotion.discount / 100);
     }
     return 0;
-  }, [promotion, basePrice]);
+  }, [promotion, basePrice, bookingDetails.dealApplied]);
 
   const finalPrice = useMemo(() => basePrice - discountAmount, [basePrice, discountAmount]);
 
@@ -110,11 +116,11 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'options':
-        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} />;
+        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} finalPrice={finalPrice} />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
-        return <Step3_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={promotion} />;
+        return <Step3_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={bookingDetails.dealApplied ? promotion : null} />;
       default:
         return null;
     }
@@ -122,13 +128,22 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
 
   return (
     <div className="py-4 space-y-6 flex flex-col h-full overflow-hidden">
-      <ScrollArea className="flex-grow pr-6 -mr-6">
-        <div className="py-4">
+        <div className="px-4">
+             <Alert>
+                <Info className="h-4 w-4" />
+                <AlertTitle>Weekly Deals Available!</AlertTitle>
+                <AlertDescription>
+                    Select a Monday, Tuesday or Wednesday on the calendar to see our special offers.
+                </AlertDescription>
+            </Alert>
+        </div>
+      <ScrollArea className="flex-grow px-6 -mx-6">
+        <div className="pt-4 pb-6">
             {renderStep()}
         </div>
       </ScrollArea>
 
-      <div className="flex-shrink-0 pt-4 border-t border-border">
+      <div className="flex-shrink-0 px-6 pt-4 border-t border-border">
         {currentStep > 0 && (
           <Button variant="outline" onClick={prevStep} className="mr-2">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back

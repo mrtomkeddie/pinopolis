@@ -54,6 +54,7 @@ export interface BookingDetails {
   time: string;
   contactDetails: ContactDetails;
   wineChoice?: 'White' | 'Red' | 'Rosé';
+  dealApplied?: boolean;
 }
 
 export interface DartsBookingDetails {

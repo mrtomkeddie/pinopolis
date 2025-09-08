@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar as CalendarIcon, Minus, Plus, Users, ToyBrick, Clock, Info, Wine } from 'lucide-react';
+import { Calendar as CalendarIcon, Minus, Plus, Users, ToyBrick, Clock, Info, Wine, Tag } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { BookingDetails, Promotion } from '@/lib/types';
@@ -13,12 +13,14 @@ import { Calendar } from '@/components/ui/calendar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Separator } from '../ui/separator';
 
 interface Step1Props {
   bookingDetails: BookingDetails;
   updateDetails: (details: Partial<BookingDetails>) => void;
   pricePerGame: number;
   promotion: Promotion | null;
+  finalPrice: number;
 }
 
 const timeSlots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
@@ -39,12 +41,13 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 );
 
 
-export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion }: Step1Props) {
+export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion, finalPrice }: Step1Props) {
     const [adultError, setAdultError] = useState(false);
 
     const isDealActive = !!promotion;
-    const isGamesLocked = isDealActive && (promotion.type === 'perPerson' || promotion.type === 'package');
-    const isWineWednesday = isDealActive && promotion.type === 'package';
+    const isDealApplied = bookingDetails.dealApplied ?? false;
+    const isGamesLocked = isDealActive && isDealApplied && (promotion.type === 'perPerson' || promotion.type === 'package');
+    const isWineWednesday = isDealActive && isDealApplied && promotion.type === 'package';
 
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
@@ -79,11 +82,15 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     <div className="space-y-6">
         {promotion && (
             <Alert variant="default" className="border-primary text-primary">
-                <Info className="h-4 w-4 !text-primary" />
-                <AlertTitle>{promotion.name}</AlertTitle>
+                <Tag className="h-4 w-4 !text-primary" />
+                <AlertTitle>{promotion.name} Available!</AlertTitle>
                 <AlertDescription>
-                    {promotion.description}
+                   {promotion.description}
                 </AlertDescription>
+                <div className="flex items-center justify-between mt-4">
+                    <Label htmlFor="deal-switch" className="text-sm font-normal">Apply Deal</Label>
+                    <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} />
+                </div>
             </Alert>
         )}
       <div>
@@ -184,11 +191,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                         selected={bookingDetails.date} 
                         onSelect={(date) => updateDetails({date: date as Date})} 
                         initialFocus 
-                        disabled={(date) => {
-                            if (isWineWednesday) return date.getDay() !== 3 || date < new Date(new Date().setHours(0,0,0,0));
-                            if (isDealActive && (promotion.type === 'perPerson' || promotion.type === 'package')) return date.getDay() !== promotion.games || date < new Date(new Date().setHours(0,0,0,0));
-                            return date < new Date(new Date().setHours(0,0,0,0));
-                        }}
+                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
                         modifiers={{
                             deal: (date) => [1,2,3].includes(date.getDay())
                         }}
@@ -212,6 +215,11 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             <p className="text-xs text-muted-foreground text-center">Please arrive 10-15 minutes prior to your requested start time</p>
         </div>
       </div>
+      <Separator />
+        <div className="flex justify-between items-center font-bold text-lg">
+            <span>Total Price</span>
+            <span>£{finalPrice.toFixed(2)}</span>
+        </div>
     </div>
   );
 }
