@@ -1,5 +1,6 @@
 
-import { Dices, Target, ToyBrick, ArrowRight, PartyPopper } from 'lucide-react';
+
+import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 15,
     image: '/bowling.jpg',
     imageHint: 'bowling alley',
-    gradient: 'from-pink-500 to-purple-500',
+    gradient: 'from-cyan-500 to-blue-500',
   },
   {
     name: 'AR Darts',
@@ -38,7 +39,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 8,
     image: '/softplay.jpg',
     imageHint: 'kids playground',
-    gradient: 'from-cyan-500 to-blue-500',
+    gradient: 'from-pink-500 to-purple-500',
   },
 ];
 
@@ -51,6 +52,22 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
           <div className="relative z-10 flex flex-col items-center space-y-8">
             <Image src="/herologo.png?v=1" alt="Pinopolis Logo" width={800} height={200} className="max-w-md md:max-w-2xl px-4" />
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-muted-foreground mt-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-primary" />
+                <span>Sandy Road, Llanelli, SA15 4DP</span>
+              </div>
+              <div className="hidden md:block w-px h-6 bg-border"></div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-yellow-400" />
+                <span>Daily: 10:30am - 10:00pm</span>
+              </div>
+              <div className="hidden md:block w-px h-6 bg-border"></div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-pink-500" />
+                <span>Premium Experience</span>
+              </div>
+            </div>
             <Link href="#activities">
               <Button size="lg" className="mt-4">
                 Book Your Experience
