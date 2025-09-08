@@ -145,6 +145,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame }: S
                     </Button>
                 ))}
             </div>
+            <p className="text-xs text-muted-foreground text-center">Please arrive 10-15 minutes prior to your requested start time</p>
         </div>
       </div>
     </div>
