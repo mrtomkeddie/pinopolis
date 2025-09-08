@@ -48,7 +48,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     name: 'Soft Play',
     description: 'Safe and exciting soft play area designed for children with interactive features and supervised fun.',
     icon: ToyBrick,
-    price: 8, // Price per hour
+    price: 5, // Price per hour
     image: '/softplay.jpg',
     imageHint: 'kids playground',
     gradient: 'from-cyan-500 to-blue-500',
