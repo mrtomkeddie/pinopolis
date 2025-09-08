@@ -3,18 +3,17 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import { Montserrat, Poppins } from 'next/font/google';
+import { Montserrat, Playfair_Display } from 'next/font/google';
 
 const fontBody = Montserrat({
   subsets: ['latin'],
   variable: '--font-body',
 });
 
-// Using a generic font-family name for Segoe UI which is a system font.
-// This is a common practice when the font is widely available.
-const fontHeadline = {
+const fontHeadline = Playfair_Display({
+  subsets: ['latin'],
   variable: '--font-headline',
-};
+});
 
 export const metadata: Metadata = {
   title: 'Pinopolis Book',

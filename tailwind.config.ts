@@ -14,7 +14,7 @@ export default {
       },
       fontFamily: {
         body: ['var(--font-body)', 'sans-serif'],
-        headline: ['Segoe UI', 'var(--font-headline)', 'sans-serif'],
+        headline: ['var(--font-headline)', 'serif'],
         code: ['monospace'],
       },
       colors: {
