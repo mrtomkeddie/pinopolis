@@ -78,7 +78,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="space-y-2">
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Users /> Select Guests</Label>
         <div className="space-y-2 p-4 border rounded-lg">
             <GuestCounter 
@@ -102,7 +102,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
         </div>
       </div>
 
-      <div>
+      <div className="space-y-2">
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
         <div className="flex flex-col gap-4">
             <Popover>
@@ -119,15 +119,6 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                         onSelect={(date) => updateDetails({date: date as Date})} 
                         initialFocus 
                         disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                        modifiers={{
-                            deal: (date) => [1,2,3].includes(date.getDay())
-                        }}
-                        modifiersStyles={{
-                            deal: {
-                                color: 'hsl(var(--primary-foreground))',
-                                backgroundColor: 'hsl(var(--primary))'
-                            }
-                        }}
                     />
                 </PopoverContent>
             </Popover>

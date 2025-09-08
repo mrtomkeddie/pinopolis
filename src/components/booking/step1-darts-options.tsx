@@ -68,8 +68,8 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails }: Step1Dart
 
   return (
     <div className="space-y-6">
-       <div className="space-y-4">
-        <div className="space-y-2">
+       <div className="space-y-2">
+        <div className="space-y-2 mb-2">
           <Label className="font-bold text-lg flex items-center gap-2"><Clock /> Pick Date & Time</Label>
           <p className="text-xs text-muted-foreground">Please arrive 10-15 minutes prior to your requested start time</p>
         </div>
@@ -88,15 +88,6 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails }: Step1Dart
                         onSelect={(date) => updateDetails({date: date as Date})} 
                         initialFocus 
                         disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                        modifiers={{
-                            deal: (date) => [1,2,3].includes(date.getDay())
-                        }}
-                        modifiersStyles={{
-                            deal: {
-                                color: 'hsl(var(--primary-foreground))',
-                                backgroundColor: 'hsl(var(--primary))'
-                            }
-                        }}
                     />
                 </PopoverContent>
             </Popover>
@@ -115,8 +106,8 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails }: Step1Dart
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
+      <div className="space-y-2">
+        <div className="space-y-2 mb-2">
             <Label className="font-bold text-lg flex items-center gap-2"><Target /> Select Oches & Duration</Label>
             <p className="text-xs text-muted-foreground">Each darts oche holds up to 6 players.</p>
         </div>
