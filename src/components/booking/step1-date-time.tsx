@@ -60,6 +60,12 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
       },
     } as React.CSSProperties;
 
+  const ringClass = {
+    orange: 'focus:ring-orange-500',
+    pink: 'focus:ring-pink-500',
+    cyan: 'focus:ring-cyan-500'
+  }[accentColor];
+
   return (
     <div className="space-y-6 pt-6">
         <div>
@@ -94,7 +100,7 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
                 </Popover>
 
                 <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger className={cn(ringClass)}>
                         <SelectValue placeholder="Select a time" />
                     </SelectTrigger>
                     <SelectContent>
