@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ActivityBooking from '@/components/activity-booking';
 import type { Activity } from '@/lib/types';
@@ -45,7 +44,6 @@ const activities: (Activity & { gradient: string })[] = [
 export default function Home() {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground font-body">
-      <Header />
       <main className="flex-1 flex flex-col items-center justify-center">
         <section className="relative w-full h-[60vh] flex flex-col items-center justify-center text-center bg-background overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
