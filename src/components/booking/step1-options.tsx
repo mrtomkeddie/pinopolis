@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -15,11 +16,14 @@ import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+type AccentColor = 'orange' | 'pink' | 'cyan';
+
 interface Step1Props {
   bookingDetails: BookingDetails;
   updateDetails: (details: Partial<BookingDetails>) => void;
   pricePerGame: number;
   promotion: Promotion | null;
+  accentColor: AccentColor;
 }
 
 const generateTimeSlots = () => {
@@ -59,7 +63,7 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 );
 
 
-export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion }: Step1Props) {
+export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion, accentColor }: Step1Props) {
     const [adultError, setAdultError] = useState(false);
 
     const isDealActive = !!promotion;
@@ -94,6 +98,24 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
 
     const handleWineChoice = (wine: 'White' | 'Red' | 'Rosé') => {
         updateDetails({ wineChoice: wine });
+    };
+
+    const accentBorderColor = {
+        orange: 'border-orange-500',
+        pink: 'border-pink-500',
+        cyan: 'border-cyan-500',
+    };
+
+    const accentTextColor = {
+        orange: 'text-orange-400',
+        pink: 'text-pink-400',
+        cyan: 'text-cyan-400',
+    };
+    
+    const accentSwitchClass = {
+        orange: 'data-[state=checked]:bg-orange-500',
+        pink: 'data-[state=checked]:bg-pink-500',
+        cyan: 'data-[state=checked]:bg-cyan-500',
     };
 
   return (
@@ -192,7 +214,9 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             {[1, 2, 3].map(num => (
                 <div key={num}>
                     <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" />
-                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer")}>
+                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer", isGamesLocked ? {} : {"peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange'},
+            {"peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink'},
+            {"peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500": accentColor === 'cyan'})}>
                         {num} {num > 1 ? 'Games' : 'Game'}
                     </Label>
                 </div>
@@ -224,7 +248,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
       <div className="space-y-2 p-4 border rounded-lg">
         <div className="flex items-center justify-between">
           <Label htmlFor="soft-play-switch" className="font-bold text-md flex items-center gap-2"><ToyBrick /> Add Soft Play</Label>
-          <Switch id="soft-play-switch" checked={bookingDetails.addSoftPlay} onCheckedChange={(checked) => updateDetails({ addSoftPlay: checked, softPlayChildren: checked ? 1 : 0 })} />
+          <Switch id="soft-play-switch" checked={bookingDetails.addSoftPlay} onCheckedChange={(checked) => updateDetails({ addSoftPlay: checked, softPlayChildren: checked ? 1 : 0 })} className={cn(accentSwitchClass[accentColor])}/>
         </div>
         {bookingDetails.addSoftPlay && (
           <div className="pt-4">

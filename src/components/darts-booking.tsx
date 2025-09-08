@@ -12,6 +12,7 @@ import { Button } from './ui/button';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
+import { cn } from '@/lib/utils';
 
 const steps = ['options', 'details', 'summary'];
 
@@ -26,7 +27,10 @@ const dartsPricing = {
     }
 };
 
-export default function DartsBooking({ activity }: { activity: Activity }) {
+type AccentColor = 'orange' | 'pink' | 'cyan';
+
+
+export default function DartsBooking({ activity, accentColor }: { activity: Activity, accentColor: AccentColor }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [bookingDetails, setBookingDetails] = useState<DartsBookingDetails>({
     activityName: activity.name,
@@ -101,7 +105,7 @@ export default function DartsBooking({ activity }: { activity: Activity }) {
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'options':
-        return <Step1_Darts_Options bookingDetails={bookingDetails} updateDetails={updateDetails} promotion={promotion}/>;
+        return <Step1_Darts_Options bookingDetails={bookingDetails} updateDetails={updateDetails} promotion={promotion} accentColor={accentColor} />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
@@ -111,14 +115,20 @@ export default function DartsBooking({ activity }: { activity: Activity }) {
     }
   };
 
+  const accentClasses = {
+      orange: 'from-yellow-500 to-orange-500',
+      pink: 'from-pink-500 to-purple-500',
+      cyan: 'from-cyan-500 to-blue-500',
+  };
+
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-card">
-       <SheetHeader className="p-6 pb-4 flex-shrink-0 border-b">
+    <div className="flex flex-col h-full overflow-hidden bg-black/50">
+       <SheetHeader className="p-6 pb-2 flex-shrink-0 border-b">
             <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
         </SheetHeader>
-      <ScrollArea className="flex-grow bg-black/50">
-        <div className="px-6 py-4">
+      <ScrollArea className="flex-grow bg-card">
+        <div className="p-6">
             {renderStep()}
         </div>
       </ScrollArea>
@@ -136,11 +146,11 @@ export default function DartsBooking({ activity }: { activity: Activity }) {
             )}
              <div className="flex-grow" />
             {currentStep < steps.length - 1 ? (
-            <Button onClick={nextStep} className="w-full ml-auto" style={{maxWidth: 'calc(100% - 100px)'}}>
+            <Button onClick={nextStep} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentClasses[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
                 Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             ) : (
-            <Button onClick={handleBooking} className="w-full ml-auto" style={{maxWidth: 'calc(100% - 100px)'}}>
+            <Button onClick={handleBooking} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentClasses[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
                 Confirm Booking & Pay
             </Button>
             )}

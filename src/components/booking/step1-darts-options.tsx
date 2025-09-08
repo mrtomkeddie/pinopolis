@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target, Tag } from 'lucide-react';
@@ -14,10 +15,13 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
+type AccentColor = 'orange' | 'pink' | 'cyan';
+
 interface Step1DartsProps {
   bookingDetails: DartsBookingDetails;
   updateDetails: (details: Partial<DartsBookingDetails>) => void;
   promotion: Promotion | null;
+  accentColor: AccentColor;
 }
 
 const generateTimeSlots = () => {
@@ -57,7 +61,7 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
     </div>
 );
 
-export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }: Step1DartsProps) {
+export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion, accentColor }: Step1DartsProps) {
     const handleSoftPlayChildrenChange = (increment: boolean) => {
         const newSoftPlayChildren = bookingDetails.softPlayChildren + (increment ? 1 : -1);
         if (newSoftPlayChildren >= 0) {
@@ -66,6 +70,24 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
     };
     
     const isDealApplied = bookingDetails.dealApplied ?? false;
+
+     const accentBorderColor = {
+        orange: 'border-orange-500',
+        pink: 'border-pink-500',
+        cyan: 'border-cyan-500',
+    };
+
+    const accentTextColor = {
+        orange: 'text-orange-400',
+        pink: 'text-pink-400',
+        cyan: 'text-cyan-400',
+    };
+
+    const accentSwitchClass = {
+        orange: 'data-[state=checked]:bg-orange-500',
+        pink: 'data-[state=checked]:bg-pink-500',
+        cyan: 'data-[state=checked]:bg-cyan-500',
+    };
 
   return (
     <div className="space-y-6">
@@ -137,7 +159,11 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
                     {[1, 2].map(num => (
                         <div key={num}>
                             <RadioGroupItem value={String(num)} id={`oches-${num}`} className="sr-only" />
-                            <Label htmlFor={`oches-${num}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
+                            <Label htmlFor={`oches-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer", {
+                                "peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange',
+                                "peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink',
+                                "peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500": accentColor === 'cyan',
+                            })}>
                                 {num} {num > 1 ? 'Oches' : 'Oche'}
                             </Label>
                         </div>
@@ -151,7 +177,11 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
                     {[30, 60].map(num => (
                         <div key={num}>
                             <RadioGroupItem value={String(num)} id={`duration-${num}`} className="sr-only" />
-                            <Label htmlFor={`duration-${num}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
+                            <Label htmlFor={`duration-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer", {
+                                "peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange',
+                                "peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink',
+                                "peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500": accentColor === 'cyan',
+                            })}>
                                 {num} Minutes
                             </Label>
                         </div>
@@ -164,7 +194,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
       <div className="space-y-2 p-4 border rounded-lg">
         <div className="flex items-center justify-between">
           <Label htmlFor="soft-play-switch" className="font-bold text-md flex items-center gap-2"><ToyBrick /> Add Soft Play</Label>
-          <Switch id="soft-play-switch" checked={bookingDetails.addSoftPlay} onCheckedChange={(checked) => updateDetails({ addSoftPlay: checked, softPlayChildren: checked ? 1 : 0 })} />
+          <Switch id="soft-play-switch" checked={bookingDetails.addSoftPlay} onCheckedChange={(checked) => updateDetails({ addSoftPlay: checked, softPlayChildren: checked ? 1 : 0 })} className={cn(accentSwitchClass[accentColor])}/>
         </div>
         {bookingDetails.addSoftPlay && (
           <div className="pt-4">

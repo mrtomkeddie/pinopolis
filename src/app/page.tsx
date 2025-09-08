@@ -187,9 +187,9 @@ export default function Home() {
                                           <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
                                       </SheetTrigger>
                                       <SheetContent className="w-full md:max-w-md bg-card border-l border-border flex flex-col p-0">
-                                          {activity.name === 'Bowling' && <ActivityBooking activity={activity} price={activity.price} />}
-                                          {activity.name === 'AR Darts' && <DartsBooking activity={activity} />}
-                                          {activity.name === 'Soft Play' && <SoftPlayBooking activity={activity} price={activity.price} />}
+                                          {activity.name === 'Bowling' && <ActivityBooking activity={activity} price={activity.price} accentColor={activity.accentColor} />}
+                                          {activity.name === 'AR Darts' && <DartsBooking activity={activity} accentColor={activity.accentColor} />}
+                                          {activity.name === 'Soft Play' && <SoftPlayBooking activity={activity} price={activity.price} accentColor={activity.accentColor} />}
                                       </SheetContent>
                                   </Sheet>
                               </div>

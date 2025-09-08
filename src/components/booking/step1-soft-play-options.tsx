@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -13,9 +14,12 @@ import { Calendar } from '@/components/ui/calendar';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+type AccentColor = 'orange' | 'pink' | 'cyan';
+
 interface Step1SoftPlayProps {
   bookingDetails: SoftPlayBookingDetails;
   updateDetails: (details: Partial<SoftPlayBookingDetails>) => void;
+  accentColor: AccentColor;
 }
 
 const generateTimeSlots = () => {
@@ -56,7 +60,7 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 );
 
 
-export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1SoftPlayProps) {
+export function Step1_SoftPlay_Options({ bookingDetails, updateDetails, accentColor }: Step1SoftPlayProps) {
     const [childrenError, setChildrenError] = useState(false);
 
     const handleAdultsChange = (increment: boolean) => {
