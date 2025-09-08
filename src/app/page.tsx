@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users } from 'lucide-react';
+import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -89,6 +89,14 @@ export default function Home() {
         <section className="relative w-full h-dvh flex flex-col items-center justify-center text-center bg-background overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
+          <div className="absolute top-6 right-6 z-20 flex items-center gap-4">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-white transition-colors">
+              <Facebook className="w-6 h-6" />
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-white transition-colors">
+              <Instagram className="w-6 h-6" />
+            </a>
+          </div>
           <div className="relative z-10 flex flex-col items-center space-y-4">
             <Image src="/herologo.png?v=1" alt="Pinopolis Logo" width={800} height={200} className="max-w-md md:max-w-2xl px-4" />
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-muted-foreground mt-4">
