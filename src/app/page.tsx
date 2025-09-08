@@ -26,7 +26,7 @@ const activities: (Activity & { gradient: string })[] = [
     description: 'Challenge your friends to augmented reality darts. Multiple game modes available.',
     icon: Target,
     price: 10,
-    image: 'https://picsum.photos/600/400?random=2',
+    image: '/bowling.jpg',
     imageHint: 'darts game',
     gradient: 'from-pink-500 to-purple-500',
   },
