@@ -17,13 +17,13 @@ export default function SegmentedControl() {
   const [activeTab, setActiveTab] = useState<Tab>('experiences');
 
   return (
-    <div className="bg-black/50 border border-border/20 rounded-full p-1.5 flex items-center justify-between max-w-md mx-auto">
+    <div className="bg-black/50 border border-border/20 rounded-full p-1.5 flex items-center justify-between max-w-lg mx-auto">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
           className={cn(
-            'flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300',
+            'flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap',
             {
               'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg': activeTab === tab.id,
               'text-muted-foreground hover:text-white': activeTab !== tab.id,
