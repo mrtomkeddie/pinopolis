@@ -130,6 +130,27 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
       cyan: 'border-cyan-500 text-cyan-500',
     }
 
+     const accentHoverClass = {
+      orange: 'hover:bg-orange-500/20 hover:border-orange-500',
+      pink: 'hover:bg-pink-500/20 hover:border-pink-500',
+      cyan: 'hover:bg-cyan-500/20 hover:border-cyan-500',
+    }
+
+    const calendarAccentClasses = {
+      orange: {
+        '--accent': 'hsl(var(--orange-accent))',
+        '--accent-foreground': 'hsl(var(--orange-accent-foreground))',
+      },
+       pink: {
+        '--accent': 'hsl(var(--pink-accent))',
+        '--accent-foreground': 'hsl(var(--pink-accent-foreground))',
+      },
+       cyan: {
+        '--accent': 'hsl(var(--cyan-accent))',
+        '--accent-foreground': 'hsl(var(--cyan-accent-foreground))',
+      },
+    } as React.CSSProperties;
+
   return (
     <div className="space-y-6">
         <div>
@@ -221,7 +242,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         <Label className="font-bold text-lg mb-2">Number of Games</Label>
         <RadioGroup 
             value={String(bookingDetails.games)} 
-            onValueChange={(val) => !isGamesLocked && updateDetails({ games: Number(val) })} 
+            onValueChange={(val) => updateDetails({ games: Number(val) })} 
             className="grid grid-cols-3 gap-2"
         >
             {[1, 2, 3].map(num => (
@@ -229,8 +250,9 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                     <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" disabled={isGamesLocked} />
                     <Label 
                         htmlFor={`games-${num}`} 
-                        className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", 
+                        className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4", 
                         isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-accent hover:text-accent-foreground", 
+                        "peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary",
                         {
                             "peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange',
                             "peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink',
@@ -293,3 +315,5 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     </div>
   );
 }
+
+    
