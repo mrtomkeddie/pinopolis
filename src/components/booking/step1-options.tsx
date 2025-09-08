@@ -214,7 +214,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             </div>
 
             <div>
-                <Label className="font-bold text-lg mb-2">Number of Games</Label>
+                <Label className="font-bold text-lg mb-4">Number of Games</Label>
                  <RadioGroup 
                     value={String(bookingDetails.games)} 
                     onValueChange={(val) => updateDetails({ games: Number(val) })} 
