@@ -1,3 +1,4 @@
+
 import { Dices, Target, ToyBrick, ArrowRight, PartyPopper } from 'lucide-react';
 import Image from 'next/image';
 
@@ -17,9 +18,9 @@ const activities: (Activity & { gradient: string })[] = [
     description: 'Experience bowling with a holographic twist. Perfect for groups and all skill levels.',
     icon: Dices,
     price: 15,
-    image: '/bowling.png',
+    image: '/bowling.jpg',
     imageHint: 'bowling alley',
-    gradient: 'from-cyan-500 to-blue-500',
+    gradient: 'from-pink-500 to-purple-500',
   },
   {
     name: 'AR Darts',
@@ -28,7 +29,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 10,
     image: '/bowling.jpg',
     imageHint: 'darts game',
-    gradient: 'from-pink-500 to-purple-500',
+    gradient: 'from-yellow-500 to-orange-500',
   },
   {
     name: 'Zero-G Soft Play',
@@ -37,7 +38,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 8,
     image: '/softplay.jpg',
     imageHint: 'kids playground',
-    gradient: 'from-yellow-500 to-orange-500',
+    gradient: 'from-cyan-500 to-blue-500',
   },
 ];
 
