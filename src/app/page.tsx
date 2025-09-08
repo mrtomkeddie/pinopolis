@@ -90,29 +90,36 @@ export default function Home() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {activities.map((activity) => (
-                        <div key={activity.name} className={cn("p-px rounded-lg bg-gradient-to-br", activity.gradient)}>
-                        <Card className="bg-card/95 border-0 hover:-translate-y-1 transition-transform duration-300 h-full group">
-                            <CardHeader>
-                            <div className="relative h-40 rounded-md overflow-hidden mb-4">
-                                <Image src={activity.image} alt={activity.name} fill={true} style={{objectFit:"cover"}} className="group-hover:scale-105 transition-transform duration-500" data-ai-hint={activity.imageHint} />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <Card key={activity.name} className="bg-card/95 border-t-2 border-primary/40 hover:-translate-y-1 transition-transform duration-300 group flex flex-col">
+                        <CardHeader className="p-0">
+                            <div className="relative h-48 rounded-t-lg overflow-hidden">
+                            <Image
+                                src={activity.image}
+                                alt={activity.name}
+                                fill={true}
+                                style={{objectFit: 'cover'}}
+                                className="group-hover:scale-105 transition-transform duration-500"
+                                data-ai-hint={activity.imageHint}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <div className={cn("text-white p-2 bg-gradient-to-br rounded-lg", activity.gradient)}>
-                                    <activity.icon className="w-8 h-8"/>
-                                </div>
-                                <div>
+                        </CardHeader>
+                        <CardContent className="p-6 flex-grow flex flex-col">
+                            <div className="flex justify-between items-start">
+                                <div className='flex-grow'>
                                     <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
-                                    <CardDescription className="mt-1">{activity.description}</CardDescription>
+                                    <CardDescription className="mt-2 text-base">{activity.description}</CardDescription>
+                                </div>
+                                <div className={cn("text-white p-2 bg-gradient-to-br rounded-lg -mt-12", activity.gradient)}>
+                                    <activity.icon className="w-6 h-6"/>
                                 </div>
                             </div>
-                            </CardHeader>
-                            <CardContent>
-                            <div className="flex justify-between items-center text-lg">
-                                <p>From <span className="font-bold text-primary">${activity.price}</span>/person</p>
+                            <div className="flex-grow" />
+                            <div className="flex justify-between items-center mt-6 pt-6 border-t border-border/20">
+                                <p className="text-xl">From <span className="font-bold text-primary">${activity.price}</span><span className="text-sm text-muted-foreground">/person</span></p>
                                 <Sheet>
                                     <SheetTrigger asChild>
-                                        <Button variant="outline">Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                                        <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
                                     </SheetTrigger>
                                     <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
                                         <SheetHeader>
@@ -123,9 +130,8 @@ export default function Home() {
                                     </SheetContent>
                                 </Sheet>
                             </div>
-                            </CardContent>
+                        </CardContent>
                         </Card>
-                        </div>
                     ))}
                     </div>
                 </div>
