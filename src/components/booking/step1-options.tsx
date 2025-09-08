@@ -80,6 +80,47 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
 
   return (
     <div className="space-y-6">
+        <div>
+            <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
+            <div className="grid grid-cols-1 gap-4">
+                <Popover>
+                    <PopoverTrigger asChild>
+                    <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal', !bookingDetails.date && 'text-muted-foreground')}>
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
+                    </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar 
+                            mode="single" 
+                            selected={bookingDetails.date} 
+                            onSelect={(date) => updateDetails({date: date as Date})} 
+                            initialFocus 
+                            disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                            modifiers={{
+                                deal: (date) => [1,2,3].includes(date.getDay())
+                            }}
+                            modifiersStyles={{
+                                deal: {
+                                    color: 'hsl(var(--primary-foreground))',
+                                    backgroundColor: 'hsl(var(--primary))'
+                                }
+                            }}
+                        />
+                    </PopoverContent>
+                </Popover>
+
+                <div className="grid grid-cols-3 gap-2">
+                    {timeSlots.map(slot => (
+                        <Button key={slot} variant={bookingDetails.time === slot ? 'default' : 'outline'} onClick={() => updateDetails({time: slot})}>
+                            {slot}
+                        </Button>
+                    ))}
+                </div>
+                <p className="text-xs text-muted-foreground text-center">Please arrive 10-15 minutes prior to your requested start time</p>
+            </div>
+        </div>
+
         {promotion && (
             <Alert variant="default" className="border-primary text-primary">
                 <Tag className="h-4 w-4 !text-primary" />
@@ -93,6 +134,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 </div>
             </Alert>
         )}
+
       <div>
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Users /> Select Guests</Label>
         <div className="space-y-2 p-4 border rounded-lg">
@@ -127,7 +169,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             {[1, 2, 3].map(num => (
                 <div key={num}>
                     <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" />
-                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground", bookingDetails.games === num && "border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer")}>
+                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer")}>
                         {num} {num > 1 ? 'Games' : 'Game'}
                     </Label>
                 </div>
@@ -174,47 +216,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
           </div>
         )}
       </div>
-
-      <div>
-        <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
-        <div className="grid grid-cols-1 gap-4">
-            <Popover>
-                <PopoverTrigger asChild>
-                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal', !bookingDetails.date && 'text-muted-foreground')}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
-                </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar 
-                        mode="single" 
-                        selected={bookingDetails.date} 
-                        onSelect={(date) => updateDetails({date: date as Date})} 
-                        initialFocus 
-                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                        modifiers={{
-                            deal: (date) => [1,2,3].includes(date.getDay())
-                        }}
-                        modifiersStyles={{
-                            deal: {
-                                color: 'hsl(var(--primary-foreground))',
-                                backgroundColor: 'hsl(var(--primary))'
-                            }
-                        }}
-                    />
-                </PopoverContent>
-            </Popover>
-
-            <div className="grid grid-cols-3 gap-2">
-                {timeSlots.map(slot => (
-                    <Button key={slot} variant={bookingDetails.time === slot ? 'default' : 'outline'} onClick={() => updateDetails({time: slot})}>
-                        {slot}
-                    </Button>
-                ))}
-            </div>
-            <p className="text-xs text-muted-foreground text-center">Please arrive 10-15 minutes prior to your requested start time</p>
-        </div>
-      </div>
+      
       <Separator />
         <div className="flex justify-between items-center font-bold text-lg">
             <span>Total Price</span>
