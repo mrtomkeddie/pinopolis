@@ -139,7 +139,7 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
                 </AlertDescription>
             </Alert>
         </div>
-      <ScrollArea className="flex-grow px-6 -mx-6 bg-black/30">
+      <ScrollArea className="flex-grow px-6 -mx-6 bg-black/50">
         <div className="pt-4 pb-6">
             {renderStep()}
         </div>

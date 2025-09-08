@@ -112,7 +112,7 @@ export default function DartsBooking({ activity }: { activity: Activity }) {
 
   return (
     <div className="py-4 space-y-6 flex flex-col h-full overflow-hidden">
-      <ScrollArea className="flex-grow px-6 -mx-6 bg-black/30">
+      <ScrollArea className="flex-grow px-6 -mx-6 bg-black/50">
         <div className="pt-4 pb-6">
             {renderStep()}
         </div>
