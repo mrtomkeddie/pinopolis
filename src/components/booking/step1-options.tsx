@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Separator } from '../ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Step1Props {
   bookingDetails: BookingDetails;
@@ -23,7 +24,17 @@ interface Step1Props {
   finalPrice: number;
 }
 
-const timeSlots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
+const generateTimeSlots = () => {
+    const slots = [];
+    for (let i = 10; i <= 20; i++) {
+        slots.push(`${i}:00`);
+        if (i < 20) {
+            slots.push(`${i}:30`);
+        }
+    }
+    return slots;
+};
+const timeSlots = generateTimeSlots();
 
 const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecrement = false, disabledIncrement = false }) => (
     <div className="flex items-center justify-between">
@@ -82,7 +93,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     <div className="space-y-6">
         <div>
             <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Popover>
                     <PopoverTrigger asChild>
                     <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal', !bookingDetails.date && 'text-muted-foreground')}>
@@ -110,15 +121,19 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                     </PopoverContent>
                 </Popover>
 
-                <div className="grid grid-cols-3 gap-2">
-                    {timeSlots.map(slot => (
-                        <Button key={slot} variant={bookingDetails.time === slot ? 'default' : 'outline'} onClick={() => updateDetails({time: slot})}>
-                            {slot}
-                        </Button>
-                    ))}
-                </div>
-                <p className="text-xs text-muted-foreground text-center">Please arrive 10-15 minutes prior to your requested start time</p>
+                <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {timeSlots.map(slot => (
+                            <SelectItem key={slot} value={slot}>{slot}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+
             </div>
+             <p className="text-xs text-muted-foreground text-center mt-4">Please arrive 10-15 minutes prior to your requested start time</p>
         </div>
 
         {promotion && (
@@ -226,3 +241,5 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     </div>
   );
 }
+
+    
