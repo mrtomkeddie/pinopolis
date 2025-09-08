@@ -139,12 +139,13 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
 
   return (
     <>
-        <SheetHeader className="p-6 pb-2 flex-shrink-0 border-b">
+        <SheetHeader className="p-6 pb-4 flex-shrink-0 border-b">
             <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
         </SheetHeader>
-        <div className="p-6">
-             <Alert>
+      <ScrollArea className="flex-grow bg-black/50">
+          <div className="p-6">
+            <Alert>
                 <Info className="h-4 w-4" />
                 <AlertTitle>Weekly Deals Available!</AlertTitle>
                 <AlertDescription>
@@ -152,8 +153,9 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
                 </AlertDescription>
             </Alert>
         </div>
-      <ScrollArea className="flex-grow bg-card px-6">
+        <div className="p-6 pt-0">
             {renderStep()}
+        </div>
       </ScrollArea>
 
       <div className="flex-shrink-0 px-6 py-4 border-t border-border">
