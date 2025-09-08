@@ -14,7 +14,18 @@ import { ScrollArea } from './ui/scroll-area';
 
 const steps = ['options', 'details', 'summary'];
 
-export default function DartsBooking({ activity, price }: { activity: Activity, price: number }) {
+const dartsPricing = {
+    1: {
+        30: 10.95,
+        60: 19.95,
+    },
+    2: {
+        30: 21.90,
+        60: 39.90,
+    }
+};
+
+export default function DartsBooking({ activity }: { activity: Activity }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [bookingDetails, setBookingDetails] = useState<DartsBookingDetails>({
     activityName: activity.name,
@@ -38,11 +49,12 @@ export default function DartsBooking({ activity, price }: { activity: Activity, 
   const { toast } = useToast();
 
   const basePrice = useMemo(() => {
-    const durationInHours = bookingDetails.duration / 60;
-    const dartsPrice = bookingDetails.oches * durationInHours * price;
+    const oches = bookingDetails.oches as keyof typeof dartsPricing;
+    const duration = bookingDetails.duration as keyof typeof dartsPricing[1];
+    const dartsPrice = dartsPricing[oches][duration] || 0;
     const softPlayPrice = bookingDetails.addSoftPlay ? bookingDetails.softPlayChildren * 5 : 0;
     return dartsPrice + softPlayPrice;
-  }, [bookingDetails, price]);
+  }, [bookingDetails]);
 
   const discountAmount = useMemo(() => {
     const applicablePromotion = bookingDetails.date ? getApplicablePromotion(bookingDetails.date) : null;

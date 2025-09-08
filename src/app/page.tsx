@@ -28,7 +28,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     name: 'Bowling',
     description: 'Brunswick bowling with state-of-the-art lanes, scoring systems and atmospheric lighting.',
     icon: Dices,
-    price: 7, // Price per game per person
+    price: 6.50, // Price per game per person
     image: '/bowling.jpg',
     imageHint: 'bowling alley',
     gradient: 'from-yellow-500 to-orange-500',
@@ -38,7 +38,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     name: 'AR Darts',
     description: 'Augmented reality dartboards with digital targets, effects and competitive scoring modes.',
     icon: Target,
-    price: 28, // Price per hour
+    price: 0, // Price is complex, handled in component
     image: '/darts.jpg',
     imageHint: 'darts game',
     gradient: 'from-pink-500 to-purple-500',
@@ -172,7 +172,13 @@ export default function Home() {
                               </div>
                               <div className="flex-grow" />
                               <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
-                                  <p className="text-xl">£<span className="font-bold">{activity.price}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : activity.name === 'Soft Play' ? '/child' : '/hour'}</span></p>
+                                  <p className="text-xl">
+                                    {activity.price > 0 ? (
+                                        <>£<span className="font-bold">{activity.price.toFixed(2)}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : '/child'}</span></>
+                                    ) : (
+                                        <span className="font-bold text-base">From £10.95</span>
+                                    )}
+                                  </p>
                                   <Sheet>
                                       <SheetTrigger asChild>
                                           <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
@@ -183,7 +189,7 @@ export default function Home() {
                                               <SheetDescription>Select your details to reserve a spot.</SheetDescription>
                                           </SheetHeader>
                                           {activity.name === 'Bowling' && <ActivityBooking activity={activity} price={activity.price} />}
-                                          {activity.name === 'AR Darts' && <DartsBooking activity={activity} price={activity.price} />}
+                                          {activity.name === 'AR Darts' && <DartsBooking activity={activity} />}
                                           {activity.name === 'Soft Play' && <SoftPlayBooking activity={activity} price={activity.price} />}
                                       </SheetContent>
                                   </Sheet>
