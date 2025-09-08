@@ -19,7 +19,7 @@ interface Step1SoftPlayProps {
 
 const timeSlots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
 
-const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecrement = false }) => (
+const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecrement = false, disabledIncrement = false }) => (
     <div className="flex items-center justify-between">
         <Label>{label}</Label>
         <div className="flex items-center gap-2">
@@ -27,7 +27,7 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
                 <Minus className="h-4 w-4" />
             </Button>
             <span className="w-8 text-center font-bold">{value}</span>
-            <Button variant="outline" size="icon" className="h-8 w-8" onClick={onIncrement}>
+            <Button variant="outline" size="icon" className="h-8 w-8" onClick={onIncrement} disabled={disabledIncrement}>
                 <Plus className="h-4 w-4" />
             </Button>
         </div>
@@ -40,17 +40,17 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
 
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
-        if (newAdults >= 0) {
+        if (newAdults >= 0 && (newAdults + bookingDetails.children <= 15)) {
             updateDetails({ adults: newAdults });
         }
     };
     
     const handleChildrenChange = (increment: boolean) => {
         const newChildren = bookingDetails.children + (increment ? 1 : -1);
-        if (newChildren >= 1) {
+        if (newChildren >= 1 && (newChildren + bookingDetails.adults <= 15)) {
             updateDetails({ children: newChildren });
             setChildrenError(false);
-        } else {
+        } else if (newChildren < 1) {
             setChildrenError(true);
         }
     };
@@ -66,6 +66,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                 onIncrement={() => handleAdultsChange(true)}
                 onDecrement={() => handleAdultsChange(false)}
                 disabledDecrement={bookingDetails.adults <= 0}
+                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 15}
             />
             <GuestCounter 
                 label="Children" 
@@ -73,6 +74,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                 onIncrement={() => handleChildrenChange(true)}
                 onDecrement={() => handleChildrenChange(false)}
                 disabledDecrement={bookingDetails.children <= 1}
+                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 15}
             />
             {childrenError && <Alert variant="destructive"><AlertDescription className="text-xs">At least one child is required for soft play.</AlertDescription></Alert>}
              <p className="text-xs text-muted-foreground pt-2">Price is £5 per child. Unlimited play.</p>
