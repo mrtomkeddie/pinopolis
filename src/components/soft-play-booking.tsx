@@ -116,9 +116,11 @@ export default function SoftPlayBooking({ activity, price, accentColor }: { acti
 
   return (
     <>
-       <SheetHeader className="p-6 flex-shrink-0 border-b">
+       <SheetHeader className="p-6 pb-0 flex-shrink-0">
+          <div className="pb-6 border-b">
             <SheetTitle className={cn("font-headline text-2xl", accentText[accentColor])}>Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
+          </div>
         </SheetHeader>
       <ScrollArea className="flex-grow min-h-0">
         <div className="p-6" style={{ contain: 'layout' }}>
