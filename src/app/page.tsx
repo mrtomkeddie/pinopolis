@@ -167,7 +167,11 @@ export default function Home() {
                               </div>
                               <CardDescription className="mt-2 text-base text-muted-foreground">{activity.description}</CardDescription>
                               <div className="flex items-center gap-4 text-muted-foreground text-sm mt-4">
-                                <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /><span>90 min</span></div>
+                                <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" />
+                                <span>
+                                  {activity.name === 'Soft Play' ? 'Unlimited Play' : '90 min'}
+                                </span>
+                                </div>
                                 <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>up to 15 players</span></div>
                               </div>
                               <div className="flex-grow" />
