@@ -3,6 +3,7 @@ export interface MenuItem {
     name: string;
     description?: string;
     price: number;
+    priceLarge?: number;
 }
   
 export interface MenuCategory {
@@ -172,22 +173,81 @@ export const streetFoodMenu: Menu = {
 };
   
 export const drinksMenu: Menu = {
-    title: 'Craft Beer & Cocktails',
-    description: 'Expertly crafted drinks to complement your experience.',
-    categories: [
-      {
-        title: 'DRAFT BEERS',
-        items: [
-          { name: 'Cyber Haze IPA', description: 'A juicy, hazy IPA with notes of citrus and tropical fruit.', price: 6.50 },
-          { name: 'Neon Lager', description: 'A crisp, clean, and refreshing pilsner-style lager.', price: 5.50 },
-        ],
-      },
-      {
-        title: 'SIGNATURE COCKTAILS',
-        items: [
-          { name: 'The Matrix', description: 'A mind-bending mix of gin, Midori, and a hint of lime.', price: 12.00 },
-          { name: 'Glitch in the System', description: 'A vibrant blue curaçao and vodka concoction.', price: 11.00 },
-        ],
-      },
-    ],
-  };
+  title: 'Craft Beer & Cocktails',
+  description: 'Expertly crafted drinks to complement your experience.',
+  categories: [
+    {
+      title: 'SOFT DRINKS',
+      description: 'By The Glass',
+      items: [
+        { name: 'Pepsi', price: 2.65, priceLarge: 3.45 },
+        { name: 'Pepsi Max', price: 2.45, priceLarge: 3.25 },
+        { name: 'Vimto', price: 2.65, priceLarge: 3.45 },
+        { name: 'Sunkist Orange', price: 2.65, priceLarge: 3.45 },
+        { name: 'Sunkist Lemonade', price: 2.65, priceLarge: 3.45 },
+        { name: 'Blackcurrant Squash', price: 1.20, priceLarge: 1.75 },
+        { name: 'Fruit shoot', price: 1.90 },
+        { name: 'Bottled water', price: 1.90 },
+        { name: 'Calippo Slush', price: 3.50 },
+      ],
+    },
+    {
+      title: 'COSTA COFFEE',
+      items: [
+        { name: 'Latte', price: 3.50, priceLarge: 3.95 },
+        { name: 'Cappuccino', price: 3.50, priceLarge: 3.95 },
+        { name: 'Flat White', price: 3.40, priceLarge: 3.80 },
+        { name: 'Americano', price: 3.25, priceLarge: 3.50 },
+        { name: 'Mocha', price: 3.85, priceLarge: 4.15 },
+        { name: 'Cortado', price: 3.40, priceLarge: 3.65 },
+        { name: 'Espresso', price: 1.95, priceLarge: 2.50 },
+        { name: 'Hot Chocolate', price: 3.50, priceLarge: 3.95 },
+        { name: 'Tea', price: 1.95, priceLarge: 2.45 },
+      ],
+    },
+    {
+      title: 'DRAUGHT',
+      description: 'Pint',
+      items: [
+        { name: 'Red Stripe', price: 4.80 },
+        { name: 'Cruzcampo', price: 4.95 },
+        { name: 'Birra Moretti', price: 4.95 },
+        { name: 'Neck Oil', price: 5.30 },
+        { name: 'Old Moat', price: 4.80 },
+        { name: 'Inch\'s', price: 4.80 },
+        { name: 'Guinness', price: 4.95 },
+        { name: 'Bitter', price: 4.75 },
+      ],
+    },
+    {
+      title: 'WINE',
+      items: [
+        { name: 'Prosecco', price: 6.95 },
+        { name: 'White Wine', price: 5.95, priceLarge: 7.95 },
+        { name: 'Red Wine', price: 5.95, priceLarge: 7.95 },
+        { name: 'Rose Wine', price: 5.95, priceLarge: 7.95 },
+      ],
+    },
+    {
+      title: 'COCKTAILS',
+      description: '£6.45 or 2 of the same for £10',
+      items: [
+        { name: 'Poison Ivy', description: 'Apple Vodka, Rum, Sour Apple, Blue Curaco, Passion Fruit', price: 6.45 },
+        { name: 'Friends with Pin', description: 'Vodka, Malibu Rum, Blue Curaco, Pina Colada, Strawberry Lemonade', price: 6.45 },
+        { name: 'Tipsy Welsh Dragon', description: 'Vodka, Gin, Rum, Mango, Lemonade, Strawberry Lemonade', price: 6.45 },
+        { name: 'Beetle Juice', description: 'Tequila, Vodka, Passion Fruit, Pinapple, Midori, Lemonade', price: 6.45 },
+        { name: 'Little Mermaid', description: 'Rum, Iced tea, Lemonade, Blue Curaco, Strawberry', price: 6.45 },
+        { name: 'Barbie Rum', description: 'Malibu, Vodka, Grapefruit, Monster Pink Punch', price: 6.45 },
+        { name: 'Hakuna Matata', description: 'Spiced Rum, Coconut Rum, Creme de Banana, Grenadine, Pinapple', price: 6.45 },
+        { name: 'Bob Marley', description: 'Coconut Rum, Spiced Rum, Grenadine, Kiwi, Pineapple', price: 6.45 },
+        { name: 'Pinopolis Sunset', description: 'Gin, Orange juice, Grenadine, Lemon Juice', price: 6.45 },
+        { name: 'Shark Doo Doo', description: 'AU Vodka Blue Raspberry, White Rum, Cherry, Lemon, Lime, Lemonade', price: 6.45 },
+        { name: 'Darty Beach', description: 'Vodka, Rum, Tequila, Peach Schnapps, Pineapple, Pink Lemonade', price: 6.45 },
+        { name: 'Strawberry Long Island', description: 'Malibu, Vodka, Gin, Tequila, Lime, Strawberry', price: 6.45 },
+        { name: 'Mudslide', description: 'Vodka, Coffee Liqueur, Baileys Irish Cream, Milk', price: 6.45 },
+        { name: 'Irish Coffee', description: 'Whiskey with Costa coffee', price: 6.45 },
+        { name: 'Irish Baileys Coffee', description: 'Baileys with Costa Coffee', price: 6.45 },
+      ],
+    },
+  ],
+};

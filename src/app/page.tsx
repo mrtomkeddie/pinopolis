@@ -61,6 +61,7 @@ const foodAndDrinks = [
     tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
     buttonText: 'View Menu',
     menu: streetFoodMenu,
+    accentColor: 'yellow' as const,
   },
   {
     name: 'Craft Beer & Cocktails',
@@ -72,6 +73,7 @@ const foodAndDrinks = [
     tags: ['Craft Beer Selection', 'Live Sports TV', 'Draft Cocktails'],
     buttonText: 'View Drinks',
     menu: drinksMenu,
+    accentColor: 'pink' as const,
   },
 ]
 
@@ -220,7 +222,7 @@ export default function Home() {
                                 </div>
                             </CardContent>
                           </Card>
-                          <MenuDialog menu={item.menu} />
+                          <MenuDialog menu={item.menu} accentColor={item.accentColor} />
                         </Dialog>
                       ))}
                     </div>
