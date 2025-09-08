@@ -119,7 +119,7 @@ export default function Home() {
               </div>
             </div>
             <Link href="#content">
-              <Button size="lg" className="mt-8">
+              <Button size="lg" className="mt-8 bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">
                 Book Your Experience
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
