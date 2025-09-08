@@ -13,7 +13,7 @@ import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Separator } from './ui/separator';
-import { SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
+import { SheetHeader, SheetTitle, SheetDescription, SheetContent } from './ui/sheet';
 import { cn } from '@/lib/utils';
 
 const steps = ['options', 'details', 'summary'];
@@ -81,8 +81,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
     }
     // Default pricing if no promotion
     const totalGuests = bookingDetails.adults + bookingDetails.children;
-    const pricePerGame = bookingDetails.games > 1 ? 5.00 : price;
-    const bowlingPrice = totalGuests * bookingDetails.games * pricePerGame;
+    const bowlingPrice = totalGuests * bookingDetails.games * price;
     const softPlayPrice = bookingDetails.addSoftPlay ? bookingDetails.softPlayChildren * 5 : 0;
     return bowlingPrice + softPlayPrice;
   }, [bookingDetails, price, promotion]);
@@ -139,7 +138,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-black/50">
+    <>
         <SheetHeader className="p-6 pb-2 flex-shrink-0 border-b">
             <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
@@ -153,10 +152,8 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
                 </AlertDescription>
             </Alert>
         </div>
-      <ScrollArea className="flex-grow bg-card">
-        <div className="p-6">
+      <ScrollArea className="flex-grow bg-card px-6">
             {renderStep()}
-        </div>
       </ScrollArea>
 
       <div className="flex-shrink-0 px-6 py-4 border-t border-border">
@@ -182,6 +179,6 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
             )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
