@@ -3,7 +3,7 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import type { Menu } from '@/lib/menu-data';
 import { Clock, X } from 'lucide-react';
@@ -26,7 +26,8 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
             <span className="sr-only">Close</span>
         </DialogClose>
         <Separator className="bg-border/20 flex-shrink-0" />
-        <ScrollArea className="flex-grow">
+        <div className="flex-grow overflow-y-auto">
+          <ScrollArea className="h-full">
             <div className="p-6 pt-2">
                 <Accordion type="multiple" className="w-full space-y-4">
                 {menu.categories.map((category) => (
@@ -54,8 +55,8 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
                 ))}
                 </Accordion>
             </div>
-            <ScrollBar />
-        </ScrollArea>
+          </ScrollArea>
+        </div>
         <Separator className="bg-border/20 flex-shrink-0" />
         <div className="p-4 text-center text-sm text-muted-foreground flex items-center justify-center gap-2 flex-shrink-0">
             <Clock className="w-4 h-4" />
