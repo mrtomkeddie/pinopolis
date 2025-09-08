@@ -114,7 +114,7 @@ export default function Home() {
               </div>
               <div className="hidden md:block w-px h-6 bg-border"></div>
               <div className="flex items-center gap-2">
-                <Phone className="w-5 h-5 text-primary" />
+                <Phone className="w-5 h-5 text-pink-400" />
                 <span>01554 556226</span>
               </div>
             </div>
