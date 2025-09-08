@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import MenuDialog from '@/components/menu-dialog';
 import { streetFoodMenu, drinksMenu } from '@/lib/menu-data';
+import DartsBooking from '@/components/darts-booking';
 
 const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink' | 'cyan' })[] = [
   {
@@ -170,7 +171,7 @@ export default function Home() {
                               </div>
                               <div className="flex-grow" />
                               <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
-                                  <p className="text-xl">£<span className="font-bold">{activity.price}</span><span className="text-sm text-muted-foreground">/game</span></p>
+                                  <p className="text-xl">£<span className="font-bold">{activity.price}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : '/hour'}</span></p>
                                   <Sheet>
                                       <SheetTrigger asChild>
                                           <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
@@ -180,7 +181,8 @@ export default function Home() {
                                               <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
                                               <SheetDescription>Select your details to reserve a spot.</SheetDescription>
                                           </SheetHeader>
-                                          <ActivityBooking activity={activity} price={activity.price} />
+                                          {activity.name === 'Bowling' && <ActivityBooking activity={activity} price={activity.price} />}
+                                          {activity.name === 'AR Darts' && <DartsBooking activity={activity} price={activity.price} />}
                                       </SheetContent>
                                   </Sheet>
                               </div>
