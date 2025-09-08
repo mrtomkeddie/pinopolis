@@ -1,13 +1,32 @@
+
+import type { Promotion } from './types';
 import { getDay } from 'date-fns';
 
-interface Promotion {
-  name: string;
-  discount: number; // as a percentage
-}
-
 const weeklyPromotions: { [key: number]: Promotion } = {
-  1: { name: 'Money Saving Monday', discount: 20 }, // Monday
-  2: { name: 'Triple Tuesday', discount: 15 }, // Tuesday
+  1: { 
+    name: 'Money Saving Monday', 
+    type: 'perPerson',
+    price: 6,
+    games: 1,
+    description: 'One game of bowling and a pint.'
+  },
+  2: { 
+    name: 'Triple Tuesday', 
+    type: 'perPerson',
+    price: 15,
+    games: 2,
+    description: 'Two games of bowling and an O.G. Burger.'
+  },
+  3: {
+    name: 'Wine Wednesday',
+    type: 'package',
+    price: 15,
+    games: 1,
+    description: 'One game of bowling and a bottle of wine for two.',
+    minGuests: 2,
+    maxGuests: 2,
+    pricePerAdditionalGuest: 3
+  }
 };
 
 /**

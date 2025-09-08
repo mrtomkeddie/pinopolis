@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { getApplicablePromotion } from '@/lib/promotions';
 import type { BookingDetails, Activity, Promotion } from '@/lib/types';
@@ -37,22 +37,50 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
   const [promotion, setPromotion] = useState<Promotion | null>(null);
 
   const { toast } = useToast();
+  
+  useEffect(() => {
+    const applicablePromotion = getApplicablePromotion(bookingDetails.date);
+    setPromotion(applicablePromotion);
+
+    if (applicablePromotion) {
+        if(applicablePromotion.type === 'perPerson' || applicablePromotion.type === 'package') {
+            updateDetails({ games: applicablePromotion.games });
+        }
+        if (applicablePromotion.type === 'package') {
+            updateDetails({ adults: 2, children: 0 });
+        }
+    }
+  }, [bookingDetails.date]);
+
 
   const basePrice = useMemo(() => {
+    if (promotion) {
+        switch (promotion.type) {
+            case 'perPerson':
+                return (bookingDetails.adults + bookingDetails.children) * promotion.price;
+            case 'package':
+                const additionalGuests = Math.max(0, bookingDetails.adults - promotion.minGuests);
+                return promotion.price + (additionalGuests * promotion.pricePerAdditionalGuest);
+            case 'discount':
+                // This case is for potential future percentage-based deals, though not used by current deals.
+                const totalGuests = bookingDetails.adults + bookingDetails.children;
+                const bowlingPrice = totalGuests * bookingDetails.games * price;
+                return bowlingPrice;
+        }
+    }
+    // Default pricing if no promotion
     const totalGuests = bookingDetails.adults + bookingDetails.children;
     const bowlingPrice = totalGuests * bookingDetails.games * price;
     const softPlayPrice = bookingDetails.addSoftPlay ? bookingDetails.softPlayChildren * 5 : 0;
     return bowlingPrice + softPlayPrice;
-  }, [bookingDetails, price]);
+  }, [bookingDetails, price, promotion]);
 
   const discountAmount = useMemo(() => {
-    const applicablePromotion = bookingDetails.date ? getApplicablePromotion(bookingDetails.date) : null;
-    setPromotion(applicablePromotion);
-    if (applicablePromotion) {
-      return basePrice * (applicablePromotion.discount / 100);
+    if (promotion?.type === 'discount') {
+        return basePrice * (promotion.discount / 100);
     }
     return 0;
-  }, [bookingDetails.date, basePrice]);
+  }, [promotion, basePrice]);
 
   const finalPrice = useMemo(() => basePrice - discountAmount, [basePrice, discountAmount]);
 
@@ -82,7 +110,7 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'options':
-        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} />;
+        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':

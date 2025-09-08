@@ -2,22 +2,23 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar as CalendarIcon, Minus, Plus, Users, ToyBrick, Clock } from 'lucide-react';
+import { Calendar as CalendarIcon, Minus, Plus, Users, ToyBrick, Clock, Info, Wine } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import type { BookingDetails } from '@/lib/types';
+import type { BookingDetails, Promotion } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
 interface Step1Props {
   bookingDetails: BookingDetails;
   updateDetails: (details: Partial<BookingDetails>) => void;
   pricePerGame: number;
+  promotion: Promotion | null;
 }
 
 const timeSlots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
@@ -38,15 +39,20 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 );
 
 
-export function Step1_Options({ bookingDetails, updateDetails, pricePerGame }: Step1Props) {
+export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion }: Step1Props) {
     const [adultError, setAdultError] = useState(false);
+
+    const isDealActive = !!promotion;
+    const isGamesLocked = isDealActive && (promotion.type === 'perPerson' || promotion.type === 'package');
+    const isWineWednesday = isDealActive && promotion.type === 'package';
 
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
-        if (newAdults >= 1 && (newAdults + bookingDetails.children <= 16)) {
+        const minAdults = isWineWednesday ? 2 : 1;
+        if (newAdults >= minAdults && (newAdults + bookingDetails.children <= 16)) {
             updateDetails({ adults: newAdults });
             setAdultError(false);
-        } else if (newAdults < 1) {
+        } else if (newAdults < minAdults) {
             setAdultError(true);
         }
     };
@@ -65,8 +71,21 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame }: S
         }
     };
 
+    const handleWineChoice = (wine: 'White' | 'Red' | 'Rosé') => {
+        updateDetails({ wineChoice: wine });
+    };
+
   return (
     <div className="space-y-6">
+        {promotion && (
+            <Alert variant="default" className="border-primary text-primary">
+                <Info className="h-4 w-4 !text-primary" />
+                <AlertTitle>{promotion.name}</AlertTitle>
+                <AlertDescription>
+                    {promotion.description}
+                </AlertDescription>
+            </Alert>
+        )}
       <div>
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Users /> Select Guests</Label>
         <div className="space-y-2 p-4 border rounded-lg">
@@ -75,7 +94,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame }: S
                 value={bookingDetails.adults} 
                 onIncrement={() => handleAdultsChange(true)}
                 onDecrement={() => handleAdultsChange(false)}
-                disabledDecrement={bookingDetails.adults <= 1}
+                disabledDecrement={bookingDetails.adults <= (isWineWednesday ? 2 : 1)}
                 disabledIncrement={bookingDetails.adults + bookingDetails.children >= 16}
             />
              {adultError && <Alert variant="destructive"><AlertDescription className="text-xs">At least one adult is required for bowling.</AlertDescription></Alert>}
@@ -85,24 +104,50 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame }: S
                 onIncrement={() => handleChildrenChange(true)}
                 onDecrement={() => handleChildrenChange(false)}
                 disabledDecrement={bookingDetails.children <= 0}
-                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 16}
+                disabledIncrement={isWineWednesday || (bookingDetails.adults + bookingDetails.children >= 16)}
             />
         </div>
       </div>
 
       <div>
         <Label className="font-bold text-lg mb-2">Number of Games</Label>
-        <RadioGroup value={String(bookingDetails.games)} onValueChange={(val) => updateDetails({ games: Number(val) })} className="grid grid-cols-3 gap-2">
+        <RadioGroup 
+            value={String(bookingDetails.games)} 
+            onValueChange={(val) => updateDetails({ games: Number(val) })} 
+            className="grid grid-cols-3 gap-2"
+            disabled={isGamesLocked}
+        >
             {[1, 2, 3].map(num => (
                 <div key={num}>
                     <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" />
-                    <Label htmlFor={`games-${num}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
+                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer")}>
                         {num} {num > 1 ? 'Games' : 'Game'}
                     </Label>
                 </div>
             ))}
         </RadioGroup>
+        {isGamesLocked && <p className="text-xs text-muted-foreground mt-2 text-center">Number of games is locked for this deal.</p>}
       </div>
+        
+      {isWineWednesday && (
+        <div>
+            <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Wine /> Select Your Wine</Label>
+            <RadioGroup 
+                value={bookingDetails.wineChoice} 
+                onValueChange={(val) => handleWineChoice(val as any)} 
+                className="grid grid-cols-3 gap-2"
+            >
+                {(['White', 'Red', 'Rosé'] as const).map(wine => (
+                    <div key={wine}>
+                        <RadioGroupItem value={wine} id={`wine-${wine}`} className="sr-only" />
+                        <Label htmlFor={`wine-${wine}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
+                            {wine}
+                        </Label>
+                    </div>
+                ))}
+            </RadioGroup>
+        </div>
+      )}
 
       <div className="space-y-2 p-4 border rounded-lg">
         <div className="flex items-center justify-between">
@@ -118,7 +163,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame }: S
                 onDecrement={() => handleSoftPlayChildrenChange(false)}
                 disabledDecrement={bookingDetails.softPlayChildren <= 0}
             />
-             <p className="text-xs text-muted-foreground mt-2">Soft play is £5 per child.</p>
+             <p className="text-xs text-muted-foreground mt-2">Soft play is £5 per child per hour.</p>
           </div>
         )}
       </div>
@@ -134,7 +179,26 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame }: S
                 </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={bookingDetails.date} onSelect={(date) => updateDetails({date: date as Date})} initialFocus disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} />
+                    <Calendar 
+                        mode="single" 
+                        selected={bookingDetails.date} 
+                        onSelect={(date) => updateDetails({date: date as Date})} 
+                        initialFocus 
+                        disabled={(date) => {
+                            if (isWineWednesday) return date.getDay() !== 3 || date < new Date(new Date().setHours(0,0,0,0));
+                            if (isDealActive && (promotion.type === 'perPerson' || promotion.type === 'package')) return date.getDay() !== promotion.games || date < new Date(new Date().setHours(0,0,0,0));
+                            return date < new Date(new Date().setHours(0,0,0,0));
+                        }}
+                        modifiers={{
+                            deal: (date) => [1,2,3].includes(date.getDay())
+                        }}
+                        modifiersStyles={{
+                            deal: {
+                                color: 'hsl(var(--primary-foreground))',
+                                backgroundColor: 'hsl(var(--primary))'
+                            }
+                        }}
+                    />
                 </PopoverContent>
             </Popover>
 

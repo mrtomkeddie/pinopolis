@@ -1,5 +1,4 @@
 
-
 import type { LucideIcon } from 'lucide-react';
 
 export interface Activity {
@@ -11,10 +10,29 @@ export interface Activity {
   imageHint: string;
 }
 
-export interface Promotion {
-  name: string;
-  discount: number; // as a percentage
-}
+export type Promotion = {
+    name: string;
+    description: string;
+} & (
+    | {
+        type: 'perPerson';
+        price: number;
+        games: number;
+      }
+    | {
+        type: 'package';
+        price: number;
+        games: number;
+        minGuests: number;
+        maxGuests: number;
+        pricePerAdditionalGuest: number;
+      }
+    | {
+        type: 'discount';
+        discount: number;
+    }
+);
+
 
 interface ContactDetails {
     firstName: string;
@@ -35,6 +53,7 @@ export interface BookingDetails {
   date: Date;
   time: string;
   contactDetails: ContactDetails;
+  wineChoice?: 'White' | 'Red' | 'Rosé';
 }
 
 export interface DartsBookingDetails {
