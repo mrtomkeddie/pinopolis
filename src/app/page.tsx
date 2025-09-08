@@ -72,7 +72,7 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {activities.map((activity) => (
-                <div key={activity.name} className={cn("p-1 rounded-lg bg-gradient-to-br", activity.gradient)}>
+                <div key={activity.name} className={cn("p-px rounded-lg bg-gradient-to-br", activity.gradient)}>
                   <Card className="bg-card/95 border-0 hover:-translate-y-1 transition-transform duration-300 h-full group">
                     <CardHeader>
                       <div className="relative h-40 rounded-md overflow-hidden mb-4">
