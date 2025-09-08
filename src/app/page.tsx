@@ -42,7 +42,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     accentColor: 'pink',
   },
   {
-    name: 'Zero-G Soft Play',
+    name: 'Soft Play',
     description: 'Safe and exciting soft play area designed for children with interactive features and supervised fun.',
     icon: ToyBrick,
     price: 8,
@@ -264,6 +264,8 @@ export default function Home() {
 }
 
     
+    
+
     
 
     
