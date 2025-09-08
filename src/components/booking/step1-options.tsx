@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -66,10 +65,9 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion, accentColor }: Step1Props) {
     const [adultError, setAdultError] = useState(false);
 
-    const isDealActive = !!promotion;
     const isDealApplied = bookingDetails.dealApplied ?? false;
-    const isGamesLocked = isDealActive && isDealApplied && (promotion.type === 'perPerson' || promotion.type === 'package');
-    const isWineWednesday = isDealActive && isDealApplied && promotion.type === 'package';
+    const isGamesLocked = isDealApplied && promotion && (promotion.type === 'perPerson' || promotion.type === 'package');
+    const isWineWednesday = isDealApplied && promotion && promotion.type === 'package';
 
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
@@ -221,9 +219,9 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 <div key={num}>
                     <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" />
                     <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer", {
-                        [`peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500`]: accentColor === 'orange',
-                        [`peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500`]: accentColor === 'pink',
-                        [`peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500`]: accentColor === 'cyan',
+                        "peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange',
+                        "peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink',
+                        "peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500": accentColor === 'cyan',
                     })}>
                         {num} {num > 1 ? 'Games' : 'Game'}
                     </Label>
