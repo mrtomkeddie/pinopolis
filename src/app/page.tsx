@@ -16,6 +16,9 @@ import { cn } from '@/lib/utils';
 import PartyPackages from '@/components/party-packages';
 import SegmentedControl from '@/components/segmented-control';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import MenuDialog from '@/components/menu-dialog';
+import { streetFoodMenu, drinksMenu } from '@/lib/menu-data';
 
 const activities: (Activity & { gradient: string })[] = [
   {
@@ -52,23 +55,23 @@ const foodAndDrinks = [
     name: 'American Style Street Food',
     description: 'Authentic American street food including loaded burgers, wings, nachos and BBQ served in a neon-lit atmosphere.',
     icon: Utensils,
-    price: 8.50,
     image: 'https://picsum.photos/600/400',
     imageHint: 'street food burgers',
-    gradient: 'from-cyan-500 to-blue-500',
+    gradient: 'from-yellow-400 to-orange-500',
     tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
-    buttonText: 'View Menu'
+    buttonText: 'View Menu',
+    menu: streetFoodMenu,
   },
   {
     name: 'Craft Beer & Cocktails',
     description: 'Premium craft beers on tap alongside expertly crafted cocktails in a futuristic sports bar atmosphere.',
     icon: Martini,
-    price: 4.50,
     image: 'https://picsum.photos/600/400',
     imageHint: 'craft beer cocktails',
     gradient: 'from-pink-500 to-purple-500',
     tags: ['Craft Beer Selection', 'Live Sports TV', 'Draft Cocktails'],
-    buttonText: 'View Drinks'
+    buttonText: 'View Drinks',
+    menu: drinksMenu,
   },
 ]
 
@@ -177,43 +180,48 @@ export default function Home() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                       {foodAndDrinks.map((item) => (
-                          <Card key={item.name} className="bg-card/95 border-b-2 border-primary/40 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden">
-                          <CardHeader className="p-0 relative">
-                              <Badge className="absolute top-4 right-4 z-10 bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0">PREMIUM</Badge>
-                              <div className="relative h-48 rounded-t-lg overflow-hidden">
-                                <Image
-                                    src={item.image}
-                                    alt={item.name}
-                                    fill={true}
-                                    style={{objectFit: 'cover'}}
-                                    className="group-hover:scale-105 transition-transform duration-500"
-                                    data-ai-hint={item.imageHint}
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                              </div>
-                          </CardHeader>
-                          <CardContent className="p-6 flex-grow flex flex-col">
-                              <div className="flex justify-between items-start">
-                                  <div className='flex-grow'>
-                                      <CardTitle className="font-headline text-2xl">{item.name}</CardTitle>
-                                      <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
-                                  </div>
-                                  <div className={cn("text-primary p-2 -mt-4")}>
-                                      <item.icon className="w-6 h-6"/>
-                                  </div>
-                              </div>
-                              <div className="flex flex-wrap gap-2 mt-4">
-                                  {item.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
-                              </div>
-                              <div className="flex-grow" />
-                              <div className="flex justify-between items-center mt-6 pt-6 border-t border-border/20">
-                                  <p className="text-xl">From <span className="font-bold text-primary">${item.price.toFixed(2)}</span></p>
-                                  <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", item.gradient)}>
-                                    {item.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
-                                  </Button>
-                              </div>
-                          </CardContent>
+                        <Dialog key={item.name}>
+                          <Card className="bg-card/95 border-b-2 border-primary/40 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden">
+                            <CardHeader className="p-0 relative">
+                                <Badge className="absolute top-4 right-4 z-10 bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0">PREMIUM</Badge>
+                                <div className="relative h-48 rounded-t-lg overflow-hidden">
+                                  <Image
+                                      src={item.image}
+                                      alt={item.name}
+                                      fill={true}
+                                      style={{objectFit: 'cover'}}
+                                      className="group-hover:scale-105 transition-transform duration-500"
+                                      data-ai-hint={item.imageHint}
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-6 flex-grow flex flex-col">
+                                <div className="flex justify-between items-start">
+                                    <div className='flex-grow'>
+                                        <CardTitle className="font-headline text-2xl">{item.name}</CardTitle>
+                                        <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
+                                    </div>
+                                    <div className={cn("text-primary p-2 -mt-4")}>
+                                        <item.icon className="w-6 h-6"/>
+                                    </div>
+                                </div>
+                                <div className="flex flex-wrap gap-2 mt-4">
+                                    {item.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                                </div>
+                                <div className="flex-grow" />
+                                <div className="flex justify-between items-center mt-6 pt-6 border-t border-border/20">
+                                  <div></div>
+                                  <DialogTrigger asChild>
+                                    <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", item.gradient)}>
+                                      {item.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Button>
+                                  </DialogTrigger>
+                                </div>
+                            </CardContent>
                           </Card>
+                          <MenuDialog menu={item.menu} />
+                        </Dialog>
                       ))}
                     </div>
                   </div>
