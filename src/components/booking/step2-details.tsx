@@ -46,7 +46,7 @@ export function Step2_Details({ contactDetails, updateContactDetails }: Step2Pro
         <div className="flex items-center space-x-2 pt-2">
             <Checkbox id="marketingOptIn" name="marketingOptIn" checked={contactDetails.marketingOptIn} onCheckedChange={(checked) => updateContactDetails({ marketingOptIn: !!checked })} />
             <label htmlFor="marketingOptIn" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                I would like to receive marketing communications.
+                Keep me updated with news, events, and offers.
             </label>
         </div>
     </div>
