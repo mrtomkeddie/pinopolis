@@ -10,6 +10,7 @@ import { Step2_Details } from './booking/step2-details';
 import { Step3_Summary } from './booking/step3-summary';
 import { Button } from './ui/button';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ScrollArea } from './ui/scroll-area';
 
 const steps = ['options', 'details', 'summary'];
 
@@ -92,10 +93,12 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
   };
 
   return (
-    <div className="py-4 space-y-6 flex flex-col h-full">
-      <div className="flex-grow">
-        {renderStep()}
-      </div>
+    <div className="py-4 space-y-6 flex flex-col h-full overflow-hidden">
+      <ScrollArea className="flex-grow pr-6 -mr-6">
+        <div className="py-4">
+            {renderStep()}
+        </div>
+      </ScrollArea>
 
       <div className="flex-shrink-0 pt-4 border-t border-border">
         {currentStep > 0 && (
