@@ -50,7 +50,7 @@ export default function Home() {
         <section className="relative w-full h-dvh flex flex-col items-center justify-center text-center bg-background overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
-          <div className="relative z-10 flex flex-col items-center space-y-8">
+          <div className="relative z-10 flex flex-col items-center space-y-4">
             <Image src="/herologo.png?v=1" alt="Pinopolis Logo" width={800} height={200} className="max-w-md md:max-w-2xl px-4" />
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-muted-foreground mt-4">
               <div className="flex items-center gap-2">
@@ -69,7 +69,7 @@ export default function Home() {
               </div>
             </div>
             <Link href="#activities">
-              <Button size="lg" className="mt-4">
+              <Button size="lg" className="mt-8">
                 Book Your Experience
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
