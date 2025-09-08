@@ -118,6 +118,12 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         cyan: 'data-[state=checked]:bg-cyan-500',
     };
 
+     const accentAlertClasses = {
+      orange: 'border-orange-500 text-orange-500',
+      pink: 'border-pink-500 text-pink-500',
+      cyan: 'border-cyan-500 text-cyan-500',
+    }
+
   return (
     <div className="space-y-6">
         <div>
@@ -166,15 +172,15 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         </div>
 
         {promotion && (
-            <Alert variant="default" className="border-primary text-primary">
-                <Tag className="h-4 w-4 !text-primary" />
+            <Alert variant="default" className={cn(accentAlertClasses[accentColor])}>
+                <Tag className="h-4 w-4" />
                 <AlertTitle>{promotion.name} Available!</AlertTitle>
                 <AlertDescription>
                    {promotion.description}
                 </AlertDescription>
                 <div className="flex items-center justify-between mt-4">
                     <Label htmlFor="deal-switch" className="text-sm font-normal">Apply Deal</Label>
-                    <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} />
+                    <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} className={cn(accentSwitchClass[accentColor])}/>
                 </div>
             </Alert>
         )}
@@ -214,9 +220,11 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             {[1, 2, 3].map(num => (
                 <div key={num}>
                     <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" />
-                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer", isGamesLocked ? {} : {"peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange'},
-            {"peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink'},
-            {"peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500": accentColor === 'cyan'})}>
+                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer", {
+                        [`peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500`]: accentColor === 'orange',
+                        [`peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500`]: accentColor === 'pink',
+                        [`peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500`]: accentColor === 'cyan',
+                    })}>
                         {num} {num > 1 ? 'Games' : 'Game'}
                     </Label>
                 </div>

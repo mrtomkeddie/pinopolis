@@ -89,6 +89,12 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion, 
         cyan: 'data-[state=checked]:bg-cyan-500',
     };
 
+    const accentAlertClasses = {
+      orange: 'border-orange-500 text-orange-500',
+      pink: 'border-pink-500 text-pink-500',
+      cyan: 'border-cyan-500 text-cyan-500',
+    }
+
   return (
     <div className="space-y-6">
        <div>
@@ -137,15 +143,15 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion, 
       </div>
 
         {promotion && promotion.type === 'discount' && (
-            <Alert variant="default" className="border-primary text-primary">
-                <Tag className="h-4 w-4 !text-primary" />
+             <Alert variant="default" className={cn(accentAlertClasses[accentColor])}>
+                <Tag className="h-4 w-4" />
                 <AlertTitle>{promotion.name} Available!</AlertTitle>
                 <AlertDescription>
                    {promotion.description}
                 </AlertDescription>
                 <div className="flex items-center justify-between mt-4">
                     <Label htmlFor="deal-switch" className="text-sm font-normal">Apply Deal</Label>
-                    <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} />
+                    <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} className={cn(accentSwitchClass[accentColor])} />
                 </div>
             </Alert>
         )}
