@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini } from 'lucide-react';
+import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -20,33 +20,42 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import MenuDialog from '@/components/menu-dialog';
 import { streetFoodMenu, drinksMenu } from '@/lib/menu-data';
 
-const activities: (Activity & { gradient: string })[] = [
+const activities: (Activity & { gradient: string, badgeText: string, badgeGradient: string, accentColor: 'orange' | 'pink' | 'cyan' })[] = [
   {
     name: 'Cyber Bowling',
-    description: 'Experience bowling with a holographic twist. Perfect for groups and all skill levels.',
+    description: 'Brunswick bowling with state-of-the-art lanes, scoring systems and atmospheric lighting.',
     icon: Dices,
-    price: 15,
+    price: 35,
     image: '/bowling.jpg',
     imageHint: 'bowling alley',
-    gradient: 'from-pink-500 to-purple-500',
+    gradient: 'from-yellow-500 to-orange-500',
+    badgeText: "TODAY'S DEAL",
+    badgeGradient: 'from-green-500 to-teal-500',
+    accentColor: 'orange',
   },
   {
     name: 'AR Darts',
-    description: 'Challenge your friends to augmented reality darts. Multiple game modes available.',
+    description: 'Augmented reality dartboards with digital targets, effects and competitive scoring modes.',
     icon: Target,
-    price: 10,
+    price: 28,
     image: '/darts.jpg',
     imageHint: 'darts game',
-    gradient: 'from-yellow-500 to-orange-500',
+    gradient: 'from-pink-500 to-purple-500',
+    badgeText: "EXCLUSIVE",
+    badgeGradient: 'from-pink-500 to-purple-500',
+    accentColor: 'pink',
   },
   {
     name: 'Zero-G Soft Play',
-    description: 'A multi-level soft play area with a futuristic theme for the little ones.',
+    description: 'Safe and exciting soft play area designed for children with interactive features and supervised fun.',
     icon: ToyBrick,
     price: 8,
-    image: '/softplay.jpg',
+    image: '/softplay.jpg_v2',
     imageHint: 'kids playground',
     gradient: 'from-cyan-500 to-blue-500',
+    badgeText: "PREMIUM",
+    badgeGradient: 'from-cyan-500 to-blue-500',
+    accentColor: 'cyan',
   },
 ];
 
@@ -127,33 +136,40 @@ export default function Home() {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {activities.map((activity) => (
-                          <Card key={activity.name} className="bg-card/95 border-t-2 border-primary/40 hover:-translate-y-1 transition-transform duration-300 group flex flex-col">
-                          <CardHeader className="p-0">
-                              <div className="relative h-48 rounded-t-lg overflow-hidden">
-                              <Image
-                                  src={activity.image}
-                                  alt={activity.name}
-                                  fill={true}
-                                  style={{objectFit: 'cover'}}
-                                  className="group-hover:scale-105 transition-transform duration-500"
-                                  data-ai-hint={activity.imageHint}
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                          <Card key={activity.name} className="bg-black border border-white/10 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden rounded-xl">
+                          <CardHeader className="p-0 relative">
+                              <Badge className={cn("absolute top-4 right-4 z-10 text-white border-0 bg-gradient-to-r", activity.badgeGradient)}>{activity.badgeText}</Badge>
+                              <div className="relative h-48">
+                                  <Image
+                                      src={activity.image}
+                                      alt={activity.name}
+                                      fill={true}
+                                      style={{objectFit: 'cover'}}
+                                      className="group-hover:scale-105 transition-transform duration-500"
+                                      data-ai-hint={activity.imageHint}
+                                  />
                               </div>
+                               <div className={cn("h-1 w-full bg-gradient-to-r", activity.gradient)}></div>
                           </CardHeader>
                           <CardContent className="p-6 flex-grow flex flex-col">
                               <div className="flex justify-between items-start">
                                   <div className='flex-grow'>
                                       <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
-                                      <CardDescription className="mt-2 text-base">{activity.description}</CardDescription>
                                   </div>
-                                  <div className={cn("text-white p-2 bg-gradient-to-br rounded-lg -mt-12", activity.gradient)}>
-                                      <activity.icon className="w-6 h-6"/>
-                                  </div>
+                                  <Zap className={cn("w-6 h-6", {
+                                    'text-orange-400': activity.accentColor === 'orange',
+                                    'text-pink-400': activity.accentColor === 'pink',
+                                    'text-cyan-400': activity.accentColor === 'cyan',
+                                  })} />
+                              </div>
+                              <CardDescription className="mt-2 text-base text-muted-foreground">{activity.description}</CardDescription>
+                              <div className="flex items-center gap-4 text-muted-foreground text-sm mt-4">
+                                <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" /><span>90 min</span></div>
+                                <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>2-8 players</span></div>
                               </div>
                               <div className="flex-grow" />
-                              <div className="flex justify-between items-center mt-6 pt-6 border-t border-border/20">
-                                  <p className="text-xl">From <span className="font-bold text-primary">${activity.price}</span><span className="text-sm text-muted-foreground">/person</span></p>
+                              <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
+                                  <p className="text-xl">£<span className="font-bold">{activity.price}</span><span className="text-sm text-muted-foreground">/hour</span></p>
                                   <Sheet>
                                       <SheetTrigger asChild>
                                           <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
@@ -250,4 +266,6 @@ export default function Home() {
 }
 
     
+    
+
     
