@@ -20,7 +20,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import MenuDialog from '@/components/menu-dialog';
 import { streetFoodMenu, drinksMenu } from '@/lib/menu-data';
 
-const activities: (Activity & { gradient: string, badgeText: string, badgeGradient: string, accentColor: 'orange' | 'pink' | 'cyan' })[] = [
+const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink' | 'cyan' })[] = [
   {
     name: 'Cyber Bowling',
     description: 'Brunswick bowling with state-of-the-art lanes, scoring systems and atmospheric lighting.',
@@ -29,8 +29,6 @@ const activities: (Activity & { gradient: string, badgeText: string, badgeGradie
     image: '/bowling.jpg',
     imageHint: 'bowling alley',
     gradient: 'from-yellow-500 to-orange-500',
-    badgeText: "TODAY'S DEAL",
-    badgeGradient: 'from-green-500 to-teal-500',
     accentColor: 'orange',
   },
   {
@@ -41,8 +39,6 @@ const activities: (Activity & { gradient: string, badgeText: string, badgeGradie
     image: '/darts.jpg',
     imageHint: 'darts game',
     gradient: 'from-pink-500 to-purple-500',
-    badgeText: "EXCLUSIVE",
-    badgeGradient: 'from-pink-500 to-purple-500',
     accentColor: 'pink',
   },
   {
@@ -53,8 +49,6 @@ const activities: (Activity & { gradient: string, badgeText: string, badgeGradie
     image: '/softplay.jpg_v2',
     imageHint: 'kids playground',
     gradient: 'from-cyan-500 to-blue-500',
-    badgeText: "PREMIUM",
-    badgeGradient: 'from-cyan-500 to-blue-500',
     accentColor: 'cyan',
   },
 ];
@@ -138,7 +132,6 @@ export default function Home() {
                       {activities.map((activity) => (
                           <Card key={activity.name} className="bg-black border border-white/10 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden rounded-xl">
                           <CardHeader className="p-0 relative">
-                              <Badge className={cn("absolute top-4 right-4 z-10 text-white border-0 bg-gradient-to-r", activity.badgeGradient)}>{activity.badgeText}</Badge>
                               <div className="relative h-48">
                                   <Image
                                       src={activity.image}
@@ -201,7 +194,6 @@ export default function Home() {
                         <Dialog key={item.name}>
                           <Card className="bg-black border border-white/10 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden rounded-xl">
                             <CardHeader className="p-0 relative">
-                                <Badge className="absolute top-4 right-4 z-10 bg-gradient-to-r from-blue-500 to-cyan-400 text-white border-0">PREMIUM</Badge>
                                 <div className="relative h-48">
                                   <Image
                                       src={item.image}
