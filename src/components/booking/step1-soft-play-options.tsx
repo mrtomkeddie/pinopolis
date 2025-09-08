@@ -20,10 +20,19 @@ interface Step1SoftPlayProps {
 
 const generateTimeSlots = () => {
     const slots = [];
-    for (let i = 10; i <= 20; i++) {
-        slots.push(`${i}:00`);
-        if (i < 20) {
-            slots.push(`${i}:30`);
+    let hour = 10;
+    let minute = 30;
+
+    while (hour < 22) {
+        const period = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+        const time = `${displayHour}:${minute.toString().padStart(2, '0')} ${period}`;
+        slots.push(time);
+
+        minute += 30;
+        if (minute === 60) {
+            hour++;
+            minute = 0;
         }
     }
     return slots;
