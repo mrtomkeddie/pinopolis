@@ -93,20 +93,26 @@ export default function SoftPlayBooking({ activity, price }: { activity: Activit
       </ScrollArea>
 
       <div className="flex-shrink-0 pt-4 border-t border-border">
-        {currentStep > 0 && (
-          <Button variant="outline" onClick={prevStep} className="mr-2">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back
-          </Button>
-        )}
-        {currentStep < steps.length - 1 ? (
-          <Button onClick={nextStep} className="w-full">
-            Next <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        ) : (
-          <Button onClick={handleBooking} className="w-full">
-            Confirm Booking & Pay
-          </Button>
-        )}
+         <div className="flex justify-between items-center mb-4">
+            <span className="text-lg font-bold">Total Price:</span>
+            <span className="text-xl font-bold">£{finalPrice.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between">
+            {currentStep > 0 && (
+            <Button variant="outline" onClick={prevStep} className="mr-2">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+            </Button>
+            )}
+            {currentStep < steps.length - 1 ? (
+            <Button onClick={nextStep} className="w-full">
+                Next <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            ) : (
+            <Button onClick={handleBooking} className="w-full">
+                Confirm Booking & Pay
+            </Button>
+            )}
+        </div>
       </div>
     </div>
   );

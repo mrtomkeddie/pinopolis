@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { getApplicablePromotion, weeklyPromotions } from '@/lib/promotions';
+import { getApplicablePromotion } from '@/lib/promotions';
 import type { BookingDetails, Activity, Promotion } from '@/lib/types';
 import { Step1_Options } from './booking/step1-options';
 import { Step2_Details } from './booking/step2-details';
@@ -12,6 +12,7 @@ import { Button } from './ui/button';
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Separator } from './ui/separator';
 
 const steps = ['options', 'details', 'summary'];
 
@@ -117,7 +118,7 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'options':
-        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} finalPrice={finalPrice} />;
+        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
@@ -145,20 +146,26 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
       </ScrollArea>
 
       <div className="flex-shrink-0 px-6 pt-4 border-t border-border">
-        {currentStep > 0 && (
-          <Button variant="outline" onClick={prevStep} className="mr-2">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back
-          </Button>
-        )}
-        {currentStep < steps.length - 1 ? (
-          <Button onClick={nextStep} className="w-full">
-            Next <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        ) : (
-          <Button onClick={handleBooking} className="w-full">
-            Confirm Booking & Pay
-          </Button>
-        )}
+         <div className="flex justify-between items-center mb-4">
+            <span className="text-lg font-bold">Total Price:</span>
+            <span className="text-xl font-bold">£{finalPrice.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between">
+            {currentStep > 0 && (
+            <Button variant="outline" onClick={prevStep} className="mr-2">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+            </Button>
+            )}
+            {currentStep < steps.length - 1 ? (
+            <Button onClick={nextStep} className="w-full">
+                Next <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            ) : (
+            <Button onClick={handleBooking} className="w-full">
+                Confirm Booking & Pay
+            </Button>
+            )}
+        </div>
       </div>
     </div>
   );

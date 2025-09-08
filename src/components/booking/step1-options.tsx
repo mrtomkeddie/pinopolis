@@ -13,7 +13,6 @@ import { Calendar } from '@/components/ui/calendar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { Separator } from '../ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Step1Props {
@@ -21,7 +20,6 @@ interface Step1Props {
   updateDetails: (details: Partial<BookingDetails>) => void;
   pricePerGame: number;
   promotion: Promotion | null;
-  finalPrice: number;
 }
 
 const generateTimeSlots = () => {
@@ -61,7 +59,7 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 );
 
 
-export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion, finalPrice }: Step1Props) {
+export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion }: Step1Props) {
     const [adultError, setAdultError] = useState(false);
 
     const isDealActive = !!promotion;
@@ -241,14 +239,6 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
           </div>
         )}
       </div>
-      
-      <Separator />
-        <div className="flex justify-between items-center font-bold text-lg">
-            <span>Total Price</span>
-            <span>£{finalPrice.toFixed(2)}</span>
-        </div>
     </div>
   );
 }
-
-    
