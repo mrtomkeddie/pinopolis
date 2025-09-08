@@ -3,7 +3,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram } from 'lucide-react';
+import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram, Phone } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -114,8 +114,8 @@ export default function Home() {
               </div>
               <div className="hidden md:block w-px h-6 bg-border"></div>
               <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-pink-500" />
-                <span>Premium Experience</span>
+                <Phone className="w-5 h-5 text-primary" />
+                <span>01554 556226</span>
               </div>
             </div>
             <Link href="#content">
