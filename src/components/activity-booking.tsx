@@ -5,7 +5,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { getApplicablePromotion } from '@/lib/promotions';
 import type { BookingDetails, Activity, Promotion } from '@/lib/types';
-import { Step1_Options } from './booking/step1-options';
+import { Step1_DateTime } from './booking/step1-date-time';
+import { Step1_GuestOptions } from './booking/step1-guest-options';
 import { Step2_Details } from './booking/step2-details';
 import { Step3_Summary } from './booking/step3-summary';
 import { Button } from './ui/button';
@@ -16,7 +17,7 @@ import { Separator } from './ui/separator';
 import { SheetHeader, SheetTitle, SheetDescription, SheetContent } from './ui/sheet';
 import { cn } from '@/lib/utils';
 
-const steps = ['options', 'details', 'summary'];
+const steps = ['dateTime', 'guestOptions', 'details', 'summary'];
 
 type AccentColor = 'orange' | 'pink' | 'cyan';
 
@@ -120,8 +121,10 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
 
   const renderStep = () => {
     switch (steps[currentStep]) {
-      case 'options':
-        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} accentColor={accentColor} />;
+      case 'dateTime':
+        return <Step1_DateTime bookingDetails={bookingDetails} updateDetails={updateDetails} accentColor={accentColor} />;
+      case 'guestOptions':
+        return <Step1_GuestOptions bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} accentColor={accentColor} />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
@@ -139,11 +142,12 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
 
   return (
     <>
-        <SheetHeader className="p-6 pb-4 flex-shrink-0 border-b">
+        <SheetHeader className="p-6 pb-2 flex-shrink-0 border-b">
             <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
         </SheetHeader>
-      <ScrollArea className="flex-grow bg-black/50">
+      <ScrollArea className="flex-grow bg-card">
+        { currentStep === 0 && (
           <div className="p-6">
             <Alert>
                 <Info className="h-4 w-4" />
@@ -152,7 +156,8 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
                     Select a Monday, Tuesday or Wednesday on the calendar to see our special offers.
                 </AlertDescription>
             </Alert>
-        </div>
+          </div>
+        )}
         <div className="p-6 pt-0">
             {renderStep()}
         </div>
