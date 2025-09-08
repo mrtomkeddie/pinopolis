@@ -66,7 +66,7 @@ const foodAndDrinks = [
     tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
     buttonText: 'View Menu',
     menu: streetFoodMenu,
-    accentColor: 'cyan' as const,
+    accentColor: 'yellow' as const,
   },
   {
     name: 'Craft Beer & Cocktails',
@@ -84,6 +84,13 @@ const foodAndDrinks = [
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'experiences' | 'food-drinks' | 'party-bookings'>('experiences');
+  
+  const accentHoverBorderColor = {
+      orange: 'hover:border-orange-500/50',
+      pink: 'hover:border-pink-500/50',
+      cyan: 'hover:border-cyan-500/50',
+      yellow: 'hover:border-yellow-400/50'
+  }
 
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground font-body">
@@ -139,7 +146,7 @@ export default function Home() {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {activities.map((activity) => (
-                          <Card key={activity.name} className="bg-black border border-white/10 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden rounded-xl">
+                          <Card key={activity.name} className={cn("bg-black border border-white/10 hover:-translate-y-1 transition-all duration-300 group flex flex-col overflow-hidden rounded-xl", accentHoverBorderColor[activity.accentColor])}>
                           <CardHeader className="p-0 relative">
                               <div className="relative h-48">
                                   <Image
@@ -208,7 +215,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                       {foodAndDrinks.map((item) => (
                         <Dialog key={item.name}>
-                          <Card className="bg-black border border-white/10 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden rounded-xl">
+                          <Card className={cn("bg-black border border-white/10 hover:-translate-y-1 transition-all duration-300 group flex flex-col overflow-hidden rounded-xl", accentHoverBorderColor[item.accentColor])}>
                             <CardHeader className="p-0 relative">
                                 <div className="relative h-48">
                                   <Image
@@ -228,7 +235,7 @@ export default function Home() {
                                         <CardTitle className="font-headline text-2xl">{item.name}</CardTitle>
                                         <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
                                     </div>
-                                    <div className={cn("p-2", item.accentColor === 'cyan' ? 'text-cyan-400' : 'text-pink-400')}>
+                                    <div className={cn("p-2", item.accentColor === 'yellow' ? 'text-yellow-400' : 'text-pink-400')}>
                                         <Zap className="w-6 h-6"/>
                                     </div>
                                 </div>
@@ -246,7 +253,7 @@ export default function Home() {
                                 </div>
                             </CardContent>
                           </Card>
-                          <MenuDialog menu={item.menu} accentColor={item.accentColor === 'cyan' ? 'yellow' : 'pink'} />
+                          <MenuDialog menu={item.menu} accentColor={item.accentColor} />
                         </Dialog>
                       ))}
                     </div>

@@ -11,23 +11,26 @@ import { cn } from '@/lib/utils';
 
 interface MenuDialogProps {
   menu: Menu;
-  accentColor?: 'yellow' | 'pink';
+  accentColor?: 'yellow' | 'pink' | 'cyan';
 }
 
 export default function MenuDialog({ menu, accentColor = 'yellow' }: MenuDialogProps) {
   const titleGradient = {
     yellow: 'from-yellow-400 to-orange-400',
     pink: 'from-pink-400 to-purple-400',
+    cyan: 'from-cyan-400 to-blue-400'
   }[accentColor];
 
   const lineGradient = {
     yellow: 'via-yellow-400',
     pink: 'via-pink-400',
+    cyan: 'via-cyan-400'
   }[accentColor];
   
   const textColor = {
     yellow: 'text-yellow-400',
     pink: 'text-pink-400',
+    cyan: 'text-cyan-400'
   }[accentColor];
 
 
