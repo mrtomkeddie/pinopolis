@@ -105,7 +105,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
 
       <div>
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-4">
             <Popover>
                 <PopoverTrigger asChild>
                 <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
