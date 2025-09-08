@@ -26,39 +26,36 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
             <span className="sr-only">Close</span>
         </DialogClose>
         <Separator className="bg-border/20 flex-shrink-0" />
-        <div className="flex-grow overflow-hidden">
-            <ScrollArea className="h-full">
-                <div className="p-6 pt-2">
-                    <Accordion type="multiple" className="w-full">
-                    {menu.categories.map((category) => (
-                        <AccordionItem value={category.title} key={category.title} className="border-b-border/20">
-                            <AccordionTrigger className="text-lg font-semibold hover:no-underline relative text-left">
-                                <span className="py-4">{category.title}</span>
-                                <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-yellow-500 to-orange-500/0" />
-                            </AccordionTrigger>
-                            <AccordionContent className="pt-4">
-                                {category.description && <p className="text-sm text-muted-foreground mb-4">{category.description}</p>}
-                                <ul className="space-y-4">
-                                {category.items.map((item) => (
-                                    <li key={item.name} className="bg-black/20 border border-white/10 rounded-lg p-4">
-                                        <div className="flex justify-between items-baseline">
-                                            <div>
-                                                <h4 className="font-semibold text-yellow-400">{item.name}</h4>
-                                                {item.description && <p className="text-sm text-muted-foreground mt-1 max-w-md">{item.description}</p>}
-                                            </div>
-                                            { item.price > 0 && <p className="font-mono text-base text-white">£{item.price.toFixed(2)}</p> }
+        <ScrollArea className="flex-grow">
+            <div className="p-6 pt-2">
+                <Accordion type="multiple" className="w-full space-y-4">
+                {menu.categories.map((category) => (
+                    <AccordionItem value={category.title} key={category.title} className="border border-white/10 rounded-lg overflow-hidden bg-black/20">
+                        <AccordionTrigger className="text-lg font-semibold hover:no-underline relative text-left px-6 py-4">
+                            <span>{category.title}</span>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 pb-6">
+                            {category.description && <p className="text-sm text-muted-foreground mb-4">{category.description}</p>}
+                            <ul className="space-y-4">
+                            {category.items.map((item) => (
+                                <li key={item.name} className="bg-black/20 border border-white/10 rounded-lg p-4">
+                                    <div className="flex justify-between items-baseline">
+                                        <div>
+                                            <h4 className="font-semibold text-yellow-400">{item.name}</h4>
+                                            {item.description && <p className="text-sm text-muted-foreground mt-1 max-w-md">{item.description}</p>}
                                         </div>
-                                    </li>
-                                ))}
-                                </ul>
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                    </Accordion>
-                </div>
-                <ScrollBar />
-            </ScrollArea>
-        </div>
+                                        { item.price > 0 && <p className="font-mono text-base text-white">£{item.price.toFixed(2)}</p> }
+                                    </div>
+                                </li>
+                            ))}
+                            </ul>
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+                </Accordion>
+            </div>
+            <ScrollBar />
+        </ScrollArea>
         <Separator className="bg-border/20 flex-shrink-0" />
         <div className="p-4 text-center text-sm text-muted-foreground flex items-center justify-center gap-2 flex-shrink-0">
             <Clock className="w-4 h-4" />
