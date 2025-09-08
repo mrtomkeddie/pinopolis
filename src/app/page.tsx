@@ -48,7 +48,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     name: 'Soft Play',
     description: 'Safe and exciting soft play area designed for children with interactive features and supervised fun.',
     icon: ToyBrick,
-    price: 5, // Price per hour
+    price: 5, // Price per hour per child
     image: '/softplay.jpg',
     imageHint: 'kids playground',
     gradient: 'from-cyan-500 to-blue-500',
@@ -172,7 +172,7 @@ export default function Home() {
                               </div>
                               <div className="flex-grow" />
                               <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
-                                  <p className="text-xl">£<span className="font-bold">{activity.price}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : '/hour'}</span></p>
+                                  <p className="text-xl">£<span className="font-bold">{activity.price}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : activity.name === 'Soft Play' ? '/child' : '/hour'}</span></p>
                                   <Sheet>
                                       <SheetTrigger asChild>
                                           <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
