@@ -46,7 +46,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     description: 'Safe and exciting soft play area designed for children with interactive features and supervised fun.',
     icon: ToyBrick,
     price: 8,
-    image: '/softplay.jpg_v2',
+    image: '/softplay.jpg',
     imageHint: 'kids playground',
     gradient: 'from-cyan-500 to-blue-500',
     accentColor: 'cyan',
