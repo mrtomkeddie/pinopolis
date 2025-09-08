@@ -41,32 +41,21 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground font-body">
       <Header />
-      <main className="flex-1">
-        <section className="relative text-center py-24 md:py-32 lg:py-40 px-4 flex flex-col items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 bg-grid-cyan opacity-20 [mask-image:radial-gradient(ellipse_at_center,white,transparent_70%)]"></div>
-            <div className="relative z-10">
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-headline tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white to-primary/70">
-                    Your Future of Fun Awaits
-                </h1>
-                <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground">
-                    Book bowling, AR darts, soft play, and exclusive party packages at Pinopolis. The ultimate cyberpunk entertainment hub.
-                </p>
-                <div className="mt-8 flex justify-center gap-4">
-                    <Button size="lg" asChild>
-                        <a href="#activities">Book an Activity</a>
-                    </Button>
-                    <Button size="lg" variant="outline" asChild>
-                        <a href="#parties">Plan a Party</a>
-                    </Button>
-                </div>
+      <main className="flex-1 flex flex-col items-center justify-center">
+        <section id="parties" className="py-16 md:py-24 w-full">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl md:text-5xl font-headline font-bold">Book an Appointment</h1>
+              <p className="mt-2 text-lg text-muted-foreground">Follow the steps below to secure your spot.</p>
             </div>
+            <PartyPackages />
+          </div>
         </section>
 
-
-        <section id="activities" className="py-16 md:py-24 bg-background/80 backdrop-blur-sm">
+        <section id="activities" className="py-16 md:py-24 bg-card/50 w-full">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline tracking-tight">Activities</h2>
+              <h2 className="text-3xl md:text-4xl font-bold font-headline">Or Book a Single Activity</h2>
               <p className="mt-2 text-lg text-muted-foreground">Choose your next adventure.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -78,7 +67,7 @@ export default function Home() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="glitch-icon text-primary p-2 bg-primary/10 rounded-lg">
+                        <div className="text-primary p-2 bg-primary/10 rounded-lg">
                             <activity.icon className="w-8 h-8"/>
                         </div>
                         <div>
@@ -92,7 +81,7 @@ export default function Home() {
                         <p>From <span className="font-bold text-primary">${activity.price}</span>/person</p>
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button variant="default">Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                                <Button variant="outline">Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
                             </SheetTrigger>
                             <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
                                 <SheetHeader>
@@ -109,34 +98,8 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section id="parties" className="py-16 md:py-24">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline tracking-tight">Party Packages</h2>
-              <p className="mt-2 text-lg text-muted-foreground">Let our AI find the perfect package for your event.</p>
-            </div>
-            <PartyPackages />
-          </div>
-        </section>
       </main>
       <Footer />
     </div>
   );
-}
-
-// Add a simple grid background pattern
-const style = `
-  .bg-grid-cyan {
-    background-image:
-      linear-gradient(hsl(var(--primary)) 1px, transparent 1px),
-      linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-`;
-const styleElement = <style>{style}</style>;
-
-// Hack to include style element in the final output
-export const head = () => {
-    return styleElement;
 }
