@@ -211,13 +211,12 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         <Label className="font-bold text-lg mb-2">Number of Games</Label>
         <RadioGroup 
             value={String(bookingDetails.games)} 
-            onValueChange={(val) => updateDetails({ games: Number(val) })} 
+            onValueChange={(val) => !isGamesLocked && updateDetails({ games: Number(val) })} 
             className="grid grid-cols-3 gap-2"
-            disabled={isGamesLocked}
         >
             {[1, 2, 3].map(num => (
                 <div key={num}>
-                    <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" />
+                    <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" disabled={isGamesLocked} />
                     <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer", {
                         "peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange',
                         "peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink',
