@@ -10,6 +10,7 @@ import ActivityBooking from '@/components/activity-booking';
 import type { Activity } from '@/lib/types';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import PartyPackages from '@/components/party-packages';
 
 const activities: (Activity & { gradient: string })[] = [
   {
@@ -19,7 +20,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 15,
     image: '/bowling.jpg',
     imageHint: 'bowling alley',
-    gradient: 'from-cyan-500 to-blue-500',
+    gradient: 'from-pink-500 to-purple-500',
   },
   {
     name: 'AR Darts',
@@ -37,7 +38,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 8,
     image: '/softplay.jpg',
     imageHint: 'kids playground',
-    gradient: 'from-pink-500 to-purple-500',
+    gradient: 'from-cyan-500 to-blue-500',
   },
 ];
 
@@ -49,7 +50,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
           <div className="relative z-10 flex flex-col items-center space-y-8">
-            <Image src="/herologo.png" alt="Pinopolis Logo" width={800} height={200} className="max-w-md md:max-w-2xl px-4" />
+            <Image src="/herologo.png?v=1" alt="Pinopolis Logo" width={800} height={200} className="max-w-md md:max-w-2xl px-4" />
             <Link href="#activities">
               <Button size="lg" className="mt-4">
                 Book Your Experience
@@ -105,6 +106,16 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="party-packages" className="py-16 md:py-24 w-full">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold font-headline flex items-center justify-center gap-4"><PartyPopper className="w-10 h-10 text-primary" /> Book a Party Package</h2>
+              <p className="mt-2 text-lg text-muted-foreground">Let our AI assistant find the perfect package for your event.</p>
+            </div>
+            <PartyPackages />
           </div>
         </section>
       </main>
