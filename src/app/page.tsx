@@ -12,6 +12,7 @@ import type { Activity } from '@/lib/types';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import PartyPackages from '@/components/party-packages';
+import SegmentedControl from '@/components/segmented-control';
 
 const activities: (Activity & { gradient: string })[] = [
   {
@@ -21,7 +22,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 15,
     image: '/bowling.jpg',
     imageHint: 'bowling alley',
-    gradient: 'from-cyan-500 to-blue-500',
+    gradient: 'from-pink-500 to-purple-500',
   },
   {
     name: 'AR Darts',
@@ -39,7 +40,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 8,
     image: '/softplay.jpg',
     imageHint: 'kids playground',
-    gradient: 'from-pink-500 to-purple-500',
+    gradient: 'from-cyan-500 to-blue-500',
   },
 ];
 
@@ -77,53 +78,65 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="activities" className="py-16 md:py-24 bg-card/50 w-full">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline">Book an Activity</h2>
-              <p className="mt-2 text-lg text-muted-foreground">Choose your next adventure.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {activities.map((activity) => (
-                <div key={activity.name} className={cn("p-px rounded-lg bg-gradient-to-br", activity.gradient)}>
-                  <Card className="bg-card/95 border-0 hover:-translate-y-1 transition-transform duration-300 h-full group">
-                    <CardHeader>
-                      <div className="relative h-40 rounded-md overflow-hidden mb-4">
-                          <Image src={activity.image} alt={activity.name} fill={true} style={{objectFit:"cover"}} className="group-hover:scale-105 transition-transform duration-500" data-ai-hint={activity.imageHint} />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                          <div className={cn("text-white p-2 bg-gradient-to-br rounded-lg", activity.gradient)}>
-                              <activity.icon className="w-8 h-8"/>
-                          </div>
-                          <div>
-                              <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
-                              <CardDescription className="mt-1">{activity.description}</CardDescription>
-                          </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex justify-between items-center text-lg">
-                          <p>From <span className="font-bold text-primary">${activity.price}</span>/person</p>
-                          <Sheet>
-                              <SheetTrigger asChild>
-                                  <Button variant="outline">Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                              </SheetTrigger>
-                              <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
-                                  <SheetHeader>
-                                      <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
-                                      <SheetDescription>Select your details to reserve a spot.</SheetDescription>
-                                  </SheetHeader>
-                                  <ActivityBooking activityName={activity.name} price={activity.price} />
-                              </SheetContent>
-                          </Sheet>
-                      </div>
-                    </CardContent>
-                  </Card>
+        <section id="experiences" className="py-16 md:py-24 w-full">
+            <div className="container mx-auto px-4">
+                <div className="mb-12">
+                    <SegmentedControl />
                 </div>
-              ))}
+                <div id="activities">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold font-headline">Book an Activity</h2>
+                        <p className="mt-2 text-lg text-muted-foreground">Choose your next adventure.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {activities.map((activity) => (
+                        <div key={activity.name} className={cn("p-px rounded-lg bg-gradient-to-br", activity.gradient)}>
+                        <Card className="bg-card/95 border-0 hover:-translate-y-1 transition-transform duration-300 h-full group">
+                            <CardHeader>
+                            <div className="relative h-40 rounded-md overflow-hidden mb-4">
+                                <Image src={activity.image} alt={activity.name} fill={true} style={{objectFit:"cover"}} className="group-hover:scale-105 transition-transform duration-500" data-ai-hint={activity.imageHint} />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className={cn("text-white p-2 bg-gradient-to-br rounded-lg", activity.gradient)}>
+                                    <activity.icon className="w-8 h-8"/>
+                                </div>
+                                <div>
+                                    <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
+                                    <CardDescription className="mt-1">{activity.description}</CardDescription>
+                                </div>
+                            </div>
+                            </CardHeader>
+                            <CardContent>
+                            <div className="flex justify-between items-center text-lg">
+                                <p>From <span className="font-bold text-primary">${activity.price}</span>/person</p>
+                                <Sheet>
+                                    <SheetTrigger asChild>
+                                        <Button variant="outline">Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                                    </SheetTrigger>
+                                    <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
+                                        <SheetHeader>
+                                            <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
+                                            <SheetDescription>Select your details to reserve a spot.</SheetDescription>
+                                        </SheetHeader>
+                                        <ActivityBooking activityName={activity.name} price={activity.price} />
+                                    </SheetContent>
+                                </Sheet>
+                            </div>
+                            </CardContent>
+                        </Card>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+                {/* Placeholder for Food & Drinks and Party Bookings sections */}
+                <div id="food-drinks" className="hidden">
+                    {/* Food & Drinks Content Here */}
+                </div>
+                <div id="party-bookings" className="hidden">
+                    {/* Party Bookings Content Here */}
+                </div>
             </div>
-          </div>
         </section>
 
         <section id="party-packages" className="py-16 md:py-24 w-full">
