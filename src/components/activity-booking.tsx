@@ -29,7 +29,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
     games: 1,
     addSoftPlay: false,
     softPlayChildren: 0,
-    date: new Date(),
+    date: undefined,
     time: '',
     contactDetails: {
       firstName: '',
@@ -121,9 +121,9 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'dateTime':
-        return <Step1_DateTime bookingDetails={bookingDetails} updateDetails={updateDetails} accentColor={accentColor} />;
+        return <Step1_DateTime bookingDetails={bookingDetails} updateDetails={updateDetails} />;
       case 'guestOptions':
-        return <Step1_GuestOptions bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} accentColor={accentColor} />;
+        return <Step1_GuestOptions bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
@@ -133,10 +133,16 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
     }
   };
   
-  const accentClasses = {
+  const accentGradient = {
       orange: 'from-yellow-500 to-orange-500',
       pink: 'from-pink-500 to-purple-500',
       cyan: 'from-cyan-500 to-blue-500',
+  };
+
+  const accentText = {
+      orange: 'text-orange-400',
+      pink: 'text-pink-400',
+      cyan: 'text-cyan-400',
   };
 
   const isNextDisabled = () => {
@@ -149,7 +155,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
   return (
     <div className="flex flex-col h-full overflow-hidden">
         <SheetHeader className="p-4 flex-shrink-0 border-b">
-            <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
+            <SheetTitle className={cn("font-headline text-2xl", accentText[accentColor])}>Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
         </SheetHeader>
       <ScrollArea className="flex-grow bg-card">
@@ -182,11 +188,11 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
             )}
             <div className="flex-grow" />
             {currentStep < steps.length - 1 ? (
-            <Button onClick={nextStep} disabled={isNextDisabled()} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentClasses[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
+            <Button onClick={nextStep} disabled={isNextDisabled()} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentGradient[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
                 Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             ) : (
-            <Button onClick={handleBooking} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentClasses[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
+            <Button onClick={handleBooking} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentGradient[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
                 Confirm Booking & Pay
             </Button>
             )}

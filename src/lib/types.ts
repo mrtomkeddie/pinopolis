@@ -50,7 +50,7 @@ export interface BookingDetails {
   games: number;
   addSoftPlay: boolean;
   softPlayChildren: number;
-  date: Date;
+  date?: Date;
   time: string;
   contactDetails: ContactDetails;
   wineChoice?: 'White' | 'Red' | 'Rosé';
