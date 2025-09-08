@@ -40,14 +40,14 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
 
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
-        if (newAdults >= 0 && (newAdults + bookingDetails.children <= 12)) {
+        if (newAdults >= 0 && (newAdults + bookingDetails.children <= 16)) {
             updateDetails({ adults: newAdults });
         }
     };
     
     const handleChildrenChange = (increment: boolean) => {
         const newChildren = bookingDetails.children + (increment ? 1 : -1);
-        if (newChildren >= 1 && (newChildren + bookingDetails.adults <= 12)) {
+        if (newChildren >= 1 && (newChildren + bookingDetails.adults <= 16)) {
             updateDetails({ children: newChildren });
             setChildrenError(false);
         } else if (newChildren < 1) {
@@ -66,7 +66,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                 onIncrement={() => handleAdultsChange(true)}
                 onDecrement={() => handleAdultsChange(false)}
                 disabledDecrement={bookingDetails.adults <= 0}
-                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 12}
+                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 16}
             />
             <GuestCounter 
                 label="Children" 
@@ -74,7 +74,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                 onIncrement={() => handleChildrenChange(true)}
                 onDecrement={() => handleChildrenChange(false)}
                 disabledDecrement={bookingDetails.children <= 1}
-                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 12}
+                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 16}
             />
             {childrenError && <Alert variant="destructive"><AlertDescription className="text-xs">At least one child is required for soft play.</AlertDescription></Alert>}
              <p className="text-xs text-muted-foreground pt-2">Price is £5 per child. Unlimited play.</p>
