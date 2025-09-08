@@ -46,15 +46,23 @@ const generateTimeSlots = () => {
 };
 const timeSlots = generateTimeSlots();
 
-const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecrement = false, disabledIncrement = false }) => (
+const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecrement = false, disabledIncrement = false, accentColor }) => (
     <div className="flex items-center justify-between">
         <Label>{label}</Label>
         <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" className="h-8 w-8" onClick={onDecrement} disabled={disabledDecrement}>
+            <Button variant="outline" size="icon" className={cn("h-8 w-8", {
+                "hover:bg-orange-500/20 hover:border-orange-500": accentColor === 'orange',
+                "hover:bg-pink-500/20 hover:border-pink-500": accentColor === 'pink',
+                "hover:bg-cyan-500/20 hover:border-cyan-500": accentColor === 'cyan',
+            })} onClick={onDecrement} disabled={disabledDecrement}>
                 <Minus className="h-4 w-4" />
             </Button>
             <span className="w-8 text-center font-bold">{value}</span>
-            <Button variant="outline" size="icon" className="h-8 w-8" onClick={onIncrement} disabled={disabledIncrement}>
+            <Button variant="outline" size="icon" className={cn("h-8 w-8", {
+                "hover:bg-orange-500/20 hover:border-orange-500": accentColor === 'orange',
+                "hover:bg-pink-500/20 hover:border-pink-500": accentColor === 'pink',
+                "hover:bg-cyan-500/20 hover:border-cyan-500": accentColor === 'cyan',
+            })} onClick={onIncrement} disabled={disabledIncrement}>
                 <Plus className="h-4 w-4" />
             </Button>
         </div>
@@ -193,6 +201,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 onDecrement={() => handleAdultsChange(false)}
                 disabledDecrement={bookingDetails.adults <= (isWineWednesday ? 2 : 1)}
                 disabledIncrement={bookingDetails.adults + bookingDetails.children >= 16}
+                accentColor={accentColor}
             />
              {adultError && <Alert variant="destructive"><AlertDescription className="text-xs">At least one adult is required for bowling.</AlertDescription></Alert>}
             <GuestCounter 
@@ -202,6 +211,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 onDecrement={() => handleChildrenChange(false)}
                 disabledDecrement={bookingDetails.children <= 0}
                 disabledIncrement={isWineWednesday || (bookingDetails.adults + bookingDetails.children >= 16)}
+                accentColor={accentColor}
             />
             <p className="text-xs text-muted-foreground pt-2">There is a maximum of 16 players per reservation. For bookings of more than 16 people please email info@pinopolis.wales</p>
         </div>
@@ -217,11 +227,18 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             {[1, 2, 3].map(num => (
                 <div key={num}>
                     <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" disabled={isGamesLocked} />
-                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer", {
-                        "peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange',
-                        "peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink',
-                        "peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500": accentColor === 'cyan',
-                    })}>
+                    <Label 
+                        htmlFor={`games-${num}`} 
+                        className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", 
+                        isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-accent hover:text-accent-foreground", 
+                        {
+                            "peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange',
+                            "peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink',
+                            "peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500": accentColor === 'cyan',
+                             "hover:bg-orange-500/20 hover:border-orange-500": accentColor === 'orange' && !isGamesLocked,
+                             "hover:bg-pink-500/20 hover:border-pink-500": accentColor === 'pink' && !isGamesLocked,
+                             "hover:bg-cyan-500/20 hover:border-cyan-500": accentColor === 'cyan' && !isGamesLocked,
+                        })}>
                         {num} {num > 1 ? 'Games' : 'Game'}
                     </Label>
                 </div>
@@ -267,6 +284,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 onIncrement={() => handleSoftPlayChildrenChange(true)}
                 onDecrement={() => handleSoftPlayChildrenChange(false)}
                 disabledDecrement={bookingDetails.softPlayChildren <= 0}
+                accentColor={accentColor}
             />
              <p className="text-xs text-muted-foreground mt-2">Soft play is £5 per child per hour.</p>
           </div>
