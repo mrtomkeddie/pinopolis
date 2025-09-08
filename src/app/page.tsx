@@ -7,7 +7,6 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ActivityBooking from '@/components/activity-booking';
-import PartyPackages from '@/components/party-packages';
 import type { Activity } from '@/lib/types';
 import Link from 'next/link';
 
@@ -52,7 +51,7 @@ export default function Home() {
               Pinopolis
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground">The future of entertainment is here.</p>
-            <Link href="#parties">
+            <Link href="#activities">
               <Button size="lg" className="mt-4">
                 Book Your Experience
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -61,20 +60,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="parties" className="py-16 md:py-24 w-full">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-headline font-bold">Book an Appointment</h2>
-              <p className="mt-2 text-lg text-muted-foreground">Follow the steps below to secure your spot.</p>
-            </div>
-            <PartyPackages />
-          </div>
-        </section>
-
         <section id="activities" className="py-16 md:py-24 bg-card/50 w-full">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline">Or Book a Single Activity</h2>
+              <h2 className="text-3xl md:text-4xl font-bold font-headline">Book an Activity</h2>
               <p className="mt-2 text-lg text-muted-foreground">Choose your next adventure.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
