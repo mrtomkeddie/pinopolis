@@ -155,6 +155,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 disabledDecrement={bookingDetails.children <= 0}
                 disabledIncrement={isWineWednesday || (bookingDetails.adults + bookingDetails.children >= 16)}
             />
+            <p className="text-xs text-muted-foreground pt-2">There is a maximum of 16 players per reservation. For bookings of more than 16 people please email info@pinopolis.wales</p>
         </div>
       </div>
 
