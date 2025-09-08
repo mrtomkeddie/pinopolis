@@ -7,7 +7,6 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import type { Menu } from '@/lib/menu-data';
 import { Clock, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface MenuDialogProps {
   menu: Menu;
@@ -41,12 +40,14 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
                                 {category.description && <p className="text-sm text-muted-foreground mb-4">{category.description}</p>}
                                 <ul className="space-y-4">
                                 {category.items.map((item) => (
-                                    <li key={item.name} className="flex justify-between items-baseline">
-                                        <div>
-                                            <h4 className="font-semibold">{item.name}</h4>
-                                            {item.description && <p className="text-sm text-muted-foreground max-w-md">{item.description}</p>}
+                                    <li key={item.name} className="bg-black/20 border border-white/10 rounded-lg p-4">
+                                        <div className="flex justify-between items-baseline">
+                                            <div>
+                                                <h4 className="font-semibold text-yellow-400">{item.name}</h4>
+                                                {item.description && <p className="text-sm text-muted-foreground mt-1 max-w-md">{item.description}</p>}
+                                            </div>
+                                            { item.price > 0 && <p className="font-mono text-base text-white">£{item.price.toFixed(2)}</p> }
                                         </div>
-                                        { item.price > 0 && <p className="font-mono text-base text-yellow-400">${item.price.toFixed(2)}</p> }
                                     </li>
                                 ))}
                                 </ul>
@@ -55,6 +56,7 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
                     ))}
                     </Accordion>
                 </div>
+                <ScrollBar />
             </ScrollArea>
         </div>
         <Separator className="bg-border/20 flex-shrink-0" />
