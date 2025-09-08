@@ -96,6 +96,9 @@ export default function SoftPlayBooking({ activity, price, accentColor }: { acti
     if (steps[currentStep] === 'options') {
       return !bookingDetails.date || !bookingDetails.time;
     }
+     if (steps[currentStep] === 'details') {
+        return !bookingDetails.contactDetails.firstName || !bookingDetails.contactDetails.lastName || !bookingDetails.contactDetails.email;
+    }
     return false;
   };
 
@@ -112,35 +115,35 @@ export default function SoftPlayBooking({ activity, price, accentColor }: { acti
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-black/50">
-       <SheetHeader className="p-6 pb-2 flex-shrink-0 border-b">
+    <div className="flex flex-col h-full">
+       <SheetHeader className="p-4 flex-shrink-0 border-b">
             <SheetTitle className={cn("font-headline text-2xl", accentText[accentColor])}>Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
         </SheetHeader>
-      <ScrollArea className="flex-grow bg-card">
+      <ScrollArea className="flex-grow">
         <div className="p-6">
             {renderStep()}
         </div>
       </ScrollArea>
 
-      <div className="flex-shrink-0 px-6 py-4 border-t border-border">
+      <div className="flex-shrink-0 px-6 py-4 border-t bg-card">
          <div className="flex justify-between items-center mb-4">
             <span className="text-lg font-bold">Total Price:</span>
             <span className="text-xl font-bold">£{finalPrice.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between">
-            {currentStep > 0 && (
-            <Button variant="outline" onClick={prevStep} className="mr-2">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back
-            </Button>
-            )}
-             <div className="flex-grow" />
+        <div className="flex justify-between gap-4">
+            {currentStep > 0 ? (
+                <Button variant="outline" onClick={prevStep} className="w-1/3">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+            ) : <div className="w-1/3" /> }
+            
             {currentStep < steps.length - 1 ? (
-            <Button onClick={nextStep} disabled={isNextDisabled()} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentGradient[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
+            <Button onClick={nextStep} disabled={isNextDisabled()} className={cn("text-white border-0 bg-gradient-to-r flex-grow", accentGradient[accentColor])}>
                 Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             ) : (
-            <Button onClick={handleBooking} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentGradient[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
+            <Button onClick={handleBooking} className={cn("text-white border-0 bg-gradient-to-r flex-grow", accentGradient[accentColor])}>
                 Confirm Booking & Pay
             </Button>
             )}

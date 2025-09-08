@@ -97,6 +97,18 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     const handleWineChoice = (wine: 'White' | 'Red' | 'Rosé') => {
         updateDetails({ wineChoice: wine });
     };
+    
+    const accentBorder = {
+        orange: 'border-orange-400',
+        pink: 'border-pink-400',
+        cyan: 'border-cyan-400'
+    }
+
+    const accentText = {
+        orange: 'text-orange-400',
+        pink: 'text-pink-400',
+        cyan: 'text-cyan-400'
+    }
 
     return (
         <div className="space-y-6">
@@ -130,7 +142,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                                 modifiersStyles={{
                                     deal: {
                                         color: 'hsl(var(--primary-foreground))',
-                                        backgroundColor: 'hsl(var(--primary))'
+                                        backgroundColor: `hsl(var(--primary))`
                                     }
                                 }}
                             />
@@ -152,7 +164,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             </div>
 
             {promotion && (
-                <Alert variant="default" className="text-primary border-primary">
+                <Alert variant="default" className={cn(accentText[accentColor], accentBorder[accentColor])}>
                     <Tag className="h-4 w-4" />
                     <AlertTitle>{promotion.name} Available!</AlertTitle>
                     <AlertDescription>
@@ -191,21 +203,21 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
 
             <div>
                 <Label className="font-bold text-lg mb-2">Number of Games</Label>
-                <RadioGroup 
+                 <RadioGroup 
                     value={String(bookingDetails.games)} 
                     onValueChange={(val) => updateDetails({ games: Number(val) })} 
                     className="grid grid-cols-3 gap-2"
                 >
                     {[1, 2, 3].map(num => (
                         <div key={num}>
-                            <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" disabled={isGamesLocked} />
+                            <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only peer" disabled={isGamesLocked} />
                             <Label 
                                 htmlFor={`games-${num}`} 
                                 className={cn(
                                     "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4", 
                                     isGamesLocked 
                                         ? "cursor-not-allowed opacity-50" 
-                                        : "cursor-pointer hover:bg-accent hover:text-accent-foreground", 
+                                        : "cursor-pointer hover:bg-accent hover:text-accent-foreground",
                                     "peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                                 )}>
                                 {num} {num > 1 ? 'Games' : 'Game'}
@@ -226,7 +238,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                     >
                         {(['White', 'Red', 'Rosé'] as const).map(wine => (
                             <div key={wine}>
-                                <RadioGroupItem value={wine} id={`wine-${wine}`} className="sr-only" />
+                                <RadioGroupItem value={wine} id={`wine-${wine}`} className="sr-only peer" />
                                 <Label htmlFor={`wine-${wine}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
                                     {wine}
                                 </Label>
