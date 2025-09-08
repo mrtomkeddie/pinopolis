@@ -76,7 +76,8 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
     }
     // Default pricing if no promotion
     const totalGuests = bookingDetails.adults + bookingDetails.children;
-    const bowlingPrice = totalGuests * bookingDetails.games * price;
+    const pricePerGame = bookingDetails.games > 1 ? 5.00 : price;
+    const bowlingPrice = totalGuests * bookingDetails.games * pricePerGame;
     const softPlayPrice = bookingDetails.addSoftPlay ? bookingDetails.softPlayChildren * 5 : 0;
     return bowlingPrice + softPlayPrice;
   }, [bookingDetails, price, promotion]);

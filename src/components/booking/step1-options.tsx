@@ -127,7 +127,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             {[1, 2, 3].map(num => (
                 <div key={num}>
                     <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only" />
-                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer")}>
+                    <Label htmlFor={`games-${num}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground", bookingDetails.games === num && "border-primary", isGamesLocked ? "cursor-not-allowed opacity-50" : "cursor-pointer")}>
                         {num} {num > 1 ? 'Games' : 'Game'}
                     </Label>
                 </div>
