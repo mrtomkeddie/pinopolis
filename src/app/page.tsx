@@ -1,4 +1,4 @@
-import { Dices, Target, ToyBrick, ArrowRight } from 'lucide-react';
+import { Dices, Target, ToyBrick, ArrowRight, PartyPopper } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import Footer from '@/components/footer';
 import ActivityBooking from '@/components/activity-booking';
 import PartyPackages from '@/components/party-packages';
 import type { Activity } from '@/lib/types';
+import Link from 'next/link';
 
 const activities: Activity[] = [
   {
@@ -42,10 +43,28 @@ export default function Home() {
     <div className="flex flex-col min-h-dvh bg-background text-foreground font-body">
       <Header />
       <main className="flex-1 flex flex-col items-center justify-center">
+        <section className="relative w-full h-[60vh] flex flex-col items-center justify-center text-center bg-background overflow-hidden">
+          <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
+          <div className="relative z-10 flex flex-col items-center space-y-4">
+            <PartyPopper className="w-24 h-24 text-primary animate-pulse" />
+            <h1 className="text-7xl md:text-9xl font-extrabold font-headline tracking-tighter">
+              Pinopolis
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground">The future of entertainment is here.</p>
+            <Link href="#parties">
+              <Button size="lg" className="mt-4">
+                Book Your Experience
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </section>
+
         <section id="parties" className="py-16 md:py-24 w-full">
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-5xl font-headline font-bold">Book an Appointment</h1>
+              <h2 className="text-4xl md:text-5xl font-headline font-bold">Book an Appointment</h2>
               <p className="mt-2 text-lg text-muted-foreground">Follow the steps below to secure your spot.</p>
             </div>
             <PartyPackages />
