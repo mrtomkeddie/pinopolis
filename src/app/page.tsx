@@ -67,7 +67,7 @@ const foodAndDrinks = [
     name: 'Craft Beer & Cocktails',
     description: 'Premium craft beers on tap alongside expertly crafted cocktails in a futuristic sports bar atmosphere.',
     icon: Martini,
-    image: 'https://picsum.photos/600/400',
+    image: '/drinks.jpg',
     imageHint: 'craft beer cocktails',
     gradient: 'from-pink-500 to-purple-500',
     tags: ['Craft Beer Selection', 'Live Sports TV', 'Draft Cocktails'],
