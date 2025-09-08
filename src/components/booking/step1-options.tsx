@@ -67,7 +67,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
 
     const isDealApplied = bookingDetails.dealApplied ?? false;
     const isGamesLocked = isDealApplied && promotion && (promotion.type === 'perPerson' || promotion.type === 'package');
-    const isWineWednesday = isDealApplied && promotion && promotion.type === 'package';
+    const isWineWednesday = isDealApplied && promotion?.type === 'package';
 
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
@@ -242,7 +242,11 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 {(['White', 'Red', 'Rosé'] as const).map(wine => (
                     <div key={wine}>
                         <RadioGroupItem value={wine} id={`wine-${wine}`} className="sr-only" />
-                        <Label htmlFor={`wine-${wine}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
+                        <Label htmlFor={`wine-${wine}`} className={cn("flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer", {
+                                "peer-data-[state=checked]:border-orange-500 [&:has([data-state=checked])]:border-orange-500": accentColor === 'orange',
+                                "peer-data-[state=checked]:border-pink-500 [&:has([data-state=checked])]:border-pink-500": accentColor === 'pink',
+                                "peer-data-[state=checked]:border-cyan-500 [&:has([data-state=checked])]:border-cyan-500": accentColor === 'cyan',
+                            })}>
                             {wine}
                         </Label>
                     </div>
