@@ -66,7 +66,7 @@ const foodAndDrinks = [
     tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
     buttonText: 'View Menu',
     menu: streetFoodMenu,
-    accentColor: 'yellow' as const,
+    accentColor: 'cyan' as const,
   },
   {
     name: 'Craft Beer & Cocktails',
@@ -90,6 +90,11 @@ export default function Home() {
       pink: 'hover:border-pink-500/50',
       cyan: 'hover:border-cyan-500/50',
       yellow: 'hover:border-yellow-400/50'
+  }
+
+  const accentTextColor = {
+    cyan: 'text-cyan-400',
+    pink: 'text-pink-400'
   }
 
   return (
@@ -237,7 +242,7 @@ export default function Home() {
                                         <CardTitle className="font-headline text-2xl">{item.name}</CardTitle>
                                         <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
                                     </div>
-                                    <div className={cn("p-2", item.accentColor === 'yellow' ? 'text-yellow-400' : 'text-pink-400')}>
+                                    <div className={cn("p-2", accentTextColor[item.accentColor])}>
                                         <Zap className="w-6 h-6"/>
                                     </div>
                                 </div>

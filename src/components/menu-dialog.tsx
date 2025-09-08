@@ -14,7 +14,7 @@ interface MenuDialogProps {
   accentColor?: 'yellow' | 'pink' | 'cyan';
 }
 
-export default function MenuDialog({ menu, accentColor = 'yellow' }: MenuDialogProps) {
+export default function MenuDialog({ menu, accentColor = 'cyan' }: MenuDialogProps) {
   const titleGradient = {
     yellow: 'from-yellow-400 to-orange-400',
     pink: 'from-pink-400 to-purple-400',
