@@ -19,6 +19,8 @@ export function Step3_Summary({ bookingDetails, basePrice, discountAmount, final
   const { activityName, adults, children, games, addSoftPlay, softPlayChildren, date, time, contactDetails, wineChoice } = bookingDetails;
   const totalGuests = adults + children;
 
+  const pricePerGame = bookingDetails.games > 1 ? 5.00 : 6.50;
+
   return (
     <div className="space-y-6">
       <h3 className="font-bold text-lg">Review & Confirm</h3>
@@ -57,6 +59,18 @@ export function Step3_Summary({ bookingDetails, basePrice, discountAmount, final
       <div className="space-y-4 rounded-lg border bg-muted/20 p-4">
         <h3 className="font-headline text-lg font-semibold">Pricing Summary</h3>
         <div className="space-y-2 text-sm">
+          {!promotion && (
+             <div className="flex justify-between">
+                <span>{totalGuests} guests x {games} game(s) @ £{pricePerGame.toFixed(2)}</span>
+                <span>£{(totalGuests * games * pricePerGame).toFixed(2)}</span>
+            </div>
+          )}
+          {addSoftPlay && (
+            <div className="flex justify-between">
+                <span>Soft Play ({softPlayChildren} children)</span>
+                <span>£{(softPlayChildren * 5).toFixed(2)}</span>
+            </div>
+          )}
           <div className="flex justify-between">
             <span>Base price:</span>
             <span>£{basePrice.toFixed(2)}</span>
