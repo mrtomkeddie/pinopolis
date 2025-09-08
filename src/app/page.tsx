@@ -119,7 +119,7 @@ export default function Home() {
               </div>
             </div>
             <Link href="#content">
-              <Button size="lg" className="mt-8 bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">
+              <Button size="lg" className="mt-8 bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 hover:-translate-y-1 transition-transform duration-300">
                 Book Your Experience
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
