@@ -19,7 +19,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 15,
     image: '/bowling.jpg',
     imageHint: 'bowling alley',
-    gradient: 'from-pink-500 to-purple-500',
+    gradient: 'from-cyan-500 to-blue-500',
   },
   {
     name: 'AR Darts',
@@ -37,7 +37,7 @@ const activities: (Activity & { gradient: string })[] = [
     price: 8,
     image: '/softplay.jpg',
     imageHint: 'kids playground',
-    gradient: 'from-cyan-500 to-blue-500',
+    gradient: 'from-pink-500 to-purple-500',
   },
 ];
 
@@ -45,7 +45,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground font-body">
       <main className="flex-1 flex flex-col items-center justify-center">
-        <section className="relative w-full h-[60vh] flex flex-col items-center justify-center text-center bg-background overflow-hidden">
+        <section className="relative w-full h-dvh flex flex-col items-center justify-center text-center bg-background overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
           <div className="relative z-10 flex flex-col items-center space-y-8">
