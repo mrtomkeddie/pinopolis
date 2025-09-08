@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { getRecommendations } from '@/app/actions';
 import {
   type RecommendPartyPackagesOutput,
@@ -67,7 +68,7 @@ function PackageSkeleton() {
 
 export default function PartyPackages() {
   const initialState: FormState = { data: null, error: null };
-  const [state, formAction] = useFormState(getRecommendations, initialState);
+  const [state, formAction] = useActionState(getRecommendations, initialState);
   const { pending } = useFormStatus();
 
   return (
