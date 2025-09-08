@@ -78,7 +78,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails }: Step1Dart
 
       <div className="space-y-2 p-4 border rounded-lg">
         <div className="flex items-center justify-between">
-          <Label htmlFor="soft-play-switch" className="font-bold text-md flex items-center gap-2"><ToyBrick /> Add Soft Play for other kids?</Label>
+          <Label htmlFor="soft-play-switch" className="font-bold text-md flex items-center gap-2"><ToyBrick /> Add Soft Play</Label>
           <Switch id="soft-play-switch" checked={bookingDetails.addSoftPlay} onCheckedChange={(checked) => updateDetails({ addSoftPlay: checked, softPlayChildren: checked ? 1 : 0 })} />
         </div>
         {bookingDetails.addSoftPlay && (
