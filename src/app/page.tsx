@@ -62,11 +62,11 @@ const foodAndDrinks = [
     icon: Utensils,
     image: '/food1.jpg',
     imageHint: 'street food burgers',
-    gradient: 'from-cyan-500 to-blue-500',
+    gradient: 'from-yellow-500 to-orange-500',
     tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
     buttonText: 'View Menu',
     menu: streetFoodMenu,
-    accentColor: 'cyan' as const,
+    accentColor: 'orange' as const,
   },
   {
     name: 'Craft Beer & Cocktails',
@@ -93,6 +93,7 @@ export default function Home() {
   }
 
   const accentTextColor = {
+    orange: 'text-orange-400',
     cyan: 'text-cyan-400',
     pink: 'text-pink-400'
   }
@@ -275,30 +276,30 @@ export default function Home() {
                         <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">Planning a special event? We offer tailored party packages to make your celebration unforgettable. From birthdays to corporate events, we've got you covered.</p>
                       </div>
                       
-                      <Card className="max-w-2xl mx-auto bg-black border border-white/10">
-                        <CardHeader className="text-center">
-                            <div className="flex items-center justify-center gap-3">
-                                <CardTitle className="font-headline text-2xl flex items-center justify-center gap-3"><Award className="w-8 h-8 text-yellow-400" /> Plan Your Perfect Party</CardTitle>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="text-center space-y-6">
-                            <p className="text-muted-foreground">
-                                Our dedicated team is here to help you create a memorable experience. Get in touch to discuss your requirements, and we'll design a custom package just for you.
-                            </p>
-                            <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-                                <a href="tel:01554556226">
-                                    <Button variant="outline" size="lg" className="bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground w-64">
-                                        <Phone className="mr-3"/> Call Us
-                                    </Button>
-                                </a>
-                                <a href="mailto:info@pinopolis.wales">
-                                    <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0 w-64">
-                                        <Mail className="mr-3"/> Email Us
-                                    </Button>
-                                </a>
-                            </div>
-                        </CardContent>
-                      </Card>
+                      <div className="max-w-2xl mx-auto bg-black border border-white/10 rounded-xl">
+                          <CardHeader className="text-center">
+                              <div className="flex items-center justify-center gap-3">
+                                  <CardTitle className="font-headline text-2xl flex items-center justify-center gap-3"><Award className="w-8 h-8 text-yellow-400" /> Plan Your Perfect Party</CardTitle>
+                              </div>
+                          </CardHeader>
+                          <CardContent className="text-center space-y-6">
+                              <p className="text-muted-foreground">
+                                  Our dedicated team is here to help you create a memorable experience. Get in touch to discuss your requirements, and we'll design a custom package just for you.
+                              </p>
+                              <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+                                  <a href="tel:01554556226">
+                                      <Button variant="outline" size="lg" className="bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground w-64">
+                                          <Phone className="mr-3"/> Call Us
+                                      </Button>
+                                  </a>
+                                  <a href="mailto:info@pinopolis.wales">
+                                      <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0 w-64">
+                                          <Mail className="mr-3"/> Email Us
+                                      </Button>
+                                  </a>
+                              </div>
+                          </CardContent>
+                      </div>
 
                     </div>
                   </section>
