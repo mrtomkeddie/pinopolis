@@ -69,14 +69,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
 
   return (
     <div className="space-y-6">
-        <Alert>
-            <Info className="h-4 w-4" />
-            <AlertTitle>Weekly Deals Available!</AlertTitle>
-            <AlertDescription>
-                Select a Monday, Tuesday or Wednesday on the calendar to see our special offers.
-            </AlertDescription>
-        </Alert>
-       <div>
+       <div className="space-y-4">
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
         <div className="flex flex-col gap-4">
             <Popover>
@@ -135,7 +128,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
             </Alert>
         )}
 
-      <div>
+      <div className="space-y-4">
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Target /> Select Oches & Duration</Label>
         <div className="space-y-4 p-4 border rounded-lg">
             <div>
