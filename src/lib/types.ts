@@ -8,3 +8,8 @@ export interface Activity {
   image: string;
   imageHint: string;
 }
+
+export interface ActivityBookingProps {
+  activityName: string;
+  price: number;
+}

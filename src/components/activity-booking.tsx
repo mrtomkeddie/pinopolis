@@ -12,18 +12,18 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { getApplicablePromotion } from '@/lib/promotions';
-import type { Activity } from '@/lib/types';
 import { Badge } from './ui/badge';
 
 interface ActivityBookingProps {
-  activity: Activity;
+  activityName: string;
+  price: number;
 }
 
 const timeSlots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
 const durations = [1, 1.5, 2, 2.5, 3];
 const guestOptions = Array.from({ length: 10 }, (_, i) => i + 1);
 
-export default function ActivityBooking({ activity }: ActivityBookingProps) {
+export default function ActivityBooking({ activityName, price }: ActivityBookingProps) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState<string>('14:00');
   const [duration, setDuration] = useState<number>(1);
@@ -34,7 +34,7 @@ export default function ActivityBooking({ activity }: ActivityBookingProps) {
 
   const { toast } = useToast();
 
-  const pricePerGuest = activity.price;
+  const pricePerGuest = price;
 
   useEffect(() => {
     const basePrice = pricePerGuest * guests * duration;
@@ -55,7 +55,7 @@ export default function ActivityBooking({ activity }: ActivityBookingProps) {
   const handleBooking = () => {
     toast({
       title: 'Booking Confirmed!',
-      description: `You've booked ${activity.name} for ${guests} people on ${date ? format(date, 'PPP') : ''} at ${time}.`,
+      description: `You've booked ${activityName} for ${guests} people on ${date ? format(date, 'PPP') : ''} at ${time}.`,
     });
   };
 

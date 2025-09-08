@@ -1,4 +1,4 @@
-import { Dices, Target, ToyBrick, PartyPopper, Users, Clock, Calendar as CalendarIcon, ArrowRight } from 'lucide-react';
+import { Dices, Target, ToyBrick, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -63,7 +63,7 @@ export default function Home() {
                 <Card key={activity.name} className="bg-card/80 border-border/60 hover:border-primary/80 transition-all duration-300 transform hover:-translate-y-1 group overflow-hidden">
                   <CardHeader>
                     <div className="relative h-40 rounded-md overflow-hidden mb-4">
-                        <Image src={activity.image} alt={activity.name} layout="fill" objectFit="cover" className="group-hover:scale-105 transition-transform duration-500" data-ai-hint={activity.imageHint} />
+                        <Image src={activity.image} alt={activity.name} fill={true} objectFit="cover" className="group-hover:scale-105 transition-transform duration-500" data-ai-hint={activity.imageHint} />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -88,7 +88,7 @@ export default function Home() {
                                     <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
                                     <SheetDescription>Select your details to reserve a spot.</SheetDescription>
                                 </SheetHeader>
-                                <ActivityBooking activity={activity} />
+                                <ActivityBooking activityName={activity.name} price={activity.price} />
                             </SheetContent>
                         </Sheet>
                     </div>
