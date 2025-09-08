@@ -3,7 +3,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram, Phone } from 'lucide-react';
+import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram, Phone, Mail, Award } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,6 @@ import ActivityBooking from '@/components/activity-booking';
 import type { Activity } from '@/lib/types';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import PartyPackages from '@/components/party-packages';
 import SegmentedControl from '@/components/segmented-control';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
@@ -262,10 +261,33 @@ export default function Home() {
                   <section id="party-packages">
                     <div className="container mx-auto px-4">
                       <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold font-headline flex items-center justify-center gap-4"><PartyPopper className="w-10 h-10 text-primary" /> Book a Party Package</h2>
-                        <p className="mt-2 text-lg text-muted-foreground">Let our AI assistant find the perfect package for your event.</p>
+                        <h2 className="text-3xl md:text-4xl font-bold font-headline flex items-center justify-center gap-4"><PartyPopper className="w-10 h-10 text-primary" /> Bespoke Party Packages</h2>
+                        <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">Planning a special event? We offer tailored party packages to make your celebration unforgettable. From birthdays to corporate events, we've got you covered.</p>
                       </div>
-                      <PartyPackages />
+                      
+                      <Card className="max-w-2xl mx-auto bg-black border border-white/10">
+                        <CardHeader className="text-center">
+                            <CardTitle className="font-headline text-2xl flex items-center justify-center gap-3"><Award className="w-8 h-8 text-yellow-400" /> Plan Your Perfect Party</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-center space-y-6">
+                            <p className="text-muted-foreground">
+                                Our dedicated team is here to help you create a memorable experience. Get in touch to discuss your requirements, and we'll design a custom package just for you.
+                            </p>
+                            <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+                                <a href="tel:01554556226">
+                                    <Button variant="outline" size="lg" className="bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground w-64">
+                                        <Phone className="mr-3"/> Call Us
+                                    </Button>
+                                </a>
+                                <a href="mailto:info@pinopolis.wales">
+                                    <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0 w-64">
+                                        <Mail className="mr-3"/> Email Us
+                                    </Button>
+                                </a>
+                            </div>
+                        </CardContent>
+                      </Card>
+
                     </div>
                   </section>
                 )}
