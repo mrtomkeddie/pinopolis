@@ -38,7 +38,7 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 );
 
 
-export function Step1_Options({ bookingDetails, updateDetails }: Step1Props) {
+export function Step1_Options({ bookingDetails, updateDetails, pricePerGame }: Step1Props) {
     const [adultError, setAdultError] = useState(false);
 
     const handleAdultsChange = (increment: boolean) => {
