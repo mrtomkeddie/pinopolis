@@ -30,7 +30,7 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
             <Accordion type="multiple" className="w-full p-6 pt-2" defaultValue={menu.categories.map(c => c.title)}>
             {menu.categories.map((category) => (
                 <AccordionItem value={category.title} key={category.title} className="border-b-border/20">
-                    <AccordionTrigger className="text-lg font-semibold hover:no-underline relative">
+                    <AccordionTrigger className="text-lg font-semibold hover:no-underline relative text-left">
                         <span className="py-4">{category.title}</span>
                         <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-yellow-500 to-orange-500/0" />
                     </AccordionTrigger>
