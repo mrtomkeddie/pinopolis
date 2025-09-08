@@ -1,166 +1,118 @@
+
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { Calendar as CalendarIcon, Clock, Users, ArrowRight } from 'lucide-react';
-import { format } from 'date-fns';
-
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
+import { useState, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
 import { getApplicablePromotion } from '@/lib/promotions';
-import { Badge } from './ui/badge';
+import type { BookingDetails, Activity, Promotion } from '@/lib/types';
+import { Step1_Options } from './booking/step1-options';
+import { Step2_Details } from './booking/step2-details';
+import { Step3_Summary } from './booking/step3-summary';
+import { Button } from './ui/button';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-interface ActivityBookingProps {
-  activityName: string;
-  price: number;
-}
+const steps = ['options', 'details', 'summary'];
 
-const timeSlots = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
-const durations = [1, 1.5, 2, 2.5, 3];
-const guestOptions = Array.from({ length: 10 }, (_, i) => i + 1);
-
-export default function ActivityBooking({ activityName, price }: ActivityBookingProps) {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [time, setTime] = useState<string>('14:00');
-  const [duration, setDuration] = useState<number>(1);
-  const [guests, setGuests] = useState<number>(2);
-  const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [discount, setDiscount] = useState<number>(0);
-  const [promotionName, setPromotionName] = useState<string | null>(null);
+export default function ActivityBooking({ activity, price }: { activity: Activity, price: number }) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [bookingDetails, setBookingDetails] = useState<BookingDetails>({
+    activityName: activity.name,
+    adults: 1,
+    children: 0,
+    games: 1,
+    addSoftPlay: false,
+    softPlayChildren: 0,
+    date: new Date(),
+    time: '',
+    contactDetails: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      postcode: '',
+      marketingOptIn: false,
+    },
+  });
+  const [promotion, setPromotion] = useState<Promotion | null>(null);
 
   const { toast } = useToast();
 
-  const pricePerGuest = price;
+  const basePrice = useMemo(() => {
+    const totalGuests = bookingDetails.adults + bookingDetails.children;
+    const bowlingPrice = totalGuests * bookingDetails.games * price;
+    const softPlayPrice = bookingDetails.addSoftPlay ? bookingDetails.softPlayChildren * 5 : 0;
+    return bowlingPrice + softPlayPrice;
+  }, [bookingDetails, price]);
 
-  useEffect(() => {
-    const basePrice = pricePerGuest * guests * duration;
-    const promotion = date ? getApplicablePromotion(date) : null;
-
-    if (promotion) {
-      const discountAmount = basePrice * (promotion.discount / 100);
-      setDiscount(discountAmount);
-      setTotalPrice(basePrice - discountAmount);
-      setPromotionName(promotion.name);
-    } else {
-      setDiscount(0);
-      setTotalPrice(basePrice);
-      setPromotionName(null);
+  const discountAmount = useMemo(() => {
+    const applicablePromotion = bookingDetails.date ? getApplicablePromotion(bookingDetails.date) : null;
+    setPromotion(applicablePromotion);
+    if (applicablePromotion) {
+      return basePrice * (applicablePromotion.discount / 100);
     }
-  }, [date, duration, guests, pricePerGuest]);
+    return 0;
+  }, [bookingDetails.date, basePrice]);
+
+  const finalPrice = useMemo(() => basePrice - discountAmount, [basePrice, discountAmount]);
+
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   const handleBooking = () => {
+    // Here you would typically handle payment processing
     toast({
       title: 'Booking Confirmed!',
-      description: `You've booked ${activityName} for ${guests} people on ${date ? format(date, 'PPP') : ''} at ${time}.`,
+      description: `Your booking for ${activity.name} has been made.`,
     });
+    // Potentially redirect to a "My Bookings" page
   };
 
-  const finalPrice = useMemo(() => totalPrice, [totalPrice]);
+  const updateDetails = (details: Partial<BookingDetails>) => {
+    setBookingDetails((prev) => ({ ...prev, ...details }));
+  };
+  
+  const updateContactDetails = (details: Partial<BookingDetails['contactDetails']>) => {
+    setBookingDetails(prev => ({
+        ...prev,
+        contactDetails: { ...prev.contactDetails, ...details }
+    }));
+  };
+
+  const renderStep = () => {
+    switch (steps[currentStep]) {
+      case 'options':
+        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} />;
+      case 'details':
+        return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
+      case 'summary':
+        return <Step3_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={promotion} />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="py-4 space-y-8">
-      <div className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="date">Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                id="date"
-                variant={'outline'}
-                className={cn('w-full justify-start text-left font-normal', !date && 'text-muted-foreground')}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, 'PPP') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar mode="single" selected={date} onSelect={setDate} initialFocus disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} />
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="time">Time</Label>
-            <Select value={time} onValueChange={setTime}>
-              <SelectTrigger>
-                <Clock className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Select time" />
-              </SelectTrigger>
-              <SelectContent>
-                {timeSlots.map((slot) => (
-                  <SelectItem key={slot} value={slot}>
-                    {slot}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="duration">Duration (hours)</Label>
-            <Select value={String(duration)} onValueChange={(val) => setDuration(Number(val))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select duration" />
-              </SelectTrigger>
-              <SelectContent>
-                {durations.map((d) => (
-                  <SelectItem key={d} value={String(d)}>
-                    {d}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="guests">Guests</Label>
-          <Select value={String(guests)} onValueChange={(val) => setGuests(Number(val))}>
-            <SelectTrigger>
-              <Users className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Select guests" />
-            </SelectTrigger>
-            <SelectContent>
-              {guestOptions.map((g) => (
-                <SelectItem key={g} value={String(g)}>
-                  {g} person{g > 1 ? 's' : ''}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="py-4 space-y-6 flex flex-col h-full">
+      <div className="flex-grow">
+        {renderStep()}
       </div>
 
-      <div className="space-y-4 rounded-lg border border-border bg-muted/20 p-4">
-        <h3 className="font-headline text-lg font-semibold">Booking Summary</h3>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span>Base price:</span>
-            <span>${(pricePerGuest * guests * duration).toFixed(2)}</span>
-          </div>
-          {promotionName && (
-            <div className="flex justify-between text-primary">
-              <span>
-                <Badge variant="outline" className="border-primary text-primary mr-2">{promotionName}</Badge>
-                Discount:
-              </span>
-              <span>-${discount.toFixed(2)}</span>
-            </div>
-          )}
-          <div className="flex justify-between font-bold text-lg pt-2 border-t border-border">
-            <span>Total Price:</span>
-            <span>${finalPrice.toFixed(2)}</span>
-          </div>
-        </div>
+      <div className="flex-shrink-0 pt-4 border-t border-border">
+        {currentStep > 0 && (
+          <Button variant="outline" onClick={prevStep} className="mr-2">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back
+          </Button>
+        )}
+        {currentStep < steps.length - 1 ? (
+          <Button onClick={nextStep} className="w-full">
+            Next <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        ) : (
+          <Button onClick={handleBooking} className="w-full">
+            Confirm Booking & Pay
+          </Button>
+        )}
       </div>
-
-      <Button size="lg" className="w-full" onClick={handleBooking}>
-        Confirm Booking <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
     </div>
   );
 }

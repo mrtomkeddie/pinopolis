@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -25,7 +26,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     name: 'Bowling',
     description: 'Brunswick bowling with state-of-the-art lanes, scoring systems and atmospheric lighting.',
     icon: Dices,
-    price: 35,
+    price: 7, // Price per game per person
     image: '/bowling.jpg',
     imageHint: 'bowling alley',
     gradient: 'from-yellow-500 to-orange-500',
@@ -35,7 +36,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     name: 'AR Darts',
     description: 'Augmented reality dartboards with digital targets, effects and competitive scoring modes.',
     icon: Target,
-    price: 28,
+    price: 28, // Price per hour
     image: '/darts.jpg',
     imageHint: 'darts game',
     gradient: 'from-pink-500 to-purple-500',
@@ -45,7 +46,7 @@ const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink'
     name: 'Soft Play',
     description: 'Safe and exciting soft play area designed for children with interactive features and supervised fun.',
     icon: ToyBrick,
-    price: 8,
+    price: 8, // Price per hour
     image: '/softplay.jpg',
     imageHint: 'kids playground',
     gradient: 'from-cyan-500 to-blue-500',
@@ -169,17 +170,17 @@ export default function Home() {
                               </div>
                               <div className="flex-grow" />
                               <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
-                                  <p className="text-xl">£<span className="font-bold">{activity.price}</span><span className="text-sm text-muted-foreground">/hour</span></p>
+                                  <p className="text-xl">£<span className="font-bold">{activity.price}</span><span className="text-sm text-muted-foreground">/game</span></p>
                                   <Sheet>
                                       <SheetTrigger asChild>
                                           <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
                                       </SheetTrigger>
-                                      <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
+                                      <SheetContent className="w-full md:max-w-md bg-card border-l border-border flex flex-col">
                                           <SheetHeader>
                                               <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
                                               <SheetDescription>Select your details to reserve a spot.</SheetDescription>
                                           </SheetHeader>
-                                          <ActivityBooking activityName={activity.name} price={activity.price} />
+                                          <ActivityBooking activity={activity} price={activity.price} />
                                       </SheetContent>
                                   </Sheet>
                               </div>
@@ -262,16 +263,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-    
-
-    
-
-    
-
-    
-
-    
-
-    
