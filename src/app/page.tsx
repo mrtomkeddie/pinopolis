@@ -22,7 +22,7 @@ import { streetFoodMenu, drinksMenu } from '@/lib/menu-data';
 
 const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink' | 'cyan' })[] = [
   {
-    name: 'Cyber Bowling',
+    name: 'Bowling',
     description: 'Brunswick bowling with state-of-the-art lanes, scoring systems and atmospheric lighting.',
     icon: Dices,
     price: 35,
