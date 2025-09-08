@@ -3,7 +3,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram, Phone, Mail, Award } from 'lucide-react';
+import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram, Phone, Mail, Award, AtSign } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -186,8 +186,8 @@ export default function Home() {
                                       <SheetTrigger asChild>
                                           <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
                                       </SheetTrigger>
-                                      <SheetContent className="w-full md:max-w-md bg-card border-l border-border flex flex-col">
-                                          <SheetHeader>
+                                      <SheetContent className="w-full md:max-w-md bg-card border-l border-border flex flex-col p-0">
+                                          <SheetHeader className="p-6">
                                               <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
                                               <SheetDescription>Select your details to reserve a spot.</SheetDescription>
                                           </SheetHeader>

@@ -88,14 +88,14 @@ export default function SoftPlayBooking({ activity, price }: { activity: Activit
   };
 
   return (
-    <div className="py-4 space-y-6 flex flex-col h-full overflow-hidden">
-      <ScrollArea className="flex-grow -mx-6 bg-black/50">
+    <div className="flex flex-col h-full overflow-hidden">
+      <ScrollArea className="flex-grow bg-black/50">
         <div className="px-6 py-4">
             {renderStep()}
         </div>
       </ScrollArea>
 
-      <div className="flex-shrink-0 pt-4 border-t border-border px-6">
+      <div className="flex-shrink-0 px-6 py-4 border-t border-border">
          <div className="flex justify-between items-center mb-4">
             <span className="text-lg font-bold">Total Price:</span>
             <span className="text-xl font-bold">£{finalPrice.toFixed(2)}</span>

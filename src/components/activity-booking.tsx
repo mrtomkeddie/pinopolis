@@ -129,8 +129,8 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
   };
 
   return (
-    <div className="py-4 space-y-6 flex flex-col h-full overflow-hidden">
-        <div className="px-4">
+    <div className="flex flex-col h-full overflow-hidden">
+        <div className="p-6">
              <Alert>
                 <Info className="h-4 w-4" />
                 <AlertTitle>Weekly Deals Available!</AlertTitle>
@@ -139,13 +139,13 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
                 </AlertDescription>
             </Alert>
         </div>
-      <ScrollArea className="flex-grow -mx-6 bg-black/50">
-        <div className="px-6 pt-4 pb-6">
+      <ScrollArea className="flex-grow bg-black/50">
+        <div className="px-6 py-4">
             {renderStep()}
         </div>
       </ScrollArea>
 
-      <div className="flex-shrink-0 px-6 pt-4 border-t border-border">
+      <div className="flex-shrink-0 px-6 py-4 border-t border-border">
          <div className="flex justify-between items-center mb-4">
             <span className="text-lg font-bold">Total Price:</span>
             <span className="text-xl font-bold">£{finalPrice.toFixed(2)}</span>
