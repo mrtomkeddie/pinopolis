@@ -161,7 +161,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
       </SheetHeader>
       
       <ScrollArea className="flex-grow min-h-0">
-        <div className="p-6">
+        <div className="p-6" style={{ contain: 'layout' }}>
             {renderStep()}
         </div>
       </ScrollArea>

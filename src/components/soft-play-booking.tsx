@@ -121,7 +121,7 @@ export default function SoftPlayBooking({ activity, price, accentColor }: { acti
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
         </SheetHeader>
       <ScrollArea className="flex-grow min-h-0">
-        <div className="p-6">
+        <div className="p-6" style={{ contain: 'layout' }}>
             {renderStep()}
         </div>
       </ScrollArea>
