@@ -59,6 +59,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails }: Step1Dart
                         </div>
                     ))}
                 </RadioGroup>
+                <p className="text-xs text-muted-foreground mt-2 text-center">Each darts oche holds up to 6 players.</p>
             </div>
             <div>
                 <Label className="font-bold text-md mb-2">Duration</Label>
