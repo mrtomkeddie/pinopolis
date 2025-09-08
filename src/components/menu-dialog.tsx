@@ -3,7 +3,7 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import type { Menu } from '@/lib/menu-data';
 import { Clock, X } from 'lucide-react';
@@ -33,7 +33,11 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
                 {menu.categories.map((category) => (
                     <AccordionItem value={category.title} key={category.title} className="border border-white/10 rounded-lg overflow-hidden bg-black/20">
                         <AccordionTrigger className="text-lg font-semibold hover:no-underline relative text-left px-6 py-4">
-                            <span>{category.title}</span>
+                            <div className="flex items-center w-full">
+                                <div className="flex-grow h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent opacity-50"></div>
+                                <span className="px-4 flex-shrink-0 text-center">{category.title}</span>
+                                <div className="flex-grow h-px bg-gradient-to-l from-transparent via-yellow-400 to-transparent opacity-50"></div>
+                            </div>
                         </AccordionTrigger>
                         <AccordionContent className="px-6 pb-6">
                             {category.description && <p className="text-sm text-muted-foreground mb-4">{category.description}</p>}
@@ -55,6 +59,7 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
                 ))}
                 </Accordion>
             </div>
+            <ScrollBar />
           </ScrollArea>
         </div>
         <Separator className="bg-border/20 flex-shrink-0" />
