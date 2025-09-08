@@ -29,7 +29,7 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
         <div className="flex-grow overflow-y-auto">
           <ScrollArea className="h-full">
             <div className="p-6 pt-2">
-                <Accordion type="multiple" className="w-full space-y-4">
+                <Accordion type="single" collapsible className="w-full space-y-4">
                 {menu.categories.map((category) => (
                     <AccordionItem value={category.title} key={category.title} className="border border-white/10 rounded-lg overflow-hidden bg-black/20">
                         <AccordionTrigger className="text-lg font-semibold hover:no-underline relative text-left px-6 py-4">
