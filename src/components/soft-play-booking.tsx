@@ -43,7 +43,10 @@ export default function SoftPlayBooking({ activity, price }: { activity: Activit
     const applicablePromotion = bookingDetails.date ? getApplicablePromotion(bookingDetails.date) : null;
     setPromotion(applicablePromotion);
     if (applicablePromotion) {
-      return basePrice * (applicablePromotion.discount / 100);
+      // Assuming promotions for soft play are discounts. This can be expanded.
+      if (applicablePromotion.type === 'discount') {
+        return basePrice * (applicablePromotion.discount / 100);
+      }
     }
     return 0;
   }, [bookingDetails.date, basePrice]);
@@ -86,13 +89,13 @@ export default function SoftPlayBooking({ activity, price }: { activity: Activit
 
   return (
     <div className="py-4 space-y-6 flex flex-col h-full overflow-hidden">
-      <ScrollArea className="flex-grow pr-6 -mr-6">
+      <ScrollArea className="flex-grow pr-6 -mr-6 bg-black/30">
         <div className="py-4">
             {renderStep()}
         </div>
       </ScrollArea>
 
-      <div className="flex-shrink-0 pt-4 border-t border-border">
+      <div className="flex-shrink-0 pt-4 border-t border-border px-6">
          <div className="flex justify-between items-center mb-4">
             <span className="text-lg font-bold">Total Price:</span>
             <span className="text-xl font-bold">£{finalPrice.toFixed(2)}</span>
