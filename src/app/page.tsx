@@ -126,7 +126,6 @@ export default function Home() {
                   <div id="activities">
                       <div className="text-center mb-12">
                           <h2 className="text-3xl md:text-4xl font-bold font-headline text-primary">Book an Activity</h2>
-                          <p className="mt-2 text-lg text-muted-foreground">Choose your next adventure.</p>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {activities.map((activity) => (
@@ -258,6 +257,8 @@ export default function Home() {
 }
 
     
+    
+
     
 
     
