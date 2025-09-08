@@ -35,7 +35,7 @@ const activities: (Activity & { gradient: string })[] = [
     description: 'A multi-level soft play area with a futuristic theme for the little ones.',
     icon: ToyBrick,
     price: 8,
-    image: 'https://picsum.photos/600/400?random=3',
+    image: '/softplay.jpg',
     imageHint: 'kids playground',
     gradient: 'from-yellow-500 to-orange-500',
   },
