@@ -49,11 +49,8 @@ export default function Home() {
         <section className="relative w-full h-[60vh] flex flex-col items-center justify-center text-center bg-background overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
-          <div className="relative z-10 flex flex-col items-center space-y-4">
-            <PartyPopper className="w-24 h-24 text-primary animate-pulse" />
-            <h1 className="text-7xl md:text-9xl font-extrabold font-headline tracking-tighter">
-              Pinopolis
-            </h1>
+          <div className="relative z-10 flex flex-col items-center space-y-8">
+            <Image src="/herologo.png" alt="Pinopolis Logo" width={800} height={200} className="max-w-md md:max-w-2xl px-4" />
             <p className="text-xl md:text-2xl text-muted-foreground">The future of entertainment is here.</p>
             <Link href="#activities">
               <Button size="lg" className="mt-4">
