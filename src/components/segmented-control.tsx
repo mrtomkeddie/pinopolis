@@ -29,7 +29,7 @@ export default function SegmentedControl({ activeTab, setActiveTab }: SegmentedC
   }
 
   return (
-    <div className="bg-black/50 border border-border/20 rounded-full p-1.5 flex items-center justify-between max-w-lg mx-auto">
+    <div className="bg-black/50 border border-white/10 rounded-full p-1.5 flex items-center justify-between max-w-lg mx-auto">
       {tabs.map((tab) => (
         <button
           key={tab.id}
