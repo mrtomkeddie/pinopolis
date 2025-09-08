@@ -59,7 +59,9 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
         }
     } else {
         // If no promotion, ensure dealApplied is false
-        updateDetails({ dealApplied: false });
+        if (bookingDetails.dealApplied) {
+            updateDetails({ dealApplied: false });
+        }
     }
   }, [bookingDetails.date, bookingDetails.dealApplied]);
 
