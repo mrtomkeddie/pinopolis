@@ -13,6 +13,7 @@ import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Separator } from './ui/separator';
+import { SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 
 const steps = ['options', 'details', 'summary'];
 
@@ -129,7 +130,11 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden bg-card">
+        <SheetHeader className="p-6 pb-4 flex-shrink-0 border-b">
+            <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
+            <SheetDescription>Select your details to reserve a spot.</SheetDescription>
+        </SheetHeader>
         <div className="p-6">
              <Alert>
                 <Info className="h-4 w-4" />
@@ -156,12 +161,13 @@ export default function ActivityBooking({ activity, price }: { activity: Activit
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back
             </Button>
             )}
+            <div className="flex-grow" />
             {currentStep < steps.length - 1 ? (
-            <Button onClick={nextStep} className="w-full">
+            <Button onClick={nextStep} className="w-full ml-auto" style={{maxWidth: 'calc(100% - 100px)'}}>
                 Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             ) : (
-            <Button onClick={handleBooking} className="w-full">
+            <Button onClick={handleBooking} className="w-full ml-auto" style={{maxWidth: 'calc(100% - 100px)'}}>
                 Confirm Booking & Pay
             </Button>
             )}
