@@ -9,8 +9,9 @@ import Footer from '@/components/footer';
 import ActivityBooking from '@/components/activity-booking';
 import type { Activity } from '@/lib/types';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
-const activities: Activity[] = [
+const activities: (Activity & { gradient: string })[] = [
   {
     name: 'Cyber Bowling',
     description: 'Experience bowling with a holographic twist. Perfect for groups and all skill levels.',
@@ -18,6 +19,7 @@ const activities: Activity[] = [
     price: 15,
     image: 'https://picsum.photos/600/400?random=1',
     imageHint: 'bowling alley',
+    gradient: 'from-cyan-500 to-blue-500',
   },
   {
     name: 'AR Darts',
@@ -26,6 +28,7 @@ const activities: Activity[] = [
     price: 10,
     image: 'https://picsum.photos/600/400?random=2',
     imageHint: 'darts game',
+    gradient: 'from-pink-500 to-purple-500',
   },
   {
     name: 'Zero-G Soft Play',
@@ -34,6 +37,7 @@ const activities: Activity[] = [
     price: 8,
     image: 'https://picsum.photos/600/400?random=3',
     imageHint: 'kids playground',
+    gradient: 'from-yellow-500 to-orange-500',
   },
 ];
 
@@ -68,40 +72,42 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {activities.map((activity) => (
-                <Card key={activity.name} className="bg-card/80 border-border/60 hover:border-primary/80 transition-all duration-300 transform hover:-translate-y-1 group overflow-hidden">
-                  <CardHeader>
-                    <div className="relative h-40 rounded-md overflow-hidden mb-4">
-                        <Image src={activity.image} alt={activity.name} fill={true} objectFit="cover" className="group-hover:scale-105 transition-transform duration-500" data-ai-hint={activity.imageHint} />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <div className="text-primary p-2 bg-primary/10 rounded-lg">
-                            <activity.icon className="w-8 h-8"/>
-                        </div>
-                        <div>
-                            <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
-                            <CardDescription className="mt-1">{activity.description}</CardDescription>
-                        </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center text-lg">
-                        <p>From <span className="font-bold text-primary">${activity.price}</span>/person</p>
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button variant="outline">Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                            </SheetTrigger>
-                            <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
-                                <SheetHeader>
-                                    <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
-                                    <SheetDescription>Select your details to reserve a spot.</SheetDescription>
-                                </SheetHeader>
-                                <ActivityBooking activityName={activity.name} price={activity.price} />
-                            </SheetContent>
-                        </Sheet>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div key={activity.name} className={cn("p-1 rounded-lg bg-gradient-to-br", activity.gradient)}>
+                  <Card className="bg-card/95 border-0 hover:-translate-y-1 transition-transform duration-300 h-full group">
+                    <CardHeader>
+                      <div className="relative h-40 rounded-md overflow-hidden mb-4">
+                          <Image src={activity.image} alt={activity.name} fill={true} style={{objectFit:"cover"}} className="group-hover:scale-105 transition-transform duration-500" data-ai-hint={activity.imageHint} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                          <div className={cn("text-white p-2 bg-gradient-to-br rounded-lg", activity.gradient)}>
+                              <activity.icon className="w-8 h-8"/>
+                          </div>
+                          <div>
+                              <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
+                              <CardDescription className="mt-1">{activity.description}</CardDescription>
+                          </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex justify-between items-center text-lg">
+                          <p>From <span className="font-bold text-primary">${activity.price}</span>/person</p>
+                          <Sheet>
+                              <SheetTrigger asChild>
+                                  <Button variant="outline">Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                              </SheetTrigger>
+                              <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
+                                  <SheetHeader>
+                                      <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
+                                      <SheetDescription>Select your details to reserve a spot.</SheetDescription>
+                                  </SheetHeader>
+                                  <ActivityBooking activityName={activity.name} price={activity.price} />
+                              </SheetContent>
+                          </Sheet>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               ))}
             </div>
           </div>
