@@ -45,12 +45,18 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
   const calendarAccentClasses = {
       orange: {
         '--primary': '25 95% 53%',
+        '--accent': '25 95% 53% / 0.1',
+        '--accent-foreground': 'hsl(25 95% 53%)'
       },
        pink: {
         '--primary': '325 81% 59%',
+        '--accent': '325 81% 59% / 0.1',
+        '--accent-foreground': 'hsl(325 81% 59%)'
       },
        cyan: {
         '--primary': '190 95% 50%',
+        '--accent': '190 95% 50% / 0.1',
+        '--accent-foreground': 'hsl(190 95% 50%)'
       },
     } as React.CSSProperties;
 
@@ -66,7 +72,7 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
                         {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
                     </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start" style={calendarAccentClasses[accentColor]}>
+                    <PopoverContent className="w-auto p-0" align="start">
                         <Calendar 
                             mode="single" 
                             selected={bookingDetails.date} 
@@ -82,6 +88,7 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
                                     backgroundColor: 'hsl(var(--primary))'
                                 }
                             }}
+                            style={calendarAccentClasses[accentColor]}
                         />
                     </PopoverContent>
                 </Popover>

@@ -13,8 +13,7 @@ import { Button } from './ui/button';
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { Separator } from './ui/separator';
-import { SheetHeader, SheetTitle, SheetDescription, SheetContent } from './ui/sheet';
+import { SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { cn } from '@/lib/utils';
 
 const steps = ['dateTime', 'guestOptions', 'details', 'summary'];
@@ -140,9 +139,16 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
       cyan: 'from-cyan-500 to-blue-500',
   };
 
+  const isNextDisabled = () => {
+    if (steps[currentStep] === 'dateTime') {
+      return !bookingDetails.date || !bookingDetails.time;
+    }
+    return false;
+  };
+
   return (
-    <>
-        <SheetHeader className="p-6 pb-2 flex-shrink-0 border-b">
+    <div className="flex flex-col h-full overflow-hidden">
+        <SheetHeader className="p-4 flex-shrink-0 border-b">
             <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
         </SheetHeader>
@@ -163,7 +169,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
         </div>
       </ScrollArea>
 
-      <div className="flex-shrink-0 px-6 py-4 border-t border-border">
+      <div className="flex-shrink-0 px-6 py-4 border-t border-border bg-black/50">
          <div className="flex justify-between items-center mb-4">
             <span className="text-lg font-bold">Total Price:</span>
             <span className="text-xl font-bold">£{finalPrice.toFixed(2)}</span>
@@ -176,7 +182,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
             )}
             <div className="flex-grow" />
             {currentStep < steps.length - 1 ? (
-            <Button onClick={nextStep} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentClasses[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
+            <Button onClick={nextStep} disabled={isNextDisabled()} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentClasses[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
                 Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             ) : (
@@ -186,6 +192,6 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
             )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
