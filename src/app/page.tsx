@@ -107,7 +107,7 @@ export default function Home() {
             </a>
           </div>
           <div className="relative z-10 flex flex-col items-center space-y-4">
-            <Image src="/herologo.png?v=1" alt="Pinopolis Logo" width={800} height={200} className="max-w-md md:max-w-2xl px-4" />
+            <Image src="/herologo.png?v=1" alt="Pinopolis Logo" width={800} height={200} className="max-w-md md:max-w-2xl px-4" priority />
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-muted-foreground mt-4">
               <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-primary" />
@@ -153,6 +153,7 @@ export default function Home() {
                                       src={activity.image}
                                       alt={activity.name}
                                       fill={true}
+                                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                       style={{objectFit: 'cover'}}
                                       className="group-hover:scale-105 transition-transform duration-500"
                                       data-ai-hint={activity.imageHint}
@@ -222,6 +223,7 @@ export default function Home() {
                                       src={item.image}
                                       alt={item.name}
                                       fill={true}
+                                      sizes="(max-width: 768px) 100vw, 50vw"
                                       style={{objectFit: 'cover'}}
                                       className="group-hover:scale-105 transition-transform duration-500"
                                       data-ai-hint={item.imageHint}
