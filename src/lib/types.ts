@@ -47,3 +47,12 @@ export interface DartsBookingDetails {
     time: string;
     contactDetails: ContactDetails;
 }
+
+export interface SoftPlayBookingDetails {
+    activityName: string;
+    adults: number;
+    children: number;
+    date: Date;
+    time: string;
+    contactDetails: ContactDetails;
+}

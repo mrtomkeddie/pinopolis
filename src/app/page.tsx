@@ -21,6 +21,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import MenuDialog from '@/components/menu-dialog';
 import { streetFoodMenu, drinksMenu } from '@/lib/menu-data';
 import DartsBooking from '@/components/darts-booking';
+import SoftPlayBooking from '@/components/soft-play-booking';
 
 const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink' | 'cyan' })[] = [
   {
@@ -183,6 +184,7 @@ export default function Home() {
                                           </SheetHeader>
                                           {activity.name === 'Bowling' && <ActivityBooking activity={activity} price={activity.price} />}
                                           {activity.name === 'AR Darts' && <DartsBooking activity={activity} price={activity.price} />}
+                                          {activity.name === 'Soft Play' && <SoftPlayBooking activity={activity} price={activity.price} />}
                                       </SheetContent>
                                   </Sheet>
                               </div>
