@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -57,11 +58,11 @@ const foodAndDrinks = [
     icon: Utensils,
     image: '/food1.jpg',
     imageHint: 'street food burgers',
-    gradient: 'from-yellow-400 to-orange-500',
+    gradient: 'from-cyan-500 to-blue-500',
     tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
     buttonText: 'View Menu',
     menu: streetFoodMenu,
-    accentColor: 'yellow' as const,
+    accentColor: 'cyan' as const,
   },
   {
     name: 'Craft Beer & Cocktails',
@@ -183,10 +184,10 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                       {foodAndDrinks.map((item) => (
                         <Dialog key={item.name}>
-                          <Card className="bg-card/95 border-b-2 border-primary/40 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden">
+                          <Card className="bg-black border border-white/10 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden rounded-xl">
                             <CardHeader className="p-0 relative">
-                                <Badge className="absolute top-4 right-4 z-10 bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0">PREMIUM</Badge>
-                                <div className="relative h-48 rounded-t-lg overflow-hidden">
+                                <Badge className="absolute top-4 right-4 z-10 bg-gradient-to-r from-blue-500 to-cyan-400 text-white border-0">PREMIUM</Badge>
+                                <div className="relative h-48">
                                   <Image
                                       src={item.image}
                                       alt={item.name}
@@ -195,8 +196,8 @@ export default function Home() {
                                       className="group-hover:scale-105 transition-transform duration-500"
                                       data-ai-hint={item.imageHint}
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                                 </div>
+                                <div className={cn("h-1 w-full bg-gradient-to-r", item.gradient)}></div>
                             </CardHeader>
                             <CardContent className="p-6 flex-grow flex flex-col">
                                 <div className="flex justify-between items-start">
@@ -204,15 +205,15 @@ export default function Home() {
                                         <CardTitle className="font-headline text-2xl">{item.name}</CardTitle>
                                         <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
                                     </div>
-                                    <div className={cn("text-primary p-2 -mt-4")}>
-                                        <item.icon className="w-6 h-6"/>
+                                    <div className={cn("p-2", item.accentColor === 'cyan' ? 'text-cyan-400' : 'text-pink-400')}>
+                                        <Zap className="w-6 h-6"/>
                                     </div>
                                 </div>
                                 <div className="flex flex-wrap gap-2 mt-4">
                                     {item.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
                                 </div>
                                 <div className="flex-grow" />
-                                <div className="flex justify-between items-center mt-6 pt-6 border-t border-border/20">
+                                <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
                                   <div></div>
                                   <DialogTrigger asChild>
                                     <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", item.gradient)}>
@@ -222,7 +223,7 @@ export default function Home() {
                                 </div>
                             </CardContent>
                           </Card>
-                          <MenuDialog menu={item.menu} accentColor={item.accentColor} />
+                          <MenuDialog menu={item.menu} accentColor={item.accentColor === 'cyan' ? 'yellow' : 'pink'} />
                         </Dialog>
                       ))}
                     </div>
@@ -248,3 +249,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
