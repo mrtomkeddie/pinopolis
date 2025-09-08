@@ -131,8 +131,9 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                     Select a Monday, Tuesday or Wednesday on the calendar to see our special offers.
                 </AlertDescription>
             </Alert>
-            <div>
-                <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
+            <div className="space-y-2">
+                <Label className="font-bold text-lg flex items-center gap-2"><Clock /> Pick Date & Time</Label>
+                 <p className="text-xs text-muted-foreground">Please arrive 10-15 minutes prior to your requested start time</p>
                 <div className="flex flex-col gap-4">
                     <Popover>
                         <PopoverTrigger asChild>
@@ -148,15 +149,6 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                                 onSelect={(date) => updateDetails({date: date as Date})} 
                                 initialFocus 
                                 disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                                modifiers={{
-                                    deal: (date) => [1,2,3].includes(date.getDay())
-                                }}
-                                modifiersStyles={{
-                                    deal: {
-                                        color: 'hsl(var(--primary-foreground))',
-                                        backgroundColor: 'hsl(var(--primary))'
-                                    }
-                                }}
                             />
                         </PopoverContent>
                     </Popover>
@@ -172,7 +164,6 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                         </SelectContent>
                     </Select>
                 </div>
-                <p className="text-xs text-muted-foreground text-center mt-4">Please arrive 10-15 minutes prior to your requested start time</p>
             </div>
 
             {promotion && (
@@ -189,8 +180,9 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 </Alert>
             )}
 
-            <div>
-                <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Users /> Select Guests</Label>
+            <div className="space-y-2">
+                <Label className="font-bold text-lg flex items-center gap-2"><Users /> Select Guests</Label>
+                 <p className="text-xs text-muted-foreground">There is a maximum of 16 players per reservation.</p>
                 <div className="space-y-2 p-4 border rounded-lg">
                     <GuestCounter 
                         label="Adults" 
@@ -209,12 +201,11 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                         disabledDecrement={bookingDetails.children <= 0}
                         disabledIncrement={isWineWednesday || (bookingDetails.adults + bookingDetails.children >= 16)}
                     />
-                    <p className="text-xs text-muted-foreground pt-2">There is a maximum of 16 players per reservation. For bookings of more than 16 people please email info@pinopolis.wales</p>
                 </div>
             </div>
 
-            <div>
-                <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Gamepad2 /> Number of Games</Label>
+            <div className="space-y-2">
+                <Label className="font-bold text-lg flex items-center gap-2"><Gamepad2 /> Number of Games</Label>
                  <RadioGroup 
                     value={String(bookingDetails.games)} 
                     onValueChange={(val) => updateDetails({ games: Number(val) })} 
