@@ -3,16 +3,17 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import { Montserrat, Playfair_Display } from 'next/font/google';
+import { Montserrat, Bebas_Neue } from 'next/font/google';
 
 const fontBody = Montserrat({
   subsets: ['latin'],
   variable: '--font-body',
 });
 
-const fontHeadline = Playfair_Display({
+const fontHeadline = Bebas_Neue({
   subsets: ['latin'],
   variable: '--font-headline',
+  weight: '400',
 });
 
 export const metadata: Metadata = {
