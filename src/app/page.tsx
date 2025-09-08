@@ -66,7 +66,7 @@ const foodAndDrinks = [
     tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
     buttonText: 'View Menu',
     menu: streetFoodMenu,
-    accentColor: 'orange' as const,
+    accentColor: 'yellow' as const,
   },
   {
     name: 'Craft Beer & Cocktails',
@@ -95,7 +95,8 @@ export default function Home() {
   const accentTextColor = {
     orange: 'text-orange-400',
     cyan: 'text-cyan-400',
-    pink: 'text-pink-400'
+    pink: 'text-pink-400',
+    yellow: 'text-yellow-400',
   }
 
   return (
