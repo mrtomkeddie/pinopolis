@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { getApplicablePromotion } from '@/lib/promotions';
 import type { SoftPlayBookingDetails, Activity, Promotion } from '@/lib/types';
@@ -35,26 +35,29 @@ export default function SoftPlayBooking({ activity, price, accentColor }: { acti
       marketingOptIn: false,
     },
   });
-  const [promotion, setPromotion] = useState<Promotion | null>(null);
+  const [promotion, setPromotion] = useState<Promotion | undefined>(undefined);
 
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (bookingDetails.date) {
+        const applicablePromotion = getApplicablePromotion(bookingDetails.date);
+        setPromotion(applicablePromotion);
+    } else {
+        setPromotion(undefined);
+    }
+  }, [bookingDetails.date]);
 
   const basePrice = useMemo(() => {
     return bookingDetails.children * price;
   }, [bookingDetails, price]);
 
   const discountAmount = useMemo(() => {
-    if (!bookingDetails.date) return 0;
-    const applicablePromotion = getApplicablePromotion(bookingDetails.date);
-    setPromotion(applicablePromotion);
-    if (applicablePromotion) {
-      // Assuming promotions for soft play are discounts. This can be expanded.
-      if (applicablePromotion.type === 'discount') {
-        return basePrice * (applicablePromotion.discount / 100);
-      }
+    if (promotion && promotion.type === 'discount') {
+        return basePrice * (promotion.discount / 100);
     }
     return 0;
-  }, [bookingDetails.date, basePrice]);
+  }, [promotion, basePrice]);
 
   const finalPrice = useMemo(() => basePrice - discountAmount, [basePrice, discountAmount]);
 
@@ -117,7 +120,7 @@ export default function SoftPlayBooking({ activity, price, accentColor }: { acti
   return (
     <>
        <SheetHeader className="p-6 pb-0 flex-shrink-0">
-          <div className="pb-6 border-b">
+          <div className="border-b pb-6">
             <SheetTitle className={cn("font-headline text-2xl", accentText[accentColor])}>Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
           </div>

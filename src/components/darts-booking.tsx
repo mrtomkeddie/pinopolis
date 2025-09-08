@@ -50,7 +50,7 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
     },
     dealApplied: false,
   });
-  const [promotion, setPromotion] = useState<Promotion | null>(null);
+  const [promotion, setPromotion] = useState<Promotion | undefined>(undefined);
 
   const { toast } = useToast();
 
@@ -105,11 +105,11 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'options':
-        return <Step1_Darts_Options bookingDetails={bookingDetails} updateDetails={updateDetails} promotion={promotion} />;
+        return <Step1_Darts_Options bookingDetails={bookingDetails} updateDetails={updateDetails} />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
-        return <Step3_Darts_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={bookingDetails.dealApplied ? promotion : null} />;
+        return <Step3_Darts_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={bookingDetails.dealApplied ? promotion : undefined} />;
       default:
         return null;
     }
@@ -140,7 +140,7 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
   return (
     <>
        <SheetHeader className="p-6 pb-0 flex-shrink-0">
-          <div className="pb-6 border-b">
+          <div className="border-b pb-6">
             <SheetTitle className={cn("font-headline text-2xl", accentText[accentColor])}>Book: {activity.name}</SheetTitle>
             <SheetDescription>Select your details to reserve a spot.</SheetDescription>
           </div>

@@ -32,10 +32,10 @@ export const weeklyPromotions: { [key: number]: Promotion } = {
 /**
  * Gets the applicable promotion for a given date.
  * @param date The date of the booking.
- * @returns The promotion object if one is applicable, otherwise null.
+ * @returns The promotion object if one is applicable, otherwise undefined.
  */
-export function getApplicablePromotion(date: Date): Promotion | null {
-  if (!date) return null;
+export function getApplicablePromotion(date: Date | undefined): Promotion | undefined {
+  if (!date) return undefined;
   const dayOfWeek = getDay(date); // Sunday is 0, Monday is 1, etc.
-  return weeklyPromotions[dayOfWeek] || null;
+  return weeklyPromotions[dayOfWeek] || undefined;
 }

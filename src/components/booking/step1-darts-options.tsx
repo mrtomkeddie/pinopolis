@@ -4,7 +4,7 @@
 import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target, Tag, Info } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import type { DartsBookingDetails, Promotion } from '@/lib/types';
+import type { DartsBookingDetails } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -17,7 +17,6 @@ import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 interface Step1DartsProps {
   bookingDetails: DartsBookingDetails;
   updateDetails: (details: Partial<DartsBookingDetails>) => void;
-  promotion: Promotion | null;
 }
 
 const generateTimeSlots = () => {
@@ -57,7 +56,7 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
     </div>
 );
 
-export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }: Step1DartsProps) {
+export function Step1_Darts_Options({ bookingDetails, updateDetails }: Step1DartsProps) {
     const handleSoftPlayChildrenChange = (increment: boolean) => {
         const newSoftPlayChildren = bookingDetails.softPlayChildren + (increment ? 1 : -1);
         if (newSoftPlayChildren >= 0) {
@@ -70,7 +69,10 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
   return (
     <div className="space-y-6">
        <div className="space-y-4">
-        <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
+        <div className="space-y-2">
+          <Label className="font-bold text-lg flex items-center gap-2"><Clock /> Pick Date & Time</Label>
+          <p className="text-xs text-muted-foreground">Please arrive 10-15 minutes prior to your requested start time</p>
+        </div>
         <div className="flex flex-col gap-4">
             <Popover>
                 <PopoverTrigger asChild>
@@ -111,25 +113,13 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
             </Select>
 
         </div>
-        <p className="text-xs text-muted-foreground text-center mt-4">Please arrive 10-15 minutes prior to your requested start time</p>
       </div>
 
-        {promotion && promotion.type === 'discount' && (
-             <Alert variant="default" className="text-pink-400 border-current">
-                <Tag className="h-4 w-4" />
-                <AlertTitle>{promotion.name} Available!</AlertTitle>
-                <AlertDescription>
-                   {promotion.description}
-                </AlertDescription>
-                <div className="flex items-center justify-between mt-4">
-                    <Label htmlFor="deal-switch" className="text-sm font-normal">Apply Deal</Label>
-                    <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} />
-                </div>
-            </Alert>
-        )}
-
       <div className="space-y-4">
-        <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Target /> Select Oches & Duration</Label>
+        <div className="space-y-2">
+            <Label className="font-bold text-lg flex items-center gap-2"><Target /> Select Oches & Duration</Label>
+            <p className="text-xs text-muted-foreground">Each darts oche holds up to 6 players.</p>
+        </div>
         <div className="space-y-4 p-4 border rounded-lg">
             <div>
                 <Label className="font-bold text-md mb-2">Number of Oches</Label>
@@ -143,7 +133,6 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
                         </div>
                     ))}
                 </RadioGroup>
-                <p className="text-xs text-muted-foreground mt-2 text-center">Each darts oche holds up to 6 players.</p>
             </div>
             <div>
                 <Label className="font-bold text-md mb-2">Duration</Label>

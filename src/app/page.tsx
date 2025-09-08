@@ -272,7 +272,9 @@ export default function Home() {
                       
                       <Card className="max-w-2xl mx-auto bg-black border border-white/10">
                         <CardHeader className="text-center">
-                            <CardTitle className="font-headline text-2xl flex items-center justify-center gap-3"><Award className="w-8 h-8 text-yellow-400" /> Plan Your Perfect Party</CardTitle>
+                            <div className="flex items-center justify-center gap-3">
+                                <CardTitle className="font-headline text-2xl flex items-center justify-center gap-3"><Award className="w-8 h-8 text-yellow-400" /> Plan Your Perfect Party</CardTitle>
+                            </div>
                         </CardHeader>
                         <CardContent className="text-center space-y-6">
                             <p className="text-muted-foreground">

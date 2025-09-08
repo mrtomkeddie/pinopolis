@@ -12,7 +12,7 @@ interface Step3SoftPlayProps {
   basePrice: number;
   discountAmount: number;
   finalPrice: number;
-  promotion: Promotion | null;
+  promotion: Promotion | undefined;
 }
 
 export function Step3_SoftPlay_Summary({ bookingDetails, basePrice, discountAmount, finalPrice, promotion }: Step3SoftPlayProps) {
