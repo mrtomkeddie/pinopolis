@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target, Tag } from 'lucide-react';
+import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target, Tag, Info } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { DartsBookingDetails, Promotion } from '@/lib/types';
@@ -70,6 +69,13 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
 
   return (
     <div className="space-y-6">
+        <Alert>
+            <Info className="h-4 w-4" />
+            <AlertTitle>Weekly Deals Available!</AlertTitle>
+            <AlertDescription>
+                Select a Monday, Tuesday or Wednesday on the calendar to see our special offers.
+            </AlertDescription>
+        </Alert>
        <div>
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -116,7 +122,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
       </div>
 
         {promotion && promotion.type === 'discount' && (
-             <Alert variant="default">
+             <Alert variant="default" className="text-pink-400 border-current">
                 <Tag className="h-4 w-4" />
                 <AlertTitle>{promotion.name} Available!</AlertTitle>
                 <AlertDescription>

@@ -114,7 +114,22 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                 </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={bookingDetails.date} onSelect={(date) => updateDetails({date: date as Date})} initialFocus disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} />
+                    <Calendar 
+                        mode="single" 
+                        selected={bookingDetails.date} 
+                        onSelect={(date) => updateDetails({date: date as Date})} 
+                        initialFocus 
+                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                        modifiers={{
+                            deal: (date) => [1,2,3].includes(date.getDay())
+                        }}
+                        modifiersStyles={{
+                            deal: {
+                                color: 'hsl(var(--primary-foreground))',
+                                backgroundColor: 'hsl(var(--primary))'
+                            }
+                        }}
+                    />
                 </PopoverContent>
             </Popover>
 

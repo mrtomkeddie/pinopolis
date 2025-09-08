@@ -38,7 +38,7 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
     duration: 30, // in minutes
     addSoftPlay: false,
     softPlayChildren: 0,
-    date: new Date(),
+    date: undefined,
     time: '',
     contactDetails: {
       firstName: '',
@@ -115,6 +115,13 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
     }
   };
 
+  const isNextDisabled = () => {
+    if (steps[currentStep] === 'options') {
+      return !bookingDetails.date || !bookingDetails.time;
+    }
+    return false;
+  };
+
   const accentGradient = {
       orange: 'from-yellow-500 to-orange-500',
       pink: 'from-pink-500 to-purple-500',
@@ -152,7 +159,7 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
             )}
              <div className="flex-grow" />
             {currentStep < steps.length - 1 ? (
-            <Button onClick={nextStep} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentGradient[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
+            <Button onClick={nextStep} disabled={isNextDisabled()} className={cn("w-full ml-auto text-white border-0 bg-gradient-to-r", accentGradient[accentColor])} style={{maxWidth: 'calc(100% - 100px)'}}>
                 Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             ) : (

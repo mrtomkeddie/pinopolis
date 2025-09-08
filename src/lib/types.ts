@@ -63,7 +63,7 @@ export interface DartsBookingDetails {
     duration: number; // in minutes
     addSoftPlay: boolean;
     softPlayChildren: number;
-    date: Date;
+    date?: Date;
     time: string;
     contactDetails: ContactDetails;
     dealApplied?: boolean;
@@ -73,7 +73,7 @@ export interface SoftPlayBookingDetails {
     activityName: string;
     adults: number;
     children: number;
-    date: Date;
+    date?: Date;
     time: string;
     contactDetails: ContactDetails;
 }
