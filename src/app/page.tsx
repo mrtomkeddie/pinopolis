@@ -17,7 +17,7 @@ const activities: (Activity & { gradient: string })[] = [
     description: 'Experience bowling with a holographic twist. Perfect for groups and all skill levels.',
     icon: Dices,
     price: 15,
-    image: 'https://picsum.photos/600/400?random=1',
+    image: '/bowling.png',
     imageHint: 'bowling alley',
     gradient: 'from-cyan-500 to-blue-500',
   },
