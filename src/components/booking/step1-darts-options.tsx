@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target, Tag, Info } from 'lucide-react';
@@ -144,7 +143,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
                 <RadioGroup value={String(bookingDetails.oches)} onValueChange={(val) => updateDetails({ oches: Number(val) })} className="grid grid-cols-2 gap-2">
                     {[1, 2].map(num => (
                         <div key={num}>
-                            <RadioGroupItem value={String(num)} id={`oches-${num}`} className="sr-only" />
+                            <RadioGroupItem value={String(num)} id={`oches-${num}`} className="sr-only peer" />
                             <Label htmlFor={`oches-${num}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
                                 {num} {num > 1 ? 'Oches' : 'Oche'}
                             </Label>
@@ -158,7 +157,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
                 <RadioGroup value={String(bookingDetails.duration)} onValueChange={(val) => updateDetails({ duration: Number(val) })} className="grid grid-cols-2 gap-2">
                     {[30, 60].map(num => (
                         <div key={num}>
-                            <RadioGroupItem value={String(num)} id={`duration-${num}`} className="sr-only" />
+                            <RadioGroupItem value={String(num)} id={`duration-${num}`} className="sr-only peer" />
                             <Label htmlFor={`duration-${num}`} className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer">
                                 {num} Minutes
                             </Label>

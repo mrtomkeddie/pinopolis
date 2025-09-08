@@ -280,5 +280,4 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             </div>
         </div>
     );
-
-    
+}

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -16,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 interface Step1SoftPlayProps {
   bookingDetails: SoftPlayBookingDetails;
-  updateDetails: (details: Partial<SoftPlayPlayBookingDetails>) => void;
+  updateDetails: (details: Partial<SoftPlayBookingDetails>) => void;
 }
 
 const generateTimeSlots = () => {
