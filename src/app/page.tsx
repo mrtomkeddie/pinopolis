@@ -55,7 +55,7 @@ const foodAndDrinks = [
     name: 'American Style Street Food',
     description: 'Authentic American street food including loaded burgers, wings, nachos and BBQ served in a neon-lit atmosphere.',
     icon: Utensils,
-    image: '/food.jpg',
+    image: '/food1.jpg',
     imageHint: 'street food burgers',
     gradient: 'from-yellow-400 to-orange-500',
     tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
