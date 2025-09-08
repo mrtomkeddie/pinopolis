@@ -27,7 +27,7 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
         </DialogClose>
         <Separator className="bg-border/20" />
         <ScrollArea className="flex-grow">
-            <Accordion type="multiple" className="w-full p-6 pt-2">
+            <Accordion type="multiple" className="w-full p-6 pt-2" defaultValue={menu.categories.map(c => c.title)}>
             {menu.categories.map((category) => (
                 <AccordionItem value={category.title} key={category.title} className="border-b-border/20">
                     <AccordionTrigger className="text-lg font-semibold hover:no-underline relative">
@@ -35,14 +35,15 @@ export default function MenuDialog({ menu }: MenuDialogProps) {
                         <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-yellow-500 to-orange-500/0" />
                     </AccordionTrigger>
                     <AccordionContent className="pt-4">
+                        {category.description && <p className="text-sm text-muted-foreground mb-4">{category.description}</p>}
                         <ul className="space-y-4">
                         {category.items.map((item) => (
                             <li key={item.name} className="flex justify-between items-baseline">
                                 <div>
                                     <h4 className="font-semibold">{item.name}</h4>
-                                    {item.description && <p className="text-sm text-muted-foreground">{item.description}</p>}
+                                    {item.description && <p className="text-sm text-muted-foreground max-w-md">{item.description}</p>}
                                 </div>
-                                <p className="font-mono text-base text-yellow-400">${item.price.toFixed(2)}</p>
+                                { item.price > 0 && <p className="font-mono text-base text-yellow-400">${item.price.toFixed(2)}</p> }
                             </li>
                         ))}
                         </ul>
