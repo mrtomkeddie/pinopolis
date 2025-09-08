@@ -1,6 +1,8 @@
 
+'use client';
 
-import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini } from 'lucide-react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -13,6 +15,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import PartyPackages from '@/components/party-packages';
 import SegmentedControl from '@/components/segmented-control';
+import { Badge } from '@/components/ui/badge';
 
 const activities: (Activity & { gradient: string })[] = [
   {
@@ -44,7 +47,34 @@ const activities: (Activity & { gradient: string })[] = [
   },
 ];
 
+const foodAndDrinks = [
+  {
+    name: 'American Style Street Food',
+    description: 'Authentic American street food including loaded burgers, wings, nachos and BBQ served in a neon-lit atmosphere.',
+    icon: Utensils,
+    price: 8.50,
+    image: 'https://picsum.photos/600/400',
+    imageHint: 'street food burgers',
+    gradient: 'from-cyan-500 to-blue-500',
+    tags: ['Loaded Burgers', 'BBQ Specials', 'Sharing Platters'],
+    buttonText: 'View Menu'
+  },
+  {
+    name: 'Craft Beer & Cocktails',
+    description: 'Premium craft beers on tap alongside expertly crafted cocktails in a futuristic sports bar atmosphere.',
+    icon: Martini,
+    price: 4.50,
+    image: 'https://picsum.photos/600/400',
+    imageHint: 'craft beer cocktails',
+    gradient: 'from-pink-500 to-purple-500',
+    tags: ['Craft Beer Selection', 'Live Sports TV', 'Draft Cocktails'],
+    buttonText: 'View Drinks'
+  },
+]
+
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<'experiences' | 'food-drinks' | 'party-bookings'>('experiences');
+
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground font-body">
       <main className="flex-1 flex flex-col items-center justify-center">
@@ -69,7 +99,7 @@ export default function Home() {
                 <span>Premium Experience</span>
               </div>
             </div>
-            <Link href="#activities">
+            <Link href="#experiences">
               <Button size="lg" className="mt-8">
                 Book Your Experience
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -78,82 +108,131 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="experiences" className="py-16 md:py-24 w-full">
+        <section id="content" className="py-16 md:py-24 w-full">
             <div className="container mx-auto px-4">
                 <div className="mb-12">
-                    <SegmentedControl />
+                    <SegmentedControl activeTab={activeTab} setActiveTab={setActiveTab} />
                 </div>
-                <div id="activities">
+                
+                {activeTab === 'experiences' && (
+                  <div id="activities">
+                      <div className="text-center mb-12">
+                          <h2 className="text-3xl md:text-4xl font-bold font-headline">Book an Activity</h2>
+                          <p className="mt-2 text-lg text-muted-foreground">Choose your next adventure.</p>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {activities.map((activity) => (
+                          <Card key={activity.name} className="bg-card/95 border-t-2 border-primary/40 hover:-translate-y-1 transition-transform duration-300 group flex flex-col">
+                          <CardHeader className="p-0">
+                              <div className="relative h-48 rounded-t-lg overflow-hidden">
+                              <Image
+                                  src={activity.image}
+                                  alt={activity.name}
+                                  fill={true}
+                                  style={{objectFit: 'cover'}}
+                                  className="group-hover:scale-105 transition-transform duration-500"
+                                  data-ai-hint={activity.imageHint}
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                              </div>
+                          </CardHeader>
+                          <CardContent className="p-6 flex-grow flex flex-col">
+                              <div className="flex justify-between items-start">
+                                  <div className='flex-grow'>
+                                      <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
+                                      <CardDescription className="mt-2 text-base">{activity.description}</CardDescription>
+                                  </div>
+                                  <div className={cn("text-white p-2 bg-gradient-to-br rounded-lg -mt-12", activity.gradient)}>
+                                      <activity.icon className="w-6 h-6"/>
+                                  </div>
+                              </div>
+                              <div className="flex-grow" />
+                              <div className="flex justify-between items-center mt-6 pt-6 border-t border-border/20">
+                                  <p className="text-xl">From <span className="font-bold text-primary">${activity.price}</span><span className="text-sm text-muted-foreground">/person</span></p>
+                                  <Sheet>
+                                      <SheetTrigger asChild>
+                                          <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                                      </SheetTrigger>
+                                      <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
+                                          <SheetHeader>
+                                              <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
+                                              <SheetDescription>Select your details to reserve a spot.</SheetDescription>
+                                          </SheetHeader>
+                                          <ActivityBooking activityName={activity.name} price={activity.price} />
+                                      </SheetContent>
+                                  </Sheet>
+                              </div>
+                          </CardContent>
+                          </Card>
+                      ))}
+                      </div>
+                  </div>
+                )}
+                
+                {activeTab === 'food-drinks' && (
+                  <div id="food-drinks">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold font-headline">Book an Activity</h2>
-                        <p className="mt-2 text-lg text-muted-foreground">Choose your next adventure.</p>
+                        <h2 className="text-3xl md:text-4xl font-bold font-headline text-yellow-400">CULINARY INNOVATION</h2>
+                        <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">Discover the future of dining with molecular gastronomy and interactive culinary experiences that challenge your senses and redefine flavor.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {activities.map((activity) => (
-                        <Card key={activity.name} className="bg-card/95 border-t-2 border-primary/40 hover:-translate-y-1 transition-transform duration-300 group flex flex-col">
-                        <CardHeader className="p-0">
-                            <div className="relative h-48 rounded-t-lg overflow-hidden">
-                            <Image
-                                src={activity.image}
-                                alt={activity.name}
-                                fill={true}
-                                style={{objectFit: 'cover'}}
-                                className="group-hover:scale-105 transition-transform duration-500"
-                                data-ai-hint={activity.imageHint}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="p-6 flex-grow flex flex-col">
-                            <div className="flex justify-between items-start">
-                                <div className='flex-grow'>
-                                    <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
-                                    <CardDescription className="mt-2 text-base">{activity.description}</CardDescription>
-                                </div>
-                                <div className={cn("text-white p-2 bg-gradient-to-br rounded-lg -mt-12", activity.gradient)}>
-                                    <activity.icon className="w-6 h-6"/>
-                                </div>
-                            </div>
-                            <div className="flex-grow" />
-                            <div className="flex justify-between items-center mt-6 pt-6 border-t border-border/20">
-                                <p className="text-xl">From <span className="font-bold text-primary">${activity.price}</span><span className="text-sm text-muted-foreground">/person</span></p>
-                                <Sheet>
-                                    <SheetTrigger asChild>
-                                        <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                                    </SheetTrigger>
-                                    <SheetContent className="w-full md:max-w-md bg-card border-l border-border">
-                                        <SheetHeader>
-                                            <SheetTitle className="font-headline text-2xl">Book: {activity.name}</SheetTitle>
-                                            <SheetDescription>Select your details to reserve a spot.</SheetDescription>
-                                        </SheetHeader>
-                                        <ActivityBooking activityName={activity.name} price={activity.price} />
-                                    </SheetContent>
-                                </Sheet>
-                            </div>
-                        </CardContent>
-                        </Card>
-                    ))}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                      {foodAndDrinks.map((item) => (
+                          <Card key={item.name} className="bg-card/95 border-b-2 border-primary/40 hover:-translate-y-1 transition-transform duration-300 group flex flex-col overflow-hidden">
+                          <CardHeader className="p-0 relative">
+                              <Badge className="absolute top-4 right-4 z-10 bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0">PREMIUM</Badge>
+                              <div className="relative h-48 rounded-t-lg overflow-hidden">
+                                <Image
+                                    src={item.image}
+                                    alt={item.name}
+                                    fill={true}
+                                    style={{objectFit: 'cover'}}
+                                    className="group-hover:scale-105 transition-transform duration-500"
+                                    data-ai-hint={item.imageHint}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                              </div>
+                          </CardHeader>
+                          <CardContent className="p-6 flex-grow flex flex-col">
+                              <div className="flex justify-between items-start">
+                                  <div className='flex-grow'>
+                                      <CardTitle className="font-headline text-2xl">{item.name}</CardTitle>
+                                      <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
+                                  </div>
+                                  <div className={cn("text-primary p-2 -mt-4")}>
+                                      <item.icon className="w-6 h-6"/>
+                                  </div>
+                              </div>
+                              <div className="flex flex-wrap gap-2 mt-4">
+                                  {item.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                              </div>
+                              <div className="flex-grow" />
+                              <div className="flex justify-between items-center mt-6 pt-6 border-t border-border/20">
+                                  <p className="text-xl">From <span className="font-bold text-primary">${item.price.toFixed(2)}</span></p>
+                                  <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", item.gradient)}>
+                                    {item.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
+                                  </Button>
+                              </div>
+                          </CardContent>
+                          </Card>
+                      ))}
                     </div>
-                </div>
-                {/* Placeholder for Food & Drinks and Party Bookings sections */}
-                <div id="food-drinks" className="hidden">
-                    {/* Food & Drinks Content Here */}
-                </div>
-                <div id="party-bookings" className="hidden">
-                    {/* Party Bookings Content Here */}
-                </div>
+                  </div>
+                )}
+                
+                {activeTab === 'party-bookings' && (
+                  <section id="party-packages">
+                    <div className="container mx-auto px-4">
+                      <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold font-headline flex items-center justify-center gap-4"><PartyPopper className="w-10 h-10 text-primary" /> Book a Party Package</h2>
+                        <p className="mt-2 text-lg text-muted-foreground">Let our AI assistant find the perfect package for your event.</p>
+                      </div>
+                      <PartyPackages />
+                    </div>
+                  </section>
+                )}
             </div>
         </section>
 
-        <section id="party-packages" className="py-16 md:py-24 w-full">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline flex items-center justify-center gap-4"><PartyPopper className="w-10 h-10 text-primary" /> Book a Party Package</h2>
-              <p className="mt-2 text-lg text-muted-foreground">Let our AI assistant find the perfect package for your event.</p>
-            </div>
-            <PartyPackages />
-          </div>
-        </section>
       </main>
       <Footer />
     </div>
