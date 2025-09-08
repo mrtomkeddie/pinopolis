@@ -108,7 +108,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Popover>
                 <PopoverTrigger asChild>
-                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6', !bookingDetails.date && 'text-muted-foreground')}>
+                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
                 </Button>
