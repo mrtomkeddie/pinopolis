@@ -89,8 +89,8 @@ export default function SoftPlayBooking({ activity, price }: { activity: Activit
 
   return (
     <div className="py-4 space-y-6 flex flex-col h-full overflow-hidden">
-      <ScrollArea className="flex-grow pr-6 -mr-6 bg-black/50">
-        <div className="py-4">
+      <ScrollArea className="flex-grow -mx-6 bg-black/50">
+        <div className="px-6 py-4">
             {renderStep()}
         </div>
       </ScrollArea>
