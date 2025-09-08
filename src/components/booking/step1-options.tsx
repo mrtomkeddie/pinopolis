@@ -52,7 +52,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
         const minAdults = isWineWednesday ? 2 : 1;
-        if (newAdults >= minAdults && (newAdults + bookingDetails.children <= 15)) {
+        if (newAdults >= minAdults && (newAdults + bookingDetails.children <= 12)) {
             updateDetails({ adults: newAdults });
             setAdultError(false);
         } else if (newAdults < minAdults) {
@@ -62,7 +62,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     
     const handleChildrenChange = (increment: boolean) => {
         const newChildren = bookingDetails.children + (increment ? 1 : -1);
-        if (newChildren >= 0 && (newChildren + bookingDetails.adults <= 15)) {
+        if (newChildren >= 0 && (newChildren + bookingDetails.adults <= 12)) {
             updateDetails({ children: newChildren });
         }
     };
@@ -144,7 +144,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 onIncrement={() => handleAdultsChange(true)}
                 onDecrement={() => handleAdultsChange(false)}
                 disabledDecrement={bookingDetails.adults <= (isWineWednesday ? 2 : 1)}
-                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 15}
+                disabledIncrement={bookingDetails.adults + bookingDetails.children >= 12}
             />
              {adultError && <Alert variant="destructive"><AlertDescription className="text-xs">At least one adult is required for bowling.</AlertDescription></Alert>}
             <GuestCounter 
@@ -153,7 +153,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 onIncrement={() => handleChildrenChange(true)}
                 onDecrement={() => handleChildrenChange(false)}
                 disabledDecrement={bookingDetails.children <= 0}
-                disabledIncrement={isWineWednesday || (bookingDetails.adults + bookingDetails.children >= 15)}
+                disabledIncrement={isWineWednesday || (bookingDetails.adults + bookingDetails.children >= 12)}
             />
         </div>
       </div>

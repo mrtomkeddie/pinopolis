@@ -172,7 +172,7 @@ export default function Home() {
                                   {activity.name === 'Soft Play' ? 'Unlimited Play' : 'up to 60 minutes'}
                                 </span>
                                 </div>
-                                <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>up to 15 players</span></div>
+                                <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>up to 12 players</span></div>
                               </div>
                               <div className="flex-grow" />
                               <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
