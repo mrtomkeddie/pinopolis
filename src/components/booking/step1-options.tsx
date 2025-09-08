@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -99,15 +100,27 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     };
     
     const accentBorder = {
-        orange: 'border-orange-400',
-        pink: 'border-pink-400',
-        cyan: 'border-cyan-400'
+        orange: 'border-orange-400 focus-visible:ring-orange-400',
+        pink: 'border-pink-400 focus-visible:ring-pink-400',
+        cyan: 'border-cyan-400 focus-visible:ring-cyan-400'
     }
 
     const accentText = {
         orange: 'text-orange-400',
         pink: 'text-pink-400',
         cyan: 'text-cyan-400'
+    }
+
+    const accentFocus = {
+      orange: 'focus:ring-orange-400',
+      pink: 'focus:ring-pink-400',
+      cyan: 'focus:ring-cyan-400'
+    }
+
+    const accentPeer = {
+      orange: 'peer-data-[state=checked]:border-orange-400 [&:has([data-state=checked])]:border-orange-400',
+      pink: 'peer-data-[state=checked]:border-pink-400 [&:has([data-state=checked])]:border-pink-400',
+      cyan: 'peer-data-[state=checked]:border-cyan-400 [&:has([data-state=checked])]:border-cyan-400'
     }
 
     return (
@@ -129,7 +142,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                             {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
                         </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
+                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
                             <Calendar 
                                 mode="single" 
                                 selected={bookingDetails.date} 
@@ -142,7 +155,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                                 modifiersStyles={{
                                     deal: {
                                         color: 'hsl(var(--primary-foreground))',
-                                        backgroundColor: `hsl(var(--primary))`
+                                        backgroundColor: 'hsl(var(--primary))'
                                     }
                                 }}
                             />

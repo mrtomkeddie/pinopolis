@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target, Tag, Info } from 'lucide-react';
@@ -86,7 +87,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
                     {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
                 </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
                     <Calendar 
                         mode="single" 
                         selected={bookingDetails.date} 

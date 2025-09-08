@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 interface Step1SoftPlayProps {
   bookingDetails: SoftPlayBookingDetails;
-  updateDetails: (details: Partial<SoftPlayBookingDetails>) => void;
+  updateDetails: (details: Partial<SoftPlayPlayBookingDetails>) => void;
 }
 
 const generateTimeSlots = () => {
@@ -113,7 +113,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                     {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
                 </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
                     <Calendar 
                         mode="single" 
                         selected={bookingDetails.date} 
