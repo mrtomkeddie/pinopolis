@@ -81,7 +81,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Popover>
                 <PopoverTrigger asChild>
-                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal', !bookingDetails.date && 'text-muted-foreground')}>
+                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6', !bookingDetails.date && 'text-muted-foreground')}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
                 </Button>
@@ -107,7 +107,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }
             </Popover>
 
              <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })}>
-                <SelectTrigger>
+                <SelectTrigger className="py-6">
                     <SelectValue placeholder="Select a time" />
                 </SelectTrigger>
                 <SelectContent>
