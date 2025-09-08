@@ -5,7 +5,7 @@ import type { DartsBookingDetails, Promotion } from '@/lib/types';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Users, Calendar, Target, ToyBrick, Clock } from 'lucide-react';
+import { Users, Calendar, Target, ToyBrick, Clock, Tag } from 'lucide-react';
 
 interface Step3DartsProps {
   bookingDetails: DartsBookingDetails;
@@ -23,7 +23,17 @@ export function Step3_Darts_Summary({ bookingDetails, basePrice, discountAmount,
       <h3 className="font-bold text-lg">Review & Confirm</h3>
       
       <div className="space-y-4 p-4 border rounded-lg">
-        <h4 className="font-semibold text-primary">{activityName}</h4>
+        {promotion ? (
+             <div className="flex items-start gap-3 text-primary pb-4 border-b">
+                <Tag className="w-5 h-5 mt-1 flex-shrink-0" />
+                <div>
+                    <h4 className="font-semibold">{promotion.name}</h4>
+                    <p className="text-sm text-primary/80">{promotion.description}</p>
+                </div>
+            </div>
+        ) : (
+            <h4 className="font-semibold text-primary">{activityName}</h4>
+        )}
         <div className="flex items-center gap-2 text-sm"><Target className="w-4 h-4" /> {oches} Oche(s)</div>
         <div className="flex items-center gap-2 text-sm"><Clock className="w-4 h-4" /> {duration} Minutes</div>
         <div className="flex items-center gap-2 text-sm"><Calendar className="w-4 h-4" /> {date ? format(date, 'E, d MMM yyyy') : 'N/A'} at {time || 'N/A'}</div>
@@ -47,7 +57,7 @@ export function Step3_Darts_Summary({ bookingDetails, basePrice, discountAmount,
             <span>Base price:</span>
             <span>£{basePrice.toFixed(2)}</span>
           </div>
-          {promotion && (
+          {promotion && discountAmount > 0 && (
             <div className="flex justify-between text-primary">
               <span>
                 <Badge variant="outline" className="border-primary text-primary mr-2">{promotion.name}</Badge>

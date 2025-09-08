@@ -10,11 +10,11 @@ const fontBody = Montserrat({
   variable: '--font-body',
 });
 
-const fontHeadline = Poppins({
-  subsets: ['latin'],
+// Using a generic font-family name for Segoe UI which is a system font.
+// This is a common practice when the font is widely available.
+const fontHeadline = {
   variable: '--font-headline',
-  weight: ['400', '600', '700'],
-});
+};
 
 export const metadata: Metadata = {
   title: 'Pinopolis Book',

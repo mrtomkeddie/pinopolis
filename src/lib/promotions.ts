@@ -35,6 +35,7 @@ export const weeklyPromotions: { [key: number]: Promotion } = {
  * @returns The promotion object if one is applicable, otherwise null.
  */
 export function getApplicablePromotion(date: Date): Promotion | null {
+  if (!date) return null;
   const dayOfWeek = getDay(date); // Sunday is 0, Monday is 1, etc.
   return weeklyPromotions[dayOfWeek] || null;
 }

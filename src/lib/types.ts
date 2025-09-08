@@ -66,6 +66,7 @@ export interface DartsBookingDetails {
     date: Date;
     time: string;
     contactDetails: ContactDetails;
+    dealApplied?: boolean;
 }
 
 export interface SoftPlayBookingDetails {

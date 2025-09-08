@@ -1,10 +1,10 @@
 
 'use client';
 
-import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target } from 'lucide-react';
+import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target, Tag } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import type { DartsBookingDetails } from '@/lib/types';
+import type { DartsBookingDetails, Promotion } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -12,10 +12,12 @@ import { Calendar } from '@/components/ui/calendar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
 interface Step1DartsProps {
   bookingDetails: DartsBookingDetails;
   updateDetails: (details: Partial<DartsBookingDetails>) => void;
+  promotion: Promotion | null;
 }
 
 const generateTimeSlots = () => {
@@ -55,16 +57,77 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
     </div>
 );
 
-export function Step1_Darts_Options({ bookingDetails, updateDetails }: Step1DartsProps) {
+export function Step1_Darts_Options({ bookingDetails, updateDetails, promotion }: Step1DartsProps) {
     const handleSoftPlayChildrenChange = (increment: boolean) => {
         const newSoftPlayChildren = bookingDetails.softPlayChildren + (increment ? 1 : -1);
         if (newSoftPlayChildren >= 0) {
             updateDetails({ softPlayChildren: newSoftPlayChildren });
         }
     };
+    
+    const isDealApplied = bookingDetails.dealApplied ?? false;
 
   return (
     <div className="space-y-6">
+       <div>
+        <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Popover>
+                <PopoverTrigger asChild>
+                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal', !bookingDetails.date && 'text-muted-foreground')}>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
+                </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar 
+                        mode="single" 
+                        selected={bookingDetails.date} 
+                        onSelect={(date) => updateDetails({date: date as Date})} 
+                        initialFocus 
+                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                        modifiers={{
+                            deal: (date) => [1,2,3].includes(date.getDay())
+                        }}
+                        modifiersStyles={{
+                            deal: {
+                                color: 'hsl(var(--primary-foreground))',
+                                backgroundColor: 'hsl(var(--primary))'
+                            }
+                        }}
+                    />
+                </PopoverContent>
+            </Popover>
+
+             <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })}>
+                <SelectTrigger>
+                    <SelectValue placeholder="Select a time" />
+                </SelectTrigger>
+                <SelectContent>
+                    {timeSlots.map(slot => (
+                        <SelectItem key={slot} value={slot}>{slot}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+
+        </div>
+        <p className="text-xs text-muted-foreground text-center mt-4">Please arrive 10-15 minutes prior to your requested start time</p>
+      </div>
+
+        {promotion && promotion.type === 'discount' && (
+            <Alert variant="default" className="border-primary text-primary">
+                <Tag className="h-4 w-4 !text-primary" />
+                <AlertTitle>{promotion.name} Available!</AlertTitle>
+                <AlertDescription>
+                   {promotion.description}
+                </AlertDescription>
+                <div className="flex items-center justify-between mt-4">
+                    <Label htmlFor="deal-switch" className="text-sm font-normal">Apply Deal</Label>
+                    <Switch id="deal-switch" checked={isDealApplied} onCheckedChange={(checked) => updateDetails({ dealApplied: checked })} />
+                </div>
+            </Alert>
+        )}
+
       <div>
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Target /> Select Oches & Duration</Label>
         <div className="space-y-4 p-4 border rounded-lg">
@@ -117,37 +180,6 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails }: Step1Dart
         )}
       </div>
 
-      <div>
-        <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Popover>
-                <PopoverTrigger asChild>
-                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal', !bookingDetails.date && 'text-muted-foreground')}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
-                </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={bookingDetails.date} onSelect={(date) => updateDetails({date: date as Date})} initialFocus disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} />
-                </PopoverContent>
-            </Popover>
-
-             <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })}>
-                <SelectTrigger>
-                    <SelectValue placeholder="Select a time" />
-                </SelectTrigger>
-                <SelectContent>
-                    {timeSlots.map(slot => (
-                        <SelectItem key={slot} value={slot}>{slot}</SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-
-        </div>
-        <p className="text-xs text-muted-foreground text-center mt-4">Please arrive 10-15 minutes prior to your requested start time</p>
-      </div>
     </div>
   );
 }
-
-    

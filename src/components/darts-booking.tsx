@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { getApplicablePromotion } from '@/lib/promotions';
 import type { DartsBookingDetails, Activity, Promotion } from '@/lib/types';
@@ -43,27 +43,36 @@ export default function DartsBooking({ activity }: { activity: Activity }) {
       postcode: '',
       marketingOptIn: false,
     },
+    dealApplied: false,
   });
   const [promotion, setPromotion] = useState<Promotion | null>(null);
 
   const { toast } = useToast();
 
+   useEffect(() => {
+    const applicablePromotion = getApplicablePromotion(bookingDetails.date);
+    setPromotion(applicablePromotion);
+
+    if (!applicablePromotion) {
+      updateDetails({ dealApplied: false });
+    }
+  }, [bookingDetails.date, bookingDetails.dealApplied]);
+
+
   const basePrice = useMemo(() => {
     const oches = bookingDetails.oches as keyof typeof dartsPricing;
     const duration = bookingDetails.duration as keyof typeof dartsPricing[1];
-    const dartsPrice = dartsPricing[oches][duration] || 0;
+    const dartsPrice = dartsPricing[oches]?.[duration] || 0;
     const softPlayPrice = bookingDetails.addSoftPlay ? bookingDetails.softPlayChildren * 5 : 0;
     return dartsPrice + softPlayPrice;
   }, [bookingDetails]);
 
   const discountAmount = useMemo(() => {
-    const applicablePromotion = bookingDetails.date ? getApplicablePromotion(bookingDetails.date) : null;
-    setPromotion(applicablePromotion);
-    if (applicablePromotion) {
-      return basePrice * (applicablePromotion.discount / 100);
+    if (promotion?.type === 'discount' && bookingDetails.dealApplied) {
+      return basePrice * (promotion.discount / 100);
     }
     return 0;
-  }, [bookingDetails.date, basePrice]);
+  }, [promotion, basePrice, bookingDetails.dealApplied]);
 
   const finalPrice = useMemo(() => basePrice - discountAmount, [basePrice, discountAmount]);
 
@@ -91,11 +100,11 @@ export default function DartsBooking({ activity }: { activity: Activity }) {
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'options':
-        return <Step1_Darts_Options bookingDetails={bookingDetails} updateDetails={updateDetails} />;
+        return <Step1_Darts_Options bookingDetails={bookingDetails} updateDetails={updateDetails} promotion={promotion}/>;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
-        return <Step3_Darts_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={promotion} />;
+        return <Step3_Darts_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={bookingDetails.dealApplied ? promotion : null} />;
       default:
         return null;
     }
@@ -103,13 +112,13 @@ export default function DartsBooking({ activity }: { activity: Activity }) {
 
   return (
     <div className="py-4 space-y-6 flex flex-col h-full overflow-hidden">
-      <ScrollArea className="flex-grow pr-6 -mr-6">
-        <div className="py-4">
+      <ScrollArea className="flex-grow px-6 -mx-6">
+        <div className="pt-4 pb-6">
             {renderStep()}
         </div>
       </ScrollArea>
 
-      <div className="flex-shrink-0 pt-4 border-t border-border">
+      <div className="flex-shrink-0 px-6 pt-4 border-t border-border">
          <div className="flex justify-between items-center mb-4">
             <span className="text-lg font-bold">Total Price:</span>
             <span className="text-xl font-bold">£{finalPrice.toFixed(2)}</span>
