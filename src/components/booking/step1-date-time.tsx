@@ -44,19 +44,16 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
   
   const calendarAccentClasses = {
       orange: {
-        '--primary': '25 95% 53%',
-        '--accent': '25 95% 53% / 0.1',
-        '--accent-foreground': 'hsl(25 95% 53%)'
+        '--primary': 'hsl(25 95% 53%)',
+        '--primary-foreground': 'hsl(0 0% 100%)',
       },
        pink: {
-        '--primary': '325 81% 59%',
-        '--accent': '325 81% 59% / 0.1',
-        '--accent-foreground': 'hsl(325 81% 59%)'
+        '--primary': 'hsl(325 81% 59%)',
+        '--primary-foreground': 'hsl(0 0% 100%)',
       },
        cyan: {
-        '--primary': '190 95% 50%',
-        '--accent': '190 95% 50% / 0.1',
-        '--accent-foreground': 'hsl(190 95% 50%)'
+        '--primary': 'hsl(190 95% 50%)',
+        '--primary-foreground': 'hsl(0 0% 100%)',
       },
     } as React.CSSProperties;
 
@@ -66,6 +63,12 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
     cyan: 'focus:ring-cyan-500'
   }[accentColor];
 
+  const hoverClass = {
+    orange: 'hover:bg-orange-500/20 hover:border-orange-500',
+    pink: 'hover:bg-pink-500/20 hover:border-pink-500',
+    cyan: 'hover:bg-cyan-500/20 hover:border-cyan-500',
+  }[accentColor];
+
   return (
     <div className="space-y-6 pt-6">
         <div>
@@ -73,7 +76,7 @@ export function Step1_DateTime({ bookingDetails, updateDetails, accentColor }: S
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Popover>
                     <PopoverTrigger asChild>
-                    <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal', !bookingDetails.date && 'text-muted-foreground')}>
+                    <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal', !bookingDetails.date && 'text-muted-foreground', hoverClass)}>
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
                     </Button>
