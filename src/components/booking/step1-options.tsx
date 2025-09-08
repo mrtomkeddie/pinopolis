@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar as CalendarIcon, Minus, Plus, Users, ToyBrick, Clock, Info, Wine, Tag } from 'lucide-react';
+import { Calendar as CalendarIcon, Minus, Plus, Users, ToyBrick, Clock, Info, Wine, Tag, Gamepad2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import type { BookingDetails, Promotion } from '@/lib/types';
@@ -214,7 +214,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             </div>
 
             <div>
-                <Label className="font-bold text-lg mb-4">Number of Games</Label>
+                <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Gamepad2 /> Number of Games</Label>
                  <RadioGroup 
                     value={String(bookingDetails.games)} 
                     onValueChange={(val) => updateDetails({ games: Number(val) })} 
@@ -280,4 +280,5 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
             </div>
         </div>
     );
-}
+
+    
