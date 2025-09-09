@@ -4,19 +4,36 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { getApplicablePromotion } from '@/lib/promotions';
-import type { BookingDetails, Activity, Promotion } from '@/lib/types';
+import { getBowlingBookingsForDate } from '@/lib/bookings';
+import type { BookingDetails, Activity, Promotion, BowlingBooking } from '@/lib/types';
 import { Step1_Options } from './booking/step1-options';
 import { Step2_Details } from './booking/step2-details';
 import { Step3_Summary } from './booking/step3-summary';
 import { Button } from './ui/button';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { cn } from '@/lib/utils';
+import { Alert, AlertDescription } from './ui/alert';
 
 const steps = ['options', 'details', 'summary'];
 
 type AccentColor = 'orange' | 'pink' | 'cyan';
+
+const timeToMinutes = (time: string) => {
+    const [timePart, period] = time.split(' ');
+    let [hours, minutes] = timePart.split(':').map(Number);
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    }
+    if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+    return hours * 60 + minutes;
+};
+
+// Estimated time per game per person in minutes
+const TIME_PER_GAME = 60; // 1 hour per game, as per user requirement.
 
 export default function ActivityBooking({ activity, price, accentColor }: { activity: Activity, price: number, accentColor: AccentColor }) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -40,6 +57,9 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
     dealApplied: false,
   });
   const [promotion, setPromotion] = useState<Promotion | null>(null);
+  const [existingBookings, setExistingBookings] = useState<BowlingBooking[]>([]);
+  const [availabilityError, setAvailabilityError] = useState<string | null>(null);
+
 
   const { toast } = useToast();
   
@@ -63,6 +83,32 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
         }
     }
   }, [bookingDetails.date, bookingDetails.dealApplied]);
+
+  useEffect(() => {
+    if (bookingDetails.date) {
+      const bookings = getBowlingBookingsForDate(bookingDetails.date);
+      setExistingBookings(bookings);
+    } else {
+      setExistingBookings([]);
+    }
+  }, [bookingDetails.date]);
+
+  // Check availability whenever details change
+  useEffect(() => {
+    if (!bookingDetails.date || !bookingDetails.time) {
+      setAvailabilityError(null);
+      return;
+    }
+
+    const { available } = checkAvailability(bookingDetails.time);
+    const lanesNeeded = Math.ceil((bookingDetails.adults + bookingDetails.children) / 8) || 1;
+    
+    if (lanesNeeded > available) {
+        setAvailabilityError(`Only ${available} lane(s) available at ${bookingDetails.time}. Please select a different time or reduce the number of players.`);
+    } else {
+        setAvailabilityError(null);
+    }
+  }, [bookingDetails.time, bookingDetails.adults, bookingDetails.children, bookingDetails.games, existingBookings]);
 
 
   const basePrice = useMemo(() => {
@@ -119,10 +165,40 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
     }));
   };
 
+  const checkAvailability = (time: string): { available: number, bookedLanes: number } => {
+    const totalLanes = 2;
+    let bookedLanesCount = 0;
+
+    const newBookingDuration = bookingDetails.games * TIME_PER_GAME;
+    const newBookingStartTime = timeToMinutes(time);
+    const newBookingEndTime = newBookingStartTime + newBookingDuration;
+
+    for (const booking of existingBookings) {
+        const existingDuration = booking.games * TIME_PER_GAME;
+        const existingStartTime = timeToMinutes(booking.time);
+        const existingEndTime = existingStartTime + existingDuration;
+
+        // Check for overlap
+        if (newBookingStartTime < existingEndTime && newBookingEndTime > existingStartTime) {
+            bookedLanesCount += booking.lanes;
+        }
+    }
+    
+    const availableLanes = totalLanes - bookedLanesCount;
+    return { available: availableLanes < 0 ? 0 : availableLanes, bookedLanes: bookedLanesCount };
+  };
+
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'options':
-        return <Step1_Options bookingDetails={bookingDetails} updateDetails={updateDetails} pricePerGame={price} promotion={promotion} accentColor={accentColor} />;
+        return <Step1_Options 
+                  bookingDetails={bookingDetails} 
+                  updateDetails={updateDetails} 
+                  pricePerGame={price} 
+                  promotion={promotion} 
+                  accentColor={accentColor} 
+                  checkAvailability={checkAvailability}
+                />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
@@ -146,7 +222,7 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
 
   const isNextDisabled = () => {
     if (steps[currentStep] === 'options') {
-      return !bookingDetails.date || !bookingDetails.time;
+      return !bookingDetails.date || !bookingDetails.time || !!availabilityError;
     }
     if (steps[currentStep] === 'details') {
         return !bookingDetails.contactDetails.firstName || !bookingDetails.contactDetails.lastName || !bookingDetails.contactDetails.email;
@@ -165,6 +241,14 @@ export default function ActivityBooking({ activity, price, accentColor }: { acti
       
       <ScrollArea className="flex-grow min-h-0">
         <div className="p-6" style={{ contain: 'layout' }}>
+             {availabilityError && steps[currentStep] === 'options' && (
+                <Alert variant="destructive" className="mb-4">
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>
+                        {availabilityError}
+                    </AlertDescription>
+                </Alert>
+            )}
             {renderStep()}
         </div>
       </ScrollArea>

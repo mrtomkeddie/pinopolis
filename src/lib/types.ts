@@ -64,6 +64,15 @@ export interface DartsBooking {
   duration: number; // 30 or 60
 }
 
+export interface BowlingBooking {
+    date: string; // YYYY-MM-DD
+    time: string;
+    lanes: number;
+    players: number;
+    games: number;
+}
+
+
 export interface DartsBookingDetails {
     activityName: string;
     oches: number;

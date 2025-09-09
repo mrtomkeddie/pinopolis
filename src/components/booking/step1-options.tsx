@@ -23,6 +23,7 @@ interface Step1Props {
   pricePerGame: number;
   promotion: Promotion | null;
   accentColor: AccentColor;
+  checkAvailability: (time: string) => { available: number; bookedLanes: number };
 }
 
 const generateTimeSlots = () => {
@@ -62,12 +63,14 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 );
 
 
-export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion, accentColor }: Step1Props) {
+export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion, accentColor, checkAvailability }: Step1Props) {
     const [adultError, setAdultError] = useState(false);
 
     const isDealApplied = bookingDetails.dealApplied ?? false;
     const isGamesLocked = isDealApplied && promotion && (promotion.type === 'perPerson' || promotion.type === 'package');
     const isWineWednesday = isDealApplied && promotion?.type === 'package';
+    
+    const lanesNeeded = Math.ceil((bookingDetails.adults + bookingDetails.children) / 8) || 1;
 
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
@@ -110,18 +113,6 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         cyan: 'text-cyan-400'
     }
 
-    const accentFocus = {
-      orange: 'focus:ring-orange-400',
-      pink: 'focus:ring-pink-400',
-      cyan: 'focus:ring-cyan-400'
-    }
-
-    const accentPeer = {
-      orange: 'peer-data-[state=checked]:border-orange-400 [&:has([data-state=checked])]:border-orange-400',
-      pink: 'peer-data-[state=checked]:border-pink-400 [&:has([data-state=checked])]:border-pink-400',
-      cyan: 'peer-data-[state=checked]:border-cyan-400 [&:has([data-state=checked])]:border-cyan-400'
-    }
-
     return (
         <div className="space-y-6">
             <Alert>
@@ -146,21 +137,26 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                             <Calendar 
                                 mode="single" 
                                 selected={bookingDetails.date} 
-                                onSelect={(date) => updateDetails({date: date as Date})} 
+                                onSelect={(date) => updateDetails({date: date as Date, time: ''})} 
                                 initialFocus 
                                 disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
                             />
                         </PopoverContent>
                     </Popover>
 
-                    <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })}>
+                    <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })} disabled={!bookingDetails.date}>
                         <SelectTrigger className="py-6">
                             <SelectValue placeholder="Select a time" />
                         </SelectTrigger>
                         <SelectContent>
-                            {timeSlots.map(slot => (
-                                <SelectItem key={slot} value={slot}>{slot}</SelectItem>
-                            ))}
+                            {timeSlots.map(slot => {
+                                const { available } = checkAvailability(slot);
+                                return (
+                                     <SelectItem key={slot} value={slot} disabled={available < lanesNeeded}>
+                                        {slot} ({available} {available === 1 ? 'lane' : 'lanes'} left)
+                                    </SelectItem>
+                                )
+                            })}
                         </SelectContent>
                     </Select>
                 </div>
@@ -182,7 +178,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
 
             <div className="space-y-2">
                 <Label className="font-bold text-lg flex items-center gap-2"><Users /> Select Guests</Label>
-                 <p className="text-xs text-muted-foreground">There is a maximum of 16 players per reservation.</p>
+                 <p className="text-xs text-muted-foreground">Max 8 players per lane. Max 16 players per booking.</p>
                 <div className="space-y-2 p-4 border rounded-lg">
                     <GuestCounter 
                         label="Adults" 
