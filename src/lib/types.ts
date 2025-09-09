@@ -57,6 +57,13 @@ export interface BookingDetails {
   dealApplied?: boolean;
 }
 
+export interface DartsBooking {
+  date: string; // YYYY-MM-DD
+  time: string; // "10:30 AM"
+  oches: number;
+  duration: number; // 30 or 60
+}
+
 export interface DartsBookingDetails {
     activityName: string;
     oches: number;

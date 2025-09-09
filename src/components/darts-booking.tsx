@@ -4,8 +4,8 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { getApplicablePromotion } from '@/lib/promotions';
-import type { DartsBookingDetails, Activity, Promotion } from '@/lib/types';
+import { getDartsBookingsForDate } from '@/lib/bookings';
+import type { DartsBookingDetails, Activity, Promotion, DartsBooking } from '@/lib/types';
 import { Step1_Darts_Options } from './booking/step1-darts-options';
 import { Step2_Details } from './booking/step2-details';
 import { Step3_Darts_Summary } from './booking/step3-darts-summary';
@@ -14,7 +14,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { cn } from '@/lib/utils';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import { Info } from 'lucide-react';
 
 const steps = ['options', 'details', 'summary'];
@@ -53,18 +53,37 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
     },
     dealApplied: false,
   });
-  const [promotion, setPromotion] = useState<Promotion | undefined>(undefined);
+
+  const [existingBookings, setExistingBookings] = useState<DartsBooking[]>([]);
+  const [availabilityError, setAvailabilityError] = useState<string | null>(null);
 
   const { toast } = useToast();
-
-   useEffect(() => {
-    const applicablePromotion = getApplicablePromotion(bookingDetails.date);
-    setPromotion(applicablePromotion);
-
-    if (!applicablePromotion) {
-      updateDetails({ dealApplied: false });
+  
+  useEffect(() => {
+    if (bookingDetails.date) {
+      const bookings = getDartsBookingsForDate(bookingDetails.date);
+      setExistingBookings(bookings);
+    } else {
+      setExistingBookings([]);
     }
-  }, [bookingDetails.date, bookingDetails.dealApplied]);
+  }, [bookingDetails.date]);
+
+  // Check availability whenever details change
+  useEffect(() => {
+    if (!bookingDetails.date || !bookingDetails.time) {
+      setAvailabilityError(null);
+      return;
+    }
+
+    const ochesNeeded = bookingDetails.oches;
+    const { available, bookedOches } = checkAvailability(bookingDetails.time, bookingDetails.duration);
+    
+    if (ochesNeeded > available) {
+        setAvailabilityError(`Only ${available} oche(s) available at ${bookingDetails.time}. Please select a different time or fewer oches.`);
+    } else {
+        setAvailabilityError(null);
+    }
+  }, [bookingDetails.time, bookingDetails.oches, bookingDetails.duration, existingBookings]);
 
 
   const basePrice = useMemo(() => {
@@ -75,19 +94,14 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
     return dartsPrice + softPlayPrice;
   }, [bookingDetails]);
 
-  const discountAmount = useMemo(() => {
-    if (promotion?.type === 'discount' && bookingDetails.dealApplied) {
-      return basePrice * (promotion.discount / 100);
-    }
-    return 0;
-  }, [promotion, basePrice, bookingDetails.dealApplied]);
-
+  const discountAmount = 0; // No promotions for darts yet
   const finalPrice = useMemo(() => basePrice - discountAmount, [basePrice, discountAmount]);
 
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   const handleBooking = () => {
+    // This is where you would also write the new booking to your state/DB
     toast({
       title: 'Booking Confirmed!',
       description: `Your booking for ${activity.name} has been made.`,
@@ -105,14 +119,52 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
     }));
   };
 
+  const checkAvailability = (time: string, duration: number): { available: number, bookedOches: number } => {
+    const totalOches = 2;
+    let bookedOchesCount = 0;
+
+    const bookingStartTime = timeToMinutes(time);
+    const bookingEndTime = bookingStartTime + duration;
+
+    for (const booking of existingBookings) {
+        const existingStartTime = timeToMinutes(booking.time);
+        const existingEndTime = existingStartTime + booking.duration;
+
+        // Check for overlap
+        if (bookingStartTime < existingEndTime && bookingEndTime > existingStartTime) {
+            bookedOchesCount += booking.oches;
+        }
+    }
+    
+    const availableOches = totalOches - bookedOchesCount;
+    return { available: availableOches < 0 ? 0 : availableOches, bookedOches: bookedOchesCount };
+  };
+
+  const timeToMinutes = (time: string) => {
+    const [timePart, period] = time.split(' ');
+    let [hours, minutes] = timePart.split(':').map(Number);
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    }
+    if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+    return hours * 60 + minutes;
+  };
+
+
   const renderStep = () => {
     switch (steps[currentStep]) {
       case 'options':
-        return <Step1_Darts_Options bookingDetails={bookingDetails} updateDetails={updateDetails} />;
+        return <Step1_Darts_Options 
+                    bookingDetails={bookingDetails} 
+                    updateDetails={updateDetails} 
+                    checkAvailability={checkAvailability}
+                />;
       case 'details':
         return <Step2_Details contactDetails={bookingDetails.contactDetails} updateContactDetails={updateContactDetails} />;
       case 'summary':
-        return <Step3_Darts_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={bookingDetails.dealApplied ? promotion : undefined} />;
+        return <Step3_Darts_Summary bookingDetails={bookingDetails} basePrice={basePrice} discountAmount={discountAmount} finalPrice={finalPrice} promotion={undefined} />;
       default:
         return null;
     }
@@ -120,7 +172,7 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
 
   const isNextDisabled = () => {
     if (steps[currentStep] === 'options') {
-      return !bookingDetails.date || !bookingDetails.time;
+      return !bookingDetails.date || !bookingDetails.time || !!availabilityError;
     }
     if (steps[currentStep] === 'details') {
         return !bookingDetails.contactDetails.firstName || !bookingDetails.contactDetails.lastName || !bookingDetails.contactDetails.email;
@@ -150,6 +202,14 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
         </SheetHeader>
       <ScrollArea className="flex-grow min-h-0">
         <div className="p-6" style={{ contain: 'layout' }}>
+             {availabilityError && steps[currentStep] === 'options' && (
+                <Alert variant="destructive" className="mb-4">
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>
+                        {availabilityError}
+                    </AlertDescription>
+                </Alert>
+            )}
             {renderStep()}
         </div>
       </ScrollArea>
