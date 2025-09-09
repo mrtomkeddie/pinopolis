@@ -18,12 +18,12 @@ const fontHeadline = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: 'Pinopolis Book',
+  title: 'Pinopolis',
   description: 'Book your next futuristic entertainment experience.',
   manifest: '/manifest.json',
   viewport: 'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.ico?v=1',
   },
 };
 
