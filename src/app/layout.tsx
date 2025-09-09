@@ -21,7 +21,6 @@ export const metadata: Metadata = {
   title: 'Pinopolis',
   description: 'Book your next futuristic entertainment experience.',
   manifest: '/manifest.json',
-  icons: null, // Prevent Next.js from automatically generating icon links
 };
 
 export const viewport: Viewport = {
@@ -32,7 +31,6 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: '#050505',
   icons: {
-    icon: '/favicon.ico?v=1',
     apple: '/mobile icon.png',
   },
 };
