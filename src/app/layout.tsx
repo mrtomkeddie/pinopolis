@@ -1,5 +1,5 @@
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
@@ -21,11 +21,22 @@ export const metadata: Metadata = {
   title: 'Pinopolis',
   description: 'Book your next futuristic entertainment experience.',
   manifest: '/manifest.json',
-  viewport: 'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
+  icons: null, // Prevent Next.js from automatically generating icon links
+};
+
+export const viewport: Viewport = {
+  minimumScale: 1,
+  initialScale: 1,
+  width: 'device-width',
+  shrinkToFit: 'no',
+  viewportFit: 'cover',
+  themeColor: '#050505',
   icons: {
     icon: '/favicon.ico?v=1',
+    apple: '/mobile icon.png',
   },
 };
+
 
 export default function RootLayout({
   children,
