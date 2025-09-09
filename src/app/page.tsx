@@ -105,6 +105,11 @@ export default function Home() {
         <section className="relative w-full h-dvh flex flex-col items-center justify-center text-center bg-background overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
+           <div className="absolute top-6 left-6 z-20">
+              <Link href="/my-bookings">
+                <Button variant="outline">My Bookings</Button>
+              </Link>
+            </div>
           <div className="absolute top-6 right-6 z-20 flex items-center gap-4">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-white transition-colors">
               <Facebook className="w-6 h-6" />
@@ -194,7 +199,7 @@ export default function Home() {
                                     {activity.price > 0 ? (
                                         <>£<span className="font-bold">{activity.price.toFixed(2)}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : '/child'}</span></>
                                     ) : (
-                                        <><span className="font-bold text-base">From £10.95</span><span className="text-sm text-muted-foreground">/oche</span></>
+                                        <><span className="font-bold text-base">From £10.95 /oche</span></>
                                     )}
                                   </p>
                                   <Sheet>

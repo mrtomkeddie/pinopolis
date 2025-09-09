@@ -8,7 +8,6 @@ export default function Footer() {
           © {new Date().getFullYear()} Pinopolis Book. All rights reserved.
         </p>
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <Link href="/my-bookings" className="hover:text-primary transition-colors">My Bookings</Link>
             <Link href="/terms" className="hover:text-primary transition-colors">Terms & Conditions</Link>
         </div>
       </div>
