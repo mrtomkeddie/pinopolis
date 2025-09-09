@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   description: 'Book your next futuristic entertainment experience.',
   manifest: '/manifest.json',
   viewport: 'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
