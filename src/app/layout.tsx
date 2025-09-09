@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   title: 'Pinopolis Book',
   description: 'Book your next futuristic entertainment experience.',
   manifest: '/manifest.json',
+  viewport: 'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
 };
 
 export default function RootLayout({
@@ -30,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={cn('antialiased min-h-screen bg-background', fontBody.variable, fontHeadline.variable)} suppressHydrationWarning>
+      <body className={cn('antialiased min-h-screen bg-background pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]', fontBody.variable, fontHeadline.variable)} suppressHydrationWarning>
         <PwaInstaller />
         {children}
         <Toaster />
