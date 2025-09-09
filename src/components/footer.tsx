@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="py-6 md:px-8 md:py-0 border-t border-border/40 bg-background">
@@ -6,7 +8,8 @@ export default function Footer() {
           © {new Date().getFullYear()} Pinopolis Book. All rights reserved.
         </p>
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <a href="/terms" className="hover:text-primary transition-colors">Terms & Conditions</a>
+            <Link href="/my-bookings" className="hover:text-primary transition-colors">My Bookings</Link>
+            <Link href="/terms" className="hover:text-primary transition-colors">Terms & Conditions</Link>
         </div>
       </div>
     </footer>
