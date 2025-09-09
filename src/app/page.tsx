@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram, Phone, Mail, Award, AtSign } from 'lucide-react';
 import Image from 'next/image';
 
@@ -21,6 +21,7 @@ import MenuDialog from '@/components/menu-dialog';
 import { streetFoodMenu, drinksMenu } from '@/lib/menu-data';
 import DartsBooking from '@/components/darts-booking';
 import SoftPlayBooking from '@/components/soft-play-booking';
+import { Carousel, type CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 
 const activities: (Activity & { gradient: string, accentColor: 'orange' | 'pink' | 'cyan' })[] = [
   {
@@ -82,9 +83,13 @@ const foodAndDrinks = [
   },
 ]
 
+type Tab = 'experiences' | 'food-drinks' | 'party-bookings';
+const TABS: Tab[] = ['experiences', 'food-drinks', 'party-bookings'];
+
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'experiences' | 'food-drinks' | 'party-bookings'>('experiences');
-  
+  const [activeTab, setActiveTab] = useState<Tab>('experiences');
+  const [api, setApi] = useState<CarouselApi>()
+ 
   const accentHoverBorderColor = {
       orange: 'hover:border-orange-500/50',
       pink: 'hover:border-pink-500/50',
@@ -97,6 +102,29 @@ export default function Home() {
     cyan: 'text-cyan-400',
     pink: 'text-pink-400',
     yellow: 'text-yellow-400',
+  }
+  
+  useEffect(() => {
+    if (!api) {
+      return
+    }
+ 
+    const handleSelect = (api: CarouselApi) => {
+      const selectedTab = TABS[api.selectedScrollSnap()];
+      setActiveTab(selectedTab);
+    }
+    
+    api.on("select", handleSelect);
+
+    return () => {
+      api.off("select", handleSelect)
+    }
+  }, [api])
+
+  const handleTabChange = (tabId: Tab) => {
+    setActiveTab(tabId);
+    const tabIndex = TABS.indexOf(tabId);
+    api?.scrollTo(tabIndex);
   }
 
   return (
@@ -148,168 +176,173 @@ export default function Home() {
         <section id="content" className="py-16 md:py-24 w-full">
             <div className="container mx-auto px-4">
                 <div className="mb-12">
-                    <SegmentedControl activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <SegmentedControl activeTab={activeTab} setActiveTab={handleTabChange} />
                 </div>
                 
-                {activeTab === 'experiences' && (
-                  <div id="activities">
-                      <div className="text-center mb-12">
-                          <h2 className="text-3xl md:text-4xl font-bold font-headline text-primary">Choose Your Experience</h2>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {activities.map((activity) => (
-                          <Card key={activity.name} className={cn("bg-black border border-white/10 hover:-translate-y-1 transition-all duration-300 group flex flex-col overflow-hidden rounded-xl", accentHoverBorderColor[activity.accentColor])}>
-                          <CardHeader className="p-0 relative">
-                              <div className="relative h-48">
-                                  <Image
-                                      src={activity.image}
-                                      alt={activity.name}
-                                      fill={true}
-                                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                      style={{objectFit: 'cover'}}
-                                      className="group-hover:scale-105 transition-transform duration-500"
-                                      data-ai-hint={activity.imageHint}
-                                  />
-                              </div>
-                               <div className={cn("h-1 w-full bg-gradient-to-r", activity.gradient)}></div>
-                          </CardHeader>
-                          <CardContent className="p-6 flex-grow flex flex-col">
-                              <div className="flex justify-between items-start">
-                                  <div className='flex-grow'>
-                                      <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
-                                  </div>
-                                  <Zap className={cn("w-6 h-6", {
-                                    'text-orange-400': activity.accentColor === 'orange',
-                                    'text-pink-400': activity.accentColor === 'pink',
-                                    'text-cyan-400': activity.accentColor === 'cyan',
-                                  })} />
-                              </div>
-                              <CardDescription className="mt-2 text-base text-muted-foreground">{activity.description}</CardDescription>
-                              <div className="flex items-center gap-4 text-muted-foreground text-sm mt-4">
-                                <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" />
-                                <span>
-                                  {activity.name === 'Soft Play' ? 'Unlimited Play' : 'up to 60 minutes'}
-                                </span>
-                                </div>
-                                <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>up to 16 players</span></div>
-                              </div>
-                              <div className="flex-grow" />
-                              <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
-                                  <p className="text-xl">
-                                    {activity.price > 0 ? (
-                                        <>£<span className="font-bold">{activity.price.toFixed(2)}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : '/child'}</span></>
-                                    ) : (
-                                        <><span className="font-bold text-base">From £10.95 /oche</span></>
-                                    )}
-                                  </p>
-                                  <Sheet>
-                                      <SheetTrigger asChild>
-                                          <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                                      </SheetTrigger>
-                                      <SheetContent className="w-full md:max-w-md bg-card border-l border-border flex flex-col p-0">
-                                          {activity.name === 'Bowling' && <ActivityBooking activity={activity} price={activity.price} accentColor={activity.accentColor} />}
-                                          {activity.name === 'AR Darts' && <DartsBooking activity={activity} accentColor={activity.accentColor} />}
-                                          {activity.name === 'Soft Play' && <SoftPlayBooking activity={activity} price={activity.price} accentColor={activity.accentColor} />}
-                                      </SheetContent>
-                                  </Sheet>
-                              </div>
-                          </CardContent>
-                          </Card>
-                      ))}
-                      </div>
-                  </div>
-                )}
-                
-                {activeTab === 'food-drinks' && (
-                  <div id="food-drinks">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold font-headline text-yellow-400">Food & Drinks</h2>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                      {foodAndDrinks.map((item) => (
-                        <Dialog key={item.name}>
-                          <Card className={cn("bg-black border border-white/10 hover:-translate-y-1 transition-all duration-300 group flex flex-col overflow-hidden rounded-xl", accentHoverBorderColor[item.accentColor])}>
-                            <CardHeader className="p-0 relative">
-                                <div className="relative h-48">
-                                  <Image
-                                      src={item.image}
-                                      alt={item.name}
-                                      fill={true}
-                                      sizes="(max-width: 768px) 100vw, 50vw"
-                                      style={{objectFit: 'cover'}}
-                                      className="group-hover:scale-105 transition-transform duration-500"
-                                      data-ai-hint={item.imageHint}
-                                  />
-                                </div>
-                                <div className={cn("h-1 w-full bg-gradient-to-r", item.gradient)}></div>
-                            </CardHeader>
-                            <CardContent className="p-6 flex-grow flex flex-col">
-                                <div className="flex justify-between items-start">
-                                    <div className='flex-grow'>
-                                        <CardTitle className="font-headline text-2xl">{item.name}</CardTitle>
-                                        <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
-                                    </div>
-                                    <div className={cn("p-2", accentTextColor[item.accentColor])}>
-                                        <Zap className="w-6 h-6"/>
-                                    </div>
-                                </div>
-                                <div className="flex flex-wrap gap-2 mt-4">
-                                    {item.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
-                                </div>
-                                <div className="flex-grow" />
-                                <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
-                                  <div></div>
-                                  <DialogTrigger asChild>
-                                    <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", item.gradient)}>
-                                      {item.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
-                                    </Button>
-                                  </DialogTrigger>
-                                </div>
-                            </CardContent>
-                          </Card>
-                          <MenuDialog menu={item.menu} accentColor={item.accentColor} />
-                        </Dialog>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {activeTab === 'party-bookings' && (
-                  <section id="party-packages">
-                    <div className="container mx-auto px-4">
-                      <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold font-headline flex items-center justify-center gap-4"><PartyPopper className="w-10 h-10 text-primary" /> Bespoke Party Packages</h2>
-                        <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">Planning a special event? We offer tailored party packages to make your celebration unforgettable. From birthdays to corporate events, we've got you covered.</p>
-                      </div>
-                      
-                      <div className="max-w-2xl mx-auto bg-black border border-white/10 rounded-xl">
-                          <CardHeader className="text-center">
-                              <div className="flex items-center justify-center gap-3">
-                                  <CardTitle className="font-headline text-2xl flex items-center justify-center gap-3"><Award className="w-8 h-8 text-yellow-400" /> Plan Your Perfect Party</CardTitle>
-                              </div>
-                          </CardHeader>
-                          <CardContent className="text-center space-y-6">
-                              <p className="text-muted-foreground">
-                                  Our dedicated team is here to help you create a memorable experience. Get in touch to discuss your requirements, and we'll design a custom package just for you.
-                              </p>
-                              <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-                                  <a href="tel:01554556226">
-                                      <Button variant="outline" size="lg" className="bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground w-64">
-                                          <Phone className="mr-3"/> Call Us
-                                      </Button>
-                                  </a>
-                                  <a href="mailto:info@pinopolis.wales">
-                                      <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0 w-64">
-                                          <Mail className="mr-3"/> Email Us
-                                      </Button>
-                                  </a>
-                              </div>
-                          </CardContent>
-                      </div>
+                <Carousel setApi={setApi} className="w-full">
+                  <CarouselContent>
 
-                    </div>
-                  </section>
-                )}
+                    <CarouselItem>
+                      <div id="activities">
+                          <div className="text-center mb-12">
+                              <h2 className="text-3xl md:text-4xl font-bold font-headline text-primary">Choose Your Experience</h2>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                          {activities.map((activity) => (
+                              <Card key={activity.name} className={cn("bg-black border border-white/10 hover:-translate-y-1 transition-all duration-300 group flex flex-col overflow-hidden rounded-xl", accentHoverBorderColor[activity.accentColor])}>
+                              <CardHeader className="p-0 relative">
+                                  <div className="relative h-48">
+                                      <Image
+                                          src={activity.image}
+                                          alt={activity.name}
+                                          fill={true}
+                                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                          style={{objectFit: 'cover'}}
+                                          className="group-hover:scale-105 transition-transform duration-500"
+                                          data-ai-hint={activity.imageHint}
+                                      />
+                                  </div>
+                                   <div className={cn("h-1 w-full bg-gradient-to-r", activity.gradient)}></div>
+                              </CardHeader>
+                              <CardContent className="p-6 flex-grow flex flex-col">
+                                  <div className="flex justify-between items-start">
+                                      <div className='flex-grow'>
+                                          <CardTitle className="font-headline text-2xl">{activity.name}</CardTitle>
+                                      </div>
+                                      <Zap className={cn("w-6 h-6", {
+                                        'text-orange-400': activity.accentColor === 'orange',
+                                        'text-pink-400': activity.accentColor === 'pink',
+                                        'text-cyan-400': activity.accentColor === 'cyan',
+                                      })} />
+                                  </div>
+                                  <CardDescription className="mt-2 text-base text-muted-foreground">{activity.description}</CardDescription>
+                                  <div className="flex items-center gap-4 text-muted-foreground text-sm mt-4">
+                                    <div className="flex items-center gap-1.5"><Clock className="w-4 h-4" />
+                                    <span>
+                                      {activity.name === 'Soft Play' ? 'Unlimited Play' : 'up to 60 minutes'}
+                                    </span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>up to 16 players</span></div>
+                                  </div>
+                                  <div className="flex-grow" />
+                                  <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
+                                      <p className="text-xl">
+                                        {activity.price > 0 ? (
+                                            <>£<span className="font-bold">{activity.price.toFixed(2)}</span><span className="text-sm text-muted-foreground">{activity.name === 'Bowling' ? '/game' : '/child'}</span></>
+                                        ) : (
+                                            <><span className="font-bold text-base">From £10.95 /oche</span></>
+                                        )}
+                                      </p>
+                                      <Sheet>
+                                          <SheetTrigger asChild>
+                                              <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", activity.gradient)}>Book Now <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                                          </SheetTrigger>
+                                          <SheetContent className="w-full md:max-w-md bg-card border-l border-border flex flex-col p-0">
+                                              {activity.name === 'Bowling' && <ActivityBooking activity={activity} price={activity.price} accentColor={activity.accentColor} />}
+                                              {activity.name === 'AR Darts' && <DartsBooking activity={activity} accentColor={activity.accentColor} />}
+                                              {activity.name === 'Soft Play' && <SoftPlayBooking activity={activity} price={activity.price} accentColor={activity.accentColor} />}
+                                          </SheetContent>
+                                      </Sheet>
+                                  </div>
+                              </CardContent>
+                              </Card>
+                          ))}
+                          </div>
+                      </div>
+                    </CarouselItem>
+                    
+                    <CarouselItem>
+                      <div id="food-drinks">
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl md:text-4xl font-bold font-headline text-yellow-400">Food & Drinks</h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                          {foodAndDrinks.map((item) => (
+                            <Dialog key={item.name}>
+                              <Card className={cn("bg-black border border-white/10 hover:-translate-y-1 transition-all duration-300 group flex flex-col overflow-hidden rounded-xl", accentHoverBorderColor[item.accentColor])}>
+                                <CardHeader className="p-0 relative">
+                                    <div className="relative h-48">
+                                      <Image
+                                          src={item.image}
+                                          alt={item.name}
+                                          fill={true}
+                                          sizes="(max-width: 768px) 100vw, 50vw"
+                                          style={{objectFit: 'cover'}}
+                                          className="group-hover:scale-105 transition-transform duration-500"
+                                          data-ai-hint={item.imageHint}
+                                      />
+                                    </div>
+                                    <div className={cn("h-1 w-full bg-gradient-to-r", item.gradient)}></div>
+                                </CardHeader>
+                                <CardContent className="p-6 flex-grow flex flex-col">
+                                    <div className="flex justify-between items-start">
+                                        <div className='flex-grow'>
+                                            <CardTitle className="font-headline text-2xl">{item.name}</CardTitle>
+                                            <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
+                                        </div>
+                                        <div className={cn("p-2", accentTextColor[item.accentColor])}>
+                                            <Zap className="w-6 h-6"/>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 mt-4">
+                                        {item.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                                    </div>
+                                    <div className="flex-grow" />
+                                    <div className="flex justify-between items-center mt-6 pt-6 border-t border-white/10">
+                                      <div></div>
+                                      <DialogTrigger asChild>
+                                        <Button variant="outline" className={cn("bg-gradient-to-r text-white border-0", item.gradient)}>
+                                          {item.buttonText} <ArrowRight className="ml-2 h-4 w-4" />
+                                        </Button>
+                                      </DialogTrigger>
+                                    </div>
+                                </CardContent>
+                              </Card>
+                              <MenuDialog menu={item.menu} accentColor={item.accentColor} />
+                            </Dialog>
+                          ))}
+                        </div>
+                      </div>
+                    </CarouselItem>
+                    
+                    <CarouselItem>
+                      <section id="party-packages">
+                        <div className="container mx-auto px-4">
+                          <div className="text-center mb-12">
+                            <h2 className="text-3xl md:text-4xl font-bold font-headline flex items-center justify-center gap-4"><PartyPopper className="w-10 h-10 text-primary" /> Bespoke Party Packages</h2>
+                            <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">Planning a special event? We offer tailored party packages to make your celebration unforgettable. From birthdays to corporate events, we've got you covered.</p>
+                          </div>
+                          
+                          <div className="max-w-2xl mx-auto bg-black border border-white/10 rounded-xl">
+                              <CardHeader className="text-center">
+                                  <div className="flex items-center justify-center gap-3">
+                                      <CardTitle className="font-headline text-2xl flex items-center justify-center gap-3"><Award className="w-8 h-8 text-yellow-400" /> Plan Your Perfect Party</CardTitle>
+                                  </div>
+                              </CardHeader>
+                              <CardContent className="text-center space-y-6">
+                                  <p className="text-muted-foreground">
+                                      Our dedicated team is here to help you create a memorable experience. Get in touch to discuss your requirements, and we'll design a custom package just for you.
+                                  </p>
+                                  <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+                                      <a href="tel:01554556226">
+                                          <Button variant="outline" size="lg" className="bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground w-64">
+                                              <Phone className="mr-3"/> Call Us
+                                          </Button>
+                                      </a>
+                                      <a href="mailto:info@pinopolis.wales">
+                                          <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0 w-64">
+                                              <Mail className="mr-3"/> Email Us
+                                          </Button>
+                                      </a>
+                                  </div>
+                              </CardContent>
+                          </div>
+
+                        </div>
+                      </section>
+                    </CarouselItem>
+                  </CarouselContent>
+                </Carousel>
             </div>
         </section>
 

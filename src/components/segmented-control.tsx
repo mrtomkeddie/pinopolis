@@ -15,7 +15,7 @@ const tabs: { id: Tab; label: string; mobileLabel?: string; icon: React.ElementT
 
 interface SegmentedControlProps {
     activeTab: Tab;
-    setActiveTab: Dispatch<SetStateAction<Tab>>;
+    setActiveTab: (tabId: Tab) => void;
 }
 
 export default function SegmentedControl({ activeTab, setActiveTab }: SegmentedControlProps) {
