@@ -111,10 +111,10 @@ export default function Home() {
               </Link>
             </div>
           <div className="absolute top-6 right-6 z-20 flex items-center gap-4">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-white transition-colors">
+            <a href="https://www.facebook.com/PinopolisLlanelli" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-white transition-colors">
               <Facebook className="w-6 h-6" />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-white transition-colors">
+            <a href="https://www.instagram.com/pinopolis_llanelli/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-white transition-colors">
               <Instagram className="w-6 h-6" />
             </a>
           </div>
