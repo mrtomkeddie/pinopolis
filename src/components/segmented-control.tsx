@@ -7,10 +7,10 @@ import type { Dispatch, SetStateAction } from 'react';
 
 type Tab = 'experiences' | 'food-drinks' | 'party-bookings';
 
-const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
+const tabs: { id: Tab; label: string; mobileLabel?: string; icon: React.ElementType }[] = [
   { id: 'experiences', label: 'Experiences', icon: Zap },
-  { id: 'food-drinks', label: 'Food & Drinks', icon: Utensils },
-  { id: 'party-bookings', label: 'Party Bookings', icon: PartyPopper },
+  { id: 'food-drinks', label: 'Food & Drinks', mobileLabel: 'Food', icon: Utensils },
+  { id: 'party-bookings', label: 'Party Bookings', mobileLabel: 'Parties', icon: PartyPopper },
 ];
 
 interface SegmentedControlProps {
@@ -43,7 +43,14 @@ export default function SegmentedControl({ activeTab, setActiveTab }: SegmentedC
           )}
         >
           <tab.icon className="w-4 h-4" />
-          <span>{tab.label}</span>
+          {tab.mobileLabel ? (
+            <>
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.mobileLabel}</span>
+            </>
+          ) : (
+            <span>{tab.label}</span>
+          )}
         </button>
       ))}
     </div>
