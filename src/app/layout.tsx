@@ -4,6 +4,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { Montserrat, Bebas_Neue } from 'next/font/google';
+import PwaInstaller from '@/components/pwa-installer';
 
 const fontBody = Montserrat({
   subsets: ['latin'],
@@ -19,6 +20,7 @@ const fontHeadline = Bebas_Neue({
 export const metadata: Metadata = {
   title: 'Pinopolis Book',
   description: 'Book your next futuristic entertainment experience.',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -29,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={cn('antialiased min-h-screen bg-background', fontBody.variable, fontHeadline.variable)} suppressHydrationWarning>
+        <PwaInstaller />
         {children}
         <Toaster />
       </body>
