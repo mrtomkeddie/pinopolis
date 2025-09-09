@@ -131,7 +131,7 @@ export default function Home() {
                 <span>01554 556226</span>
               </div>
             </div>
-            <Link href="#content">
+            <Link href="#content" prefetch={false}>
               <Button size="lg" className="mt-8 bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 hover:-translate-y-1 transition-transform duration-300">
                 Book Your Experience
                 <ArrowRight className="ml-2 h-5 w-5" />
