@@ -42,8 +42,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
        <head>
-        <link rel="icon" href="/favicon.ico?v=1" sizes="any" />
-        <link rel="apple-touch-icon" href="/mobile icon.png?v=1" />
+        <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+        <link rel="apple-touch-icon" href="/mobile%20icon.png?v=2" />
       </head>
       <body className={cn('antialiased min-h-screen bg-background pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]', fontBody.variable, fontHeadline.variable)} suppressHydrationWarning>
         <PwaInstaller />
