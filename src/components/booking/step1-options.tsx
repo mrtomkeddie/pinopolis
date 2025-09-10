@@ -72,7 +72,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
 
     const isDealApplied = bookingDetails.dealApplied ?? false;
     const isGamesLocked = isDealApplied && promotion && (promotion.type === 'perPerson' || promotion.type === 'package');
-    const isWineWednesday = isDealDapplied && promotion?.type === 'package';
+    const isWineWednesday = isDealApplied && promotion?.type === 'package';
     
     const lanesNeeded = Math.ceil((bookingDetails.adults + bookingDetails.children) / 8) || 1;
 
@@ -298,5 +298,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         </div>
     );
 }
+
+    
 
     
