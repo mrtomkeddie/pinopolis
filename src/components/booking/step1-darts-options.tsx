@@ -85,7 +85,14 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, checkAvaila
     }
 
     const CalendarButton = () => (
-        <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
+        <Button 
+            type="button"
+            variant={'outline'} 
+            className={cn(
+                'w-full justify-start text-left font-normal py-6 px-4 touch-manipulation', 
+                !bookingDetails.date && 'text-muted-foreground'
+            )}
+        >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
         </Button>
@@ -215,5 +222,3 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, checkAvaila
     </div>
   );
 }
-
-    

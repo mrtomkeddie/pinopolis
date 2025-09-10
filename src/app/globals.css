@@ -62,11 +62,26 @@
 @layer base {
   html {
     @apply scroll-smooth;
+    -webkit-overflow-scrolling: touch;
   }
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Prevent iOS from zooming in on form inputs */
+  @media (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      font-size: 16px !important;
+    }
+     button,
+    [role="button"] {
+        min-height: 44px;
+    }
   }
 }
