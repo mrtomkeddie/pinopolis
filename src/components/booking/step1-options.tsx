@@ -9,11 +9,13 @@ import type { BookingDetails, Promotion } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 type AccentColor = 'orange' | 'pink' | 'cyan';
 
@@ -65,10 +67,12 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 
 export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, promotion, accentColor, checkAvailability }: Step1Props) {
     const [adultError, setAdultError] = useState(false);
+    const isMobile = useIsMobile();
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     const isDealApplied = bookingDetails.dealApplied ?? false;
     const isGamesLocked = isDealApplied && promotion && (promotion.type === 'perPerson' || promotion.type === 'package');
-    const isWineWednesday = isDealApplied && promotion?.type === 'package';
+    const isWineWednesday = isDealDapplied && promotion?.type === 'package';
     
     const lanesNeeded = Math.ceil((bookingDetails.adults + bookingDetails.children) / 8) || 1;
 
@@ -100,6 +104,13 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
     const handleWineChoice = (wine: 'White' | 'Red' | 'Rosé') => {
         updateDetails({ wineChoice: wine });
     };
+
+    const handleDateSelect = (date: Date | undefined) => {
+        if (date) {
+            updateDetails({date: date, time: ''});
+            setIsCalendarOpen(false); // Close calendar after selection
+        }
+    }
     
     const accentBorder = {
         orange: 'border-orange-400 focus-visible:ring-orange-400',
@@ -112,6 +123,23 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         pink: 'text-pink-400',
         cyan: 'text-cyan-400'
     }
+
+    const CalendarButton = () => (
+         <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
+        </Button>
+    );
+
+    const CalendarComponent = () => (
+        <Calendar 
+            mode="single" 
+            selected={bookingDetails.date} 
+            onSelect={handleDateSelect}
+            initialFocus 
+            disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+        />
+    )
 
     return (
         <div className="space-y-6">
@@ -126,23 +154,25 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                 <Label className="font-bold text-lg flex items-center gap-2"><Clock /> Pick Date & Time</Label>
                  <p className="text-xs text-muted-foreground">Please arrive 10-15 minutes prior to your requested start time</p>
                 <div className="flex flex-col gap-4">
-                    <Popover>
-                        <PopoverTrigger asChild>
-                        <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
-                        </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-                            <Calendar 
-                                mode="single" 
-                                selected={bookingDetails.date} 
-                                onSelect={(date) => updateDetails({date: date as Date, time: ''})} 
-                                initialFocus 
-                                disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                            />
-                        </PopoverContent>
-                    </Popover>
+                    { isMobile ? (
+                         <Dialog open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                            <DialogTrigger asChild>
+                                <CalendarButton />
+                            </DialogTrigger>
+                            <DialogContent className="w-auto">
+                                <CalendarComponent />
+                            </DialogContent>
+                        </Dialog>
+                    ) : (
+                        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                            <PopoverTrigger asChild>
+                                <CalendarButton />
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                                <CalendarComponent />
+                            </PopoverContent>
+                        </Popover>
+                    )}
 
                     <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })} disabled={!bookingDetails.date}>
                         <SelectTrigger className="py-6">
@@ -268,3 +298,5 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         </div>
     );
 }
+
+    

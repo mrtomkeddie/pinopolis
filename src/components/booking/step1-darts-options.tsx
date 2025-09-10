@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Calendar as CalendarIcon, Minus, Plus, ToyBrick, Clock, Target, Tag, Info } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -8,11 +9,13 @@ import type { DartsBookingDetails } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Step1DartsProps {
   bookingDetails: DartsBookingDetails;
@@ -61,6 +64,9 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 );
 
 export function Step1_Darts_Options({ bookingDetails, updateDetails, checkAvailability }: Step1DartsProps) {
+    const isMobile = useIsMobile();
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
     const handleSoftPlayChildrenChange = (increment: boolean) => {
         const newSoftPlayChildren = bookingDetails.softPlayChildren + (increment ? 1 : -1);
         if (newSoftPlayChildren >= 0) {
@@ -71,6 +77,29 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, checkAvaila
     const isDealApplied = bookingDetails.dealApplied ?? false;
     const { available: ochesAvailableAtTime } = bookingDetails.time ? checkAvailability(bookingDetails.time, bookingDetails.duration) : { available: 2 };
 
+    const handleDateSelect = (date: Date | undefined) => {
+        if (date) {
+            updateDetails({date: date, time: ''}); // Reset time when date changes
+            setIsCalendarOpen(false); // Close calendar after selection
+        }
+    }
+
+    const CalendarButton = () => (
+        <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
+        </Button>
+    );
+
+    const CalendarComponent = () => (
+        <Calendar 
+            mode="single" 
+            selected={bookingDetails.date} 
+            onSelect={handleDateSelect}
+            initialFocus 
+            disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+        />
+    )
 
   return (
     <div className="space-y-6">
@@ -80,25 +109,25 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, checkAvaila
           <p className="text-xs text-muted-foreground">Please arrive 10-15 minutes prior to your requested start time</p>
         </div>
         <div className="flex flex-col gap-4">
-            <Popover>
-                <PopoverTrigger asChild>
-                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
-                </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-                    <Calendar 
-                        mode="single" 
-                        selected={bookingDetails.date} 
-                        onSelect={(date) => {
-                            updateDetails({date: date as Date, time: ''}); // Reset time when date changes
-                        }} 
-                        initialFocus 
-                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                    />
-                </PopoverContent>
-            </Popover>
+            { isMobile ? (
+                <Dialog open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <DialogTrigger asChild>
+                        <CalendarButton />
+                    </DialogTrigger>
+                    <DialogContent className="w-auto">
+                        <CalendarComponent />
+                    </DialogContent>
+                </Dialog>
+            ) : (
+                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <PopoverTrigger asChild>
+                        <CalendarButton />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                        <CalendarComponent />
+                    </PopoverContent>
+                </Popover>
+            )}
 
              <Select 
                 value={bookingDetails.time} 
@@ -186,3 +215,5 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, checkAvaila
     </div>
   );
 }
+
+    

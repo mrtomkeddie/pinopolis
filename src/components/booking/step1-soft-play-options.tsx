@@ -9,9 +9,11 @@ import type { SoftPlayBookingDetails } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Step1SoftPlayProps {
   bookingDetails: SoftPlayBookingDetails;
@@ -58,6 +60,8 @@ const GuestCounter = ({ label, value, onIncrement, onDecrement, disabledDecremen
 
 export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1SoftPlayProps) {
     const [childrenError, setChildrenError] = useState(false);
+    const isMobile = useIsMobile();
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     const handleAdultsChange = (increment: boolean) => {
         const newAdults = bookingDetails.adults + (increment ? 1 : -1);
@@ -75,6 +79,30 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
             setChildrenError(true);
         }
     };
+
+    const handleDateSelect = (date: Date | undefined) => {
+        if (date) {
+            updateDetails({date: date});
+            setIsCalendarOpen(false); // Close calendar after selection
+        }
+    }
+
+    const CalendarButton = () => (
+        <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
+        </Button>
+    );
+
+    const CalendarComponent = () => (
+        <Calendar 
+            mode="single" 
+            selected={bookingDetails.date} 
+            onSelect={handleDateSelect}
+            initialFocus 
+            disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+        />
+    )
 
   return (
     <div className="space-y-6">
@@ -105,23 +133,25 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
       <div className="space-y-2">
         <Label className="font-bold text-lg flex items-center gap-2 mb-2"><Clock /> Pick Date & Time</Label>
         <div className="flex flex-col gap-4">
-            <Popover>
-                <PopoverTrigger asChild>
-                <Button variant={'outline'} className={cn('w-full justify-start text-left font-normal py-6 px-4', !bookingDetails.date && 'text-muted-foreground')}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
-                </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-                    <Calendar 
-                        mode="single" 
-                        selected={bookingDetails.date} 
-                        onSelect={(date) => updateDetails({date: date as Date})} 
-                        initialFocus 
-                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
-                    />
-                </PopoverContent>
-            </Popover>
+            { isMobile ? (
+                <Dialog open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <DialogTrigger asChild>
+                        <CalendarButton />
+                    </DialogTrigger>
+                    <DialogContent className="w-auto">
+                        <CalendarComponent />
+                    </DialogContent>
+                </Dialog>
+            ) : (
+                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <PopoverTrigger asChild>
+                        <CalendarButton />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                        <CalendarComponent />
+                    </PopoverContent>
+                </Popover>
+            )}
 
             <Select value={bookingDetails.time} onValueChange={(value) => updateDetails({ time: value })}>
                 <SelectTrigger className="py-6">
@@ -139,3 +169,5 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
     </div>
   );
 }
+
+    
