@@ -124,7 +124,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, checkAvaila
                     <DialogTrigger asChild>
                         <CalendarButton />
                     </DialogTrigger>
-                    <DialogContent className="w-auto">
+                    <DialogContent className="w-full max-w-xs">
                         <CalendarComponent />
                     </DialogContent>
                 </Dialog>

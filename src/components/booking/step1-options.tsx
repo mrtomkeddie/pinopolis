@@ -169,7 +169,7 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                             <DialogTrigger asChild>
                                 <CalendarButton />
                             </DialogTrigger>
-                            <DialogContent className="w-auto">
+                            <DialogContent className="w-full max-w-xs">
                                 <CalendarComponent />
                             </DialogContent>
                         </Dialog>

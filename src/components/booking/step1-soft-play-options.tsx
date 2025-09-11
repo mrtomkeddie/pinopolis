@@ -148,7 +148,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
                     <DialogTrigger asChild>
                         <CalendarButton />
                     </DialogTrigger>
-                    <DialogContent className="w-auto">
+                    <DialogContent className="w-full max-w-xs">
                         <CalendarComponent />
                     </DialogContent>
                 </Dialog>
