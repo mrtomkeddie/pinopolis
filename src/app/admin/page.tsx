@@ -10,6 +10,7 @@ import {
   Activity as ActivityIcon,
   Swords,
   Users,
+  PlusCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -77,13 +78,21 @@ export default function AdminDashboard() {
             <h1 className="text-xl font-bold font-headline">Admin Dashboard</h1>
             <p className="text-sm text-muted-foreground">Pinopolis</p>
         </div>
-        <Link
-            href="/logout"
-            className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-        >
-          <LogOut className="h-4 w-4" />
-          Logout
-        </Link>
+        <div className="flex items-center gap-2">
+             <Link href="/admin/new-booking">
+                <Button>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  New Booking
+                </Button>
+            </Link>
+            <Link
+                href="/logout"
+                className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Link>
+        </div>
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
 
@@ -101,7 +110,37 @@ export default function AdminDashboard() {
                     <p className="text-xs text-muted-foreground">+20.1% from yesterday</p>
                 </CardContent>
             </Card>
-            <Card className="md:col-span-2">
+             <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                        <span>Bookings Today</span>
+                        <Users className="h-5 w-5 text-muted-foreground" />
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-4xl font-bold">42</p>
+                    <p className="text-xs text-muted-foreground">Across all activities</p>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                        <span>Bookings by Activity</span>
+                         <ActivityIcon className="h-5 w-5 text-muted-foreground" />
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                     <ChartContainer config={chartConfig} className="h-20 w-full">
+                        <BarChart data={bookingsChartData} layout="vertical" margin={{ left: -20, right: 10, top: 0, bottom: 0 }}>
+                            <XAxis type="number" hide />
+                            <YAxis dataKey="activity" type="category" tickLine={false} axisLine={false} tickMargin={8} width={80}/>
+                            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
+                            <Bar dataKey="bookings" fill="hsl(var(--primary))" radius={4} />
+                        </BarChart>
+                    </ChartContainer>
+                </CardContent>
+            </Card>
+            <Card className="md:col-span-3">
                 <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                         <span>Weekly Revenue</span>
