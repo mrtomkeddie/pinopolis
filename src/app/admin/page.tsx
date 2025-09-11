@@ -39,7 +39,7 @@ export default function AdminDashboard() {
       <header className="sticky top-0 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
         <div>
             <h1 className="text-xl font-bold font-headline">Admin Dashboard</h1>
-            <p className="text-sm text-muted-foreground">Managing: Pinopolis</p>
+            <p className="text-sm text-muted-foreground">Pinopolis</p>
         </div>
         <Link
             href="/logout"
