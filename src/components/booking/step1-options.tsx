@@ -243,10 +243,11 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                     value={String(bookingDetails.games)} 
                     onValueChange={(val) => updateDetails({ games: Number(val) })} 
                     className="grid grid-cols-3 gap-2"
+                    disabled={isGamesLocked}
                 >
                     {[1, 2, 3].map(num => (
                         <div key={num}>
-                            <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only peer" disabled={isGamesLocked} />
+                            <RadioGroupItem value={String(num)} id={`games-${num}`} className="sr-only peer" />
                             <Label 
                                 htmlFor={`games-${num}`} 
                                 className={cn(
