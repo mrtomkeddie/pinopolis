@@ -152,7 +152,7 @@ export function Step1_Darts_Options({ bookingDetails, updateDetails, checkAvaila
                         const { available } = checkAvailability(slot, bookingDetails.duration);
                         return (
                              <SelectItem key={slot} value={slot} disabled={available === 0}>
-                                {slot} {available < 2 && available > 0 && `(${available} oche left)`}
+                                {slot} ({available} {available === 1 ? 'oche' : 'oches'} left)
                             </SelectItem>
                         )
                     })}
