@@ -6,21 +6,13 @@ import {
   Calendar,
   Cog,
   LogOut,
-  DollarSign,
-  Activity as ActivityIcon,
   Swords,
-  Users,
   PlusCircle,
+  BarChart,
 } from 'lucide-react';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart';
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 
 const dashboardItems = [
   {
@@ -36,6 +28,12 @@ const dashboardItems = [
     icon: Swords,
   },
   {
+    title: 'View Analytics',
+    description: 'See revenue and booking trends.',
+    href: '/admin/analytics',
+    icon: BarChart,
+  },
+  {
     title: 'Account Settings',
     description: 'Change your account password.',
     href: '/admin/settings',
@@ -43,32 +41,6 @@ const dashboardItems = [
   },
 ];
 
-const bookingsChartData = [
-  { activity: "Bowling", bookings: 186 },
-  { activity: "AR Darts", bookings: 305 },
-  { activity: "Soft Play", bookings: 237 },
-];
-
-const revenueChartData = [
-    { date: "2024-09-01", revenue: 450 },
-    { date: "2024-09-02", revenue: 520 },
-    { date: "2024-09-03", revenue: 610 },
-    { date: "2024-09-04", revenue: 380 },
-    { date: "2024-09-05", revenue: 720 },
-    { date: "2024-09-06", revenue: 800 },
-    { date: "2024-09-07", revenue: 950 },
-];
-
-const chartConfig = {
-  bookings: {
-    label: 'Bookings',
-    color: 'hsl(var(--chart-2))',
-  },
-  revenue: {
-    label: 'Revenue',
-    color: 'hsl(var(--chart-1))',
-  },
-};
 
 export default function AdminDashboard() {
   return (
@@ -95,72 +67,6 @@ export default function AdminDashboard() {
         </div>
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-
-        {/* Analytics Section */}
-        <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                        <span>Revenue Today</span>
-                        <DollarSign className="h-5 w-5 text-muted-foreground" />
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-4xl font-bold">£1,234.56</p>
-                    <p className="text-xs text-muted-foreground">+20.1% from yesterday</p>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                        <span>Bookings Today</span>
-                        <Users className="h-5 w-5 text-muted-foreground" />
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-4xl font-bold">42</p>
-                    <p className="text-xs text-muted-foreground">Across all activities</p>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                        <span>Bookings by Activity</span>
-                         <ActivityIcon className="h-5 w-5 text-muted-foreground" />
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                     <ChartContainer config={chartConfig} className="h-20 w-full">
-                        <BarChart data={bookingsChartData} layout="vertical" margin={{ left: -20, right: 10, top: 0, bottom: 0 }}>
-                            <XAxis type="number" hide />
-                            <YAxis dataKey="activity" type="category" tickLine={false} axisLine={false} tickMargin={8} width={80}/>
-                            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-                            <Bar dataKey="bookings" fill="hsl(var(--primary))" radius={4} />
-                        </BarChart>
-                    </ChartContainer>
-                </CardContent>
-            </Card>
-            <Card className="md:col-span-3">
-                <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                        <span>Weekly Revenue</span>
-                        <ActivityIcon className="h-5 w-5 text-muted-foreground" />
-                    </CardTitle>
-                    <CardDescription>Revenue trend for the last 7 days.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <ChartContainer config={chartConfig} className="h-40 w-full">
-                        <LineChart data={revenueChartData} margin={{ top: 5, right: 10, left: 10, bottom: 0 }}>
-                            <CartesianGrid vertical={false} />
-                            <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} />
-                            <YAxis hide={true} />
-                            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-                            <Line dataKey="revenue" type="monotone" stroke="hsl(var(--primary))" strokeWidth={2} dot={true} />
-                        </LineChart>
-                    </ChartContainer>
-                </CardContent>
-            </Card>
-        </section>
 
         {/* Navigation Section */}
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
