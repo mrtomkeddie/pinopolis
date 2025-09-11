@@ -78,8 +78,9 @@ export default function AdminDashboard() {
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
           {dashboardItems.map((item) => (
-            <div
+            <Link
               key={item.title}
+              href={item.href}
               className="rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
             >
               <div className="flex h-full flex-col justify-between p-6">
@@ -92,15 +93,14 @@ export default function AdminDashboard() {
                     {item.description}
                   </p>
                 </div>
-                <Link
-                  href={item.href}
+                <div
                   className="mt-6 flex items-center gap-2 text-sm font-semibold text-primary"
                 >
-                  Go to {item.title.split(' ')[1]}
+                  Go to page
                   <ArrowRight className="h-4 w-4" />
-                </Link>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         <div className="mt-auto text-center text-sm text-muted-foreground">
