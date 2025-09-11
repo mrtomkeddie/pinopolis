@@ -81,7 +81,7 @@ export default function AdminDashboard() {
             <Link
               key={item.title}
               href={item.href}
-              className="rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+              className="rounded-lg border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
             >
               <div className="flex h-full flex-col justify-between p-6">
                 <div>
