@@ -9,7 +9,7 @@ import type { BookingDetails, Promotion } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
@@ -170,6 +170,12 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
                                 <CalendarButton />
                             </DialogTrigger>
                             <DialogContent className="w-full max-w-xs">
+                                <DialogHeader>
+                                    <DialogTitle>Select a Date</DialogTitle>
+                                    <DialogDescription>
+                                        Choose a date for your booking.
+                                    </DialogDescription>
+                                </DialogHeader>
                                 <CalendarComponent />
                             </DialogContent>
                         </Dialog>
@@ -309,3 +315,5 @@ export function Step1_Options({ bookingDetails, updateDetails, pricePerGame, pro
         </div>
     );
 }
+
+    
