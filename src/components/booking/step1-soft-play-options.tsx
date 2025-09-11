@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import { Calendar as CalendarIcon, Minus, Plus, Users, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -87,8 +87,11 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
         }
     }
 
-    const CalendarButton = () => (
+    // eslint-disable-next-line react/display-name
+    const CalendarButton = forwardRef<HTMLButtonElement, React.ComponentPropsWithoutRef<'button'>>((props, ref) => (
         <Button 
+            {...props}
+            ref={ref}
             type="button"
             variant={'outline'} 
             className={cn(
@@ -99,7 +102,7 @@ export function Step1_SoftPlay_Options({ bookingDetails, updateDetails }: Step1S
             <CalendarIcon className="mr-2 h-4 w-4" />
             {bookingDetails.date ? format(bookingDetails.date, 'PPP') : <span>Pick a date</span>}
         </Button>
-    );
+    ));
 
     const CalendarComponent = () => (
         <Calendar 
