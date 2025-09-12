@@ -5,7 +5,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { getDartsBookingsForDate } from '@/lib/bookings';
-import type { DartsBookingDetails, Activity, Promotion, DartsBooking } from '@/lib/types';
+import type { DartsBookingDetails, Activity, DartsBooking } from '@/lib/types';
 import { Step1_Darts_Options } from './booking/step1-darts-options';
 import { Step2_Details } from './booking/step2-details';
 import { Step3_Darts_Summary } from './booking/step3-darts-summary';
@@ -76,7 +76,7 @@ export default function DartsBooking({ activity, accentColor }: { activity: Acti
     }
 
     const ochesNeeded = bookingDetails.oches;
-    const { available, bookedOches } = checkAvailability(bookingDetails.time, bookingDetails.duration);
+    const { available } = checkAvailability(bookingDetails.time, bookingDetails.duration);
     
     if (ochesNeeded > available) {
         setAvailabilityError(`Only ${available} oche(s) available at ${bookingDetails.time}. Please select a different time or fewer oches.`);

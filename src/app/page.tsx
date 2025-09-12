@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Dices, Target, ToyBrick, ArrowRight, PartyPopper, MapPin, Clock, Zap, Utensils, Martini, Users, Facebook, Instagram, Phone, Mail, Award, AtSign } from 'lucide-react';
 import Image from 'next/image';
 
@@ -89,6 +89,7 @@ const TABS: Tab[] = ['experiences', 'food-drinks', 'party-bookings'];
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('experiences');
   const [api, setApi] = useState<CarouselApi>()
+  const contentRef = useRef<HTMLDivElement>(null);
  
   const accentHoverBorderColor = {
       orange: 'hover:border-orange-500/50',
@@ -125,6 +126,7 @@ export default function Home() {
     setActiveTab(tabId);
     const tabIndex = TABS.indexOf(tabId);
     api?.scrollTo(tabIndex);
+    contentRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
 
   return (
@@ -173,7 +175,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="content" className="py-16 md:py-24 w-full">
+        <section id="content" ref={contentRef} className="py-16 md:py-24 w-full scroll-mt-16">
             <div className="container mx-auto px-4">
                 <div className="mb-12">
                     <SegmentedControl activeTab={activeTab} setActiveTab={handleTabChange} />
